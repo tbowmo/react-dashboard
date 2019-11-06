@@ -1,0 +1,6 @@
+.topdashboard {
+    display: grid;
+    grid-template-columns: repeat(var(--dash-grid-columns), 1fr);
+    grid-template-rows: 1fr 1fr;
+    grid-gap: var(--dash-grid-gap);
+}

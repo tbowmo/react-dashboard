@@ -1,0 +1,15 @@
+.tabs {
+    display: grid;
+    grid-template-columns: repeat(var(--dash-grid-columns), 1fr);
+    grid-gap: var(--dash-grid-gap); 
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.active {
+    color: var(--dash-color-active);
+}

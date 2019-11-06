@@ -1,0 +1,15 @@
+:root {
+    --dash-grid-columns: 12;
+    --dash-grid-gap: 10px;
+    --dash-color-background: #000;
+    --dash-color-active: #ff8c00;
+    --dash-color-inactive: #333;
+    --dash-color-border: #111;
+    --dash-color-label: #999;
+    --dash-grid1: 2; // calc(var(--dash-grid-columns) / 6);
+    --dash-grid2: 4; //  calc(var(--dash-grid-columns) / 4);
+    --dash-grid3: 6; // calc(var(--dash-grid-columns) / 3);
+    --dash-grid4: 8; // calc(var(--dash-grid-columns) / 2);
+    --dash-grid5: 10;
+    --dash-grid6: 12; // calc(var(--dash-grid-columns) / 1);
+}

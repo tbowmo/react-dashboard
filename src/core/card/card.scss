@@ -1,0 +1,31 @@
+.card {
+    border-radius: 10px;
+    border: solid 2px #666;
+    background-color: #111;
+    padding: 10px;
+}
+
+.cols1 {
+    grid-column: span var(--dash-grid1);
+}
+.cols2 {
+
+    grid-column: span var(--dash-grid2);
+}
+.cols3 {
+    grid-column: span var(--dash-grid3);
+}
+.cols4 {
+    grid-column: span var(--dash-grid4);
+}
+.cols6 {
+    grid-column: span var(--dash-grid6);
+}
+
+.rows1 {
+    grid-row: span 1;
+}
+
+.rows2 {
+    grid-row: span 2;
+}
