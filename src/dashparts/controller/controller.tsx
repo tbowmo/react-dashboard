@@ -58,7 +58,7 @@ export function Controller() {
         {icon: faForward, key: 'next', enabled: capabilities.supported_features.skip_fwd},
         {icon: faPowerOff, key: 'off', enabled: true},
       ];
-console.log(capabilities)
+
     return (
         <div className="controller">
         <Card cols="4" rows="2">
@@ -110,7 +110,7 @@ console.log(capabilities)
 }
 
 function truncString(input: string): string {
-    const truncatedString = (input || '').substr(0, 20)
+    const truncatedString = (input || '').substr(0, 16)
     return truncatedString + ((input !== truncatedString) ? '...' : '')
 }
 
@@ -119,15 +119,12 @@ function Music(props: {media: Media}) {
     return (
         <React.Fragment>
             <div>
-                <div className="label">Artist</div>
                 <div className="info">{truncString(media.artist)}</div>
             </div>
             <div>
-                <div className="label">Album</div>
                 <div className="info">{truncString(media.album)}</div>
             </div>
             <div>
-                <div className="label">Titel</div>
                 <div className="info">{truncString(media.title)}</div>
             </div>
         </React.Fragment>

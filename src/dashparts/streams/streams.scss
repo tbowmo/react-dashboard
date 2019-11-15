@@ -14,3 +14,12 @@
 .active {
     color: var(--dash-color-active);
 }
+
+.singleStream {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+}
+
+.show {
+    font-size:20pt;
+}

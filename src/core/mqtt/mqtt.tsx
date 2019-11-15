@@ -92,7 +92,7 @@ export type Media = {
 }
 
 export function useCapabilities(): Capabilities | undefined {
-    const capabilities = useSubscribe('chromegeneric/capabilities')
+    const capabilities = useSubscribe('media/stuen/capabilities')
     return React.useMemo(() => {
         if (capabilities) {
             return JSON.parse(capabilities.payload)
@@ -101,7 +101,7 @@ export function useCapabilities(): Capabilities | undefined {
 }
 
 export function useMedia(): Media | undefined {
-    const media = useSubscribe('chromegeneric/media')
+    const media = useSubscribe('media/stuen/media')
     return React.useMemo(() => {
         if (media) {
             return JSON.parse(media.payload)

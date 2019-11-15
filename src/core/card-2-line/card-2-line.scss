@@ -1,13 +1,12 @@
 .card2line {
     display: grid;
-    grid-template-rows: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 2fr 1fr;
     height: 100%;
     
     .value {
-        grid-row: span 3;
         font-family: Orbitron, serif;
         font-weight: bold;
-        font-size: 55pt;
+        font-size: 30pt;
         color: var(--dash-color-active);
     }
 
@@ -15,7 +14,7 @@
         font-family: Orbitron, serif;
         font-weight: normal;
         color: var(--dash-color-label);
-        font-size: 17px;
+        font-size: 15px;
     }
 
     .section {

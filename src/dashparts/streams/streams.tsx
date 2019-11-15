@@ -9,44 +9,44 @@ type Props = {
 }
 
 type Stream = {
-    label: string,
-    link: string,
-    type: string,
+    programme: string;
+    start: string;
+    stop:string;
+    id:string;
+    friendly:string;
+    extra:string;
+    xmlid: string;
+    link:string;
+    media:string;
 }
-
-const TV: Stream[] = [
-    {link:'https://dr01-lh.akamaihd.net/i/live/dr01_0@147054/master.m3u8?b=100-4000', type:'video/mp4', label:'DR1'},
-    {link:'https://dr02-lh.akamaihd.net/i/live/dr02_0@147055/master.m3u8?b=100-4000', type:'video/mp4', label:'DR2'},
-    {link:'https://dr03-lh.akamaihd.net/i/live/dr03_0@147056/master.m3u8?b=100-4000', type:'video/mp4', label:'DR3'},
-    {link:'https://dr04-lh.akamaihd.net/i/live/dr04_0@147057/master.m3u8?b=100-4000', type:'video/mp4', label:'DRK'},
-    {link:'https://dr05-lh.akamaihd.net/i/live/dr05_0@147058/master.m3u8?b=100-4000', type:'video/mp4', label:'Ramasjang'},
-    {link:'https://dr06-lh.akamaihd.net/i/live/dr06_0@147059/master.m3u8?b=100-4000', type:'video/mp4', label:'Ultra'},
-]
-
-const RADIO: Stream[] = [
-    { link:'http://live-icy.gss.dr.dk/A/A03H.mp3', type:'audio/mp3', label:'DR P1'},
-    { link:'http://live-icy.gss.dr.dk/A/A04H.mp3', type:'audio/mp3', label:'DR P2'},
-    { link:'http://live-icy.gss.dr.dk/A/A05H.mp3', type:'audio/mp3', label:'DR P3'},
-    { link:'http://live-icy.gss.dr.dk/A/A10H.mp3', type:'audio/mp3', label:'DR P4'},
-    { link:'http://live-icy.gss.dr.dk/A/A29H.mp3', type:'audio/mp3', label:'DR P6'},
-    { link:'http://live-icy.gss.dr.dk/A/A21H.mp3', type:'audio/mp3', label:'DR P7'},
-]
 
 function SelectStream(stream: Stream, mqttClient: MqttClient, setActive: (value: string) => void) {
     setActive(stream.link)
-    mqttClient.publish('chromecast/play', JSON.stringify(stream))
+    mqttClient.publish('media/stuen/control/play', JSON.stringify(stream))
 }
 
 export function Streams(props: Props) {
+    const {
+        type
+    } = props
     const [ active, setActive ] = React.useState('')
-    const streams: Stream[] = (props.type === 'tv') ? TV : RADIO
+    const [ streams, setStreams] = React.useState([])
+
+    React.useEffect(() => {
+        fetch(`http://192.168.4.13:8181/${type}/list`)
+          .then(resp => resp.json())
+          .then(data => setStreams(data));
+      }, [type, setStreams]);
+
     const mqttClient = useMqttClient()
     return (
         <div className="streams">
             { streams.map((streamEntry) => 
-            <Card key={streamEntry.label} onClick={() => SelectStream(streamEntry, mqttClient, setActive)}>
-                <div className={'center ' + ((streamEntry.link === active) ? 'active' : '')} >
-                    {streamEntry.label}
+            <Card cols="2" className="singleStream" key={streamEntry.friendly} onClick={() => SelectStream(streamEntry, mqttClient, setActive)}>
+                <div className={'center channel ' + ((streamEntry.link === active) ? 'active' : '')} >
+                    {streamEntry.friendly}
+                </div><div className="center show">
+                    {streamEntry.programme || streamEntry.extra}
                 </div>
             </Card>
             )}
