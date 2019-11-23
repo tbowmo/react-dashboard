@@ -1,0 +1,16 @@
+.scene {
+    display: grid;
+    grid-template-rows: repeat(4, 1fr);
+    grid-template-columns: repeat(12, 1fr);
+}
+
+.light {
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 90px 1fr;
+    
+    .slider {
+        margin-top: 10px;
+        margin-right: 20px;
+    }
+}

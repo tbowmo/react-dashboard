@@ -1,20 +1,27 @@
 import { MqttClient } from 'mqtt'
 import * as React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { connectMqtt, incommingMsg, subscribe } from './data/actions'
+import {
+    useDispatch,
+    useSelector,
+} from 'react-redux'
+import {
+    connectMqtt,
+    incommingMsg,
+    subscribe,
+} from './data/actions'
 import { MqttState, MqttDataEntry } from './data/reducer'
 
 const match = require('mqtt-match')
 
 type Props = {
     mqttHost: string,
-    children?: any
+    children?: any,
 }
 
 export function MqttConnect(props: Props) {
     const dispatch = useDispatch()
     dispatch(connectMqtt(props.mqttHost))
-    const client = useSelector( (state: MqttState)  => state.client) as MqttClient
+    const client = useSelector( (state: MqttState) => state.client) as MqttClient
     if (client !== undefined) {
         client.on('message', (topic, payload) => {
             dispatch(incommingMsg(topic, payload.toString()))
@@ -34,10 +41,10 @@ function useSubscribe(topic: string): {topic: string, payload: string} | undefin
         let d = data[topic]
         if (d === undefined) {
             const key = Object.values(data)
-                .sort((a: MqttDataEntry, b: MqttDataEntry) =>  b.timestamp - a.timestamp)
+                .sort((a: MqttDataEntry, b: MqttDataEntry) => b.timestamp - a.timestamp)
                 .find((b: MqttDataEntry) => {
-                return match(topic, b.topic)
-            }) as MqttDataEntry
+                    return match(topic, b.topic)
+                }) as MqttDataEntry
             if (key !== undefined) {
                 d = data[key.topic]
             }
@@ -79,8 +86,8 @@ type Capabilities = {
         skip_bck: boolean,
         pause: boolean,
         volume: boolean,
-        mute: boolean
-    }
+        mute: boolean,
+    },
 }
 
 export type Media = {

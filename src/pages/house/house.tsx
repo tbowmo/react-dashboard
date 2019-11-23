@@ -1,7 +1,7 @@
 import * as React from 'react'
 
-export function Scene() {
+export function House() {
     return (
-        <div>Scene</div>
+        <div></div>
     )
 }

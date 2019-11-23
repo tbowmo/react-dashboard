@@ -1,11 +1,15 @@
-import { Subscribe, Incomming, Connect } from "./action-types";
-import { connect } from "mqtt";
+import {
+    Subscribe,
+    Incomming,
+    Connect,
+} from './action-types'
+import { connect } from 'mqtt'
 
 export function connectMqtt(host: string): Connect {
     const client = connect(host)
     return {
         type: 'connect',
-        payload: client
+        payload: client,
     }
 }
 
@@ -22,6 +26,6 @@ export function incommingMsg(topic: string, payload: string): Incomming {
         payload: {
             topic,
             payload,
-        }
+        },
     }
 }

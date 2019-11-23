@@ -1,9 +1,9 @@
 import * as React from 'react'
 import './card.scss'
 
-export type colSize = "1" | "2" | "3" | "4" | "5" | "6"
+export type colSize = '1' | '2' | '3' | '4' | '5' | '6'
 
-export type rowSize = "1" | "2" | "3"
+export type rowSize = '1' | '2' | '3'
 
 type Props = {
     onClick?: (event: React.MouseEvent<HTMLDivElement>) => void,
@@ -15,9 +15,9 @@ type Props = {
 
 export function Card(props: Props) {
     const {
-        cols="1",
-        rows="1",
-        className=''
+        cols='1',
+        rows='1',
+        className='',
     } = props
 
     return (

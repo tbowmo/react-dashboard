@@ -1,10 +1,10 @@
-import { useSubscribeNumberPayload } from "../mqtt/mqtt"
-import { Card2Line } from "../card-2-line/card-2-line"
+import { useSubscribeNumberPayload } from '../mqtt/mqtt'
+import { Card2Line } from '../card-2-line/card-2-line'
 import * as React from 'react'
-import { colSize, rowSize } from "../card/card"
+import { colSize, rowSize } from '../card/card'
 
 type Props = {
-    sensorId: number,
+    sensorId?: number,
     type? : number,
     child?: number,
     label: string,
@@ -12,6 +12,7 @@ type Props = {
     precission?: number,
     cols?: colSize,
     rows?: rowSize,
+    value?: number,
 }
 
 export function Sensor(props: Props) {

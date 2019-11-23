@@ -1,4 +1,4 @@
-import { MqttClient } from "mqtt"
+import { MqttClient } from 'mqtt'
 
 export type Subscribe = {
     type: 'subscribe',
@@ -10,7 +10,7 @@ export type Incomming = {
     payload: {
         topic: string,
         payload: string,
-    }
+    },
 }
 
 export type Connect = {
