@@ -7,7 +7,9 @@ import { Router } from 'react-router-dom'
 import history from './history'
 import { MqttConnect } from './core/mqtt/mqtt'
 import { Provider } from 'react-redux'
-import { store } from './core/mqtt/data/store'
+import configureStore from './core/data/store'
+
+const store = configureStore()
 
 ReactDOM.render(
     <Router history={history}>

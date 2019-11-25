@@ -58,12 +58,12 @@ export function Tabs() {
             css: '',
         },
         {
-            label: 'House',
+            label: 'Hus',
             target: '/house',
             css: '',
         },
         {
-            label: 'Surveilance',
+            label: 'Video',
             target: '/surveilance',
             css: '',
         },

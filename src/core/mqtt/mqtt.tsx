@@ -8,8 +8,8 @@ import {
     connectMqtt,
     incommingMsg,
     subscribe,
-} from './data/actions'
-import { MqttState, MqttDataEntry } from './data/reducer'
+} from '../data/mqtt-actions'
+import { MqttState, MqttDataEntry } from '../data/reducers'
 
 const match = require('mqtt-match')
 
@@ -21,7 +21,7 @@ type Props = {
 export function MqttConnect(props: Props) {
     const dispatch = useDispatch()
     dispatch(connectMqtt(props.mqttHost))
-    const client = useSelector( (state: MqttState) => state.client) as MqttClient
+    const client = useSelector((state) => state.mqtt.client)
     if (client !== undefined) {
         client.on('message', (topic, payload) => {
             dispatch(incommingMsg(topic, payload.toString()))
@@ -33,9 +33,9 @@ export function MqttConnect(props: Props) {
 }
 
 function useSubscribe(topic: string): {topic: string, payload: string} | undefined {
-    const subscriptions = useSelector( (state: MqttState) => state.subscriptions)
+    const subscriptions = useSelector( state => state.mqtt.subscriptions)
     const dispatch = useDispatch()
-    const data = useSelector( (state: MqttState) => state.data )
+    const data = useSelector( (state) => state.mqtt.data )
     
     const x = React.useMemo(() => {
         let d = data[topic]
@@ -117,5 +117,5 @@ export function useMedia(): Media | undefined {
 }
 
 export function useMqttClient(): MqttClient | undefined {
-    return useSelector((state: MqttState) => state.client)
+    return useSelector(state => state.mqtt.client)
 }

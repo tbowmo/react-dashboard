@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useCurrentWeather } from '../../../core/api/use-weather-api'
+import { useCurrentWeather } from '../../../core/weather-api/use-weather-api'
 import './weather.scss'
 import { 
     WiDaySunny,
@@ -40,9 +40,11 @@ export const icons = {
 
 export function Weather() {
     const weather = useCurrentWeather()
+
     if (weather === undefined) {
         return null
     }
+
     const Icon = icons[weather.weather[0].icon]
     return (
         <div className="mainWeather">

@@ -12,7 +12,6 @@ type Props = {
     precission?: number,
     cols?: colSize,
     rows?: rowSize,
-    value?: number,
 }
 
 export function Sensor(props: Props) {
