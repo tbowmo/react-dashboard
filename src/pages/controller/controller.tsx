@@ -17,7 +17,7 @@ import {
     useMqttClient,
     useSubscribeStringPayload,
     Media,
-} from '../../core/mqtt/mqtt'
+} from '../../core/data/'
 import { Card2Line } from '../../core/card-2-line/card-2-line'
 import { Sensor } from '../../core/sensor/sensor'
 import TextTruncate from 'react-text-truncate'
@@ -29,7 +29,41 @@ type controlKey = {
     enabled: boolean,
 }
 
+const functions: controlKey[] = [
+    {
+        icon: faVolumeUp,
+        key: 'volumeup',
+        enabled: true,
+    },
+    {
+        icon: faVolumeDown,
+        key : 'volumedown',
+        enabled: true,
+    },
+    {
+        icon: faBackward,
+        key: 'prev',
+        enabled: true,
+    },
+    {
+        icon: faPause,
+        key: 'pause',
+        enabled: true,
+    },
+    {
+        icon: faForward,
+        key: 'next',
+        enabled: true,
+    },
+    {
+        icon: faPowerOff,
+        key: 'off',
+        enabled: true,
+    },
+]
+
 export function Controller() {
+    const [ showWeather, setShowWeather ] = React.useState<boolean>(false)
 
     const mqttClient = useMqttClient()
 
@@ -43,63 +77,33 @@ export function Controller() {
         }
     }
 
+    function mediaInfoClick() {
+        setShowWeather(true)
+        setTimeout(() => {
+            setShowWeather(false)
+        }, 10000)
+    }
+    
     const media = useMedia()
     const capabilities = useCapabilities()
     const avcenter = useSubscribeStringPayload('avctrl/out/scene') || ''
-    const features = capabilities !== undefined ? capabilities.supported_features : {
-        skip_bck: false,
-        pause: false,
-        skip_fwd: false,
-    }
-    const functions: controlKey[] = [
-        {
-            icon: faVolumeUp,
-            key: 'volumeup',
-            enabled: true,
-        },
-        {
-            icon: faVolumeDown,
-            key : 'volumedown',
-            enabled: true,
-        },
-        {
-            icon: faBackward,
-            key: 'prev',
-            enabled: features.skip_bck,
-        },
-        {
-            icon: faPause,
-            key: 'pause',
-            enabled: features.pause,
-        },
-        {
-            icon: faForward,
-            key: 'next',
-            enabled: features.skip_fwd,
-        },
-        {
-            icon: faPowerOff,
-            key: 'off',
-            enabled: true,
-        },
-    ]
 
     if (media === undefined || capabilities === undefined) {
         return null
     }
-
+    
     return (
         <div className="controller">
             <Card cols="4" rows="2">
-                { avcenter.toLowerCase().includes('stream') ? (
-                    <div className="mediaInfo">
+                { showWeather || !avcenter.toLowerCase().includes('stream') ? (
+                    <Weather />
+                ) : (
+                    <div className="mediaInfo" onClick={mediaInfoClick}>
                         <div className="center">
                             <img src={media.album_art || capabilities.app_icon} alt={media.album} />
                         </div>
                         <Music media={media} />
                     </div>
-                ): (
-                    <Weather />
                 )}
             </Card>
             <Card2Line 

@@ -8,8 +8,8 @@ import {
     connectMqtt,
     incommingMsg,
     subscribe,
-} from '../data/mqtt-actions'
-import { MqttState, MqttDataEntry } from '../data/reducers'
+} from './mqtt/actions'
+import { MqttState, MqttDataEntry } from './mqtt/reducer'
 
 const match = require('mqtt-match')
 

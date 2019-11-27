@@ -48,21 +48,21 @@ export interface ForecastDto {
     message: number,
     cnt: number,
     city: {
-      id: number,
-      name: string,
-      coord: {
-          lat: number,
-          lon: number,
-      },
-      country: string,
-      timezone: number,
-      sunrise: number,
-      sunset: number,
+        id: number,
+        name: string,
+        coord: {
+            lat: number,
+            lon: number,
+        },
+        country: string,
+        timezone: number,
+        sunrise: number,
+        sunset: number,
     },
     list: ForecastTupple[],
   }
   
-  interface ForecastTupple {
+export interface ForecastTupple {
     dt: number,
     main: {
         temp: number,
@@ -86,4 +86,4 @@ export interface ForecastDto {
         pod: string,
     },
     dt_txt: string,
-  }
+}

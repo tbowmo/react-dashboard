@@ -1,9 +1,9 @@
 import * as React from 'react'
-import './dash-top.scss'
 import { Card2Line } from '../card-2-line/card-2-line'
 import moment from 'moment'
 import { Sensor } from '../sensor/sensor'
-import { useCurrentWeather } from '../weather-api/use-weather-api'
+import { useCurrentWeather } from '../data/'
+import './dash-top.scss'
 
 export function DashTop() {
     const [date, setDate] = React.useState(moment())

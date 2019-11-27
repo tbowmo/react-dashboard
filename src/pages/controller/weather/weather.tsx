@@ -1,5 +1,9 @@
 import * as React from 'react'
-import { useCurrentWeather } from '../../../core/weather-api/use-weather-api'
+import {
+    useCurrentWeather,
+    useForecastWeather,
+    ForecastTupple,
+} from '../../../core/data/'
 import './weather.scss'
 import { 
     WiDaySunny,
@@ -15,7 +19,9 @@ import {
     WiNightThunderstorm,
     WiNightSnowThunderstorm,
     WiNightFog,
+    WiNightRain,
 } from 'react-icons/wi'
+import moment from 'moment'
 
 export const icons = {
     '01d': WiDaySunny,
@@ -32,7 +38,7 @@ export const icons = {
     '03n': WiCloudy,
     '04n': WiCloudy,
     '09n': WiShowers,
-    '10n': WiDayRain,
+    '10n': WiNightRain,
     '11n': WiNightThunderstorm,
     '13n': WiNightSnowThunderstorm,
     '50n': WiNightFog,
@@ -55,13 +61,45 @@ export function Weather() {
                     <div className="description">{weather.weather[0].description} { weather.clouds.all>20 ? `- ${weather.clouds.all}%` : ''} </div>
                 </div>
                 <div>
-                    Vind: {weather.wind.speed} m/sec, retning {weather.wind.deg}<br />
+                    Vind: {weather.wind.speed} m/sec<br/>retning {weather.wind.deg}<br />
                 </div>
             </div>
             <div className="symbol">
                 <Icon />
-                {weather.dt}
             </div>
+            <Forecast />
+        </div>
+    )
+}
+
+export function Forecast() {
+    const forecast = useForecastWeather()
+
+    if (forecast === undefined) {
+        return null
+    }
+
+    return (
+        <div className="forecast">
+            { forecast.list.slice(1,7).map((f) => (
+                <SingleForecast data={f} />
+            ))}
+        </div>
+    )
+}
+
+function SingleForecast(props: {data: ForecastTupple} ) {
+    const { data } = props
+    const Icon = icons[data.weather[0].icon]
+    const timeObj = moment.unix(data.dt).local(false)
+    const dateStr = timeObj.format("DD-MM-YY")
+    const timeStr = timeObj.format('HH:mm')
+    return (
+        <div className='rw-day'>
+            <div className="rw-date">Kl. {timeStr}</div>
+            <Icon className="wicon" />
+            <div className="rw-desc">{data.weather[0].description}</div>
+            <div className="rw-range">{data.main.temp_max} / {data.main.temp_min}&deg;C</div>
         </div>
     )
 }

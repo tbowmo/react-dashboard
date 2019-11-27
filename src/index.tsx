@@ -5,7 +5,7 @@ import App from './App'
 import * as serviceWorker from './serviceWorker'
 import { Router } from 'react-router-dom'
 import history from './history'
-import { MqttConnect } from './core/mqtt/mqtt'
+import { MqttConnect } from './core/data/use-mqtt'
 import { Provider } from 'react-redux'
 import configureStore from './core/data/store'
 

@@ -1,4 +1,4 @@
-import { WeatherActions } from '../action-types'
+import { WeatherActions } from './action-types'
 import { ForecastDto, CurrentWeatherDto } from '../weather-types'
 
 export type CurrentWeather = {

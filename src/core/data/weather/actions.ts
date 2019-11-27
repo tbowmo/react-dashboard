@@ -1,4 +1,4 @@
-import { CurrentWeatherDto, ForecastDto } from './weather-types'
+import { CurrentWeatherDto, ForecastDto } from '../weather-types'
 import { FetchCurrentWeatherSuccess, FetchForecastSuccess, FetchCurrentWeatherPending, FetchForecastPending } from './action-types'
 
 export function fetchCurrentWeatherSuccess(data: CurrentWeatherDto): FetchCurrentWeatherSuccess {

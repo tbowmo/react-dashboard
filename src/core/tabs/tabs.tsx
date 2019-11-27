@@ -33,42 +33,42 @@ function buttonClick(menu: MenuEntry, setActive: any) {
     history.replace(menu.target)
 }
 
+const menuLinks = [
+    {
+        label: 'Main',
+        target: '/',
+        css: 'active',
+    },
+    {
+        label: 'Radio',
+        target : '/streams/radio',
+        css: '',
+    },
+    {
+        label: 'TV',
+        target: '/streams/tv',
+        css: '',
+    },
+    {
+        label: 'Scene',
+        target: '/scene',
+        css: '',
+    },
+    {
+        label: 'Hus',
+        target: '/house',
+        css: '',
+    },
+    {
+        label: 'Video',
+        target: '/surveilance',
+        css: '',
+    },
+]
+
 export function Tabs() {
     const [active, setActive] = React.useState('/')
-
-    const menuLinks = [
-        {
-            label: 'Main',
-            target: '/',
-            css: 'active',
-        },
-        {
-            label: 'Radio',
-            target : '/streams/radio',
-            css: '',
-        },
-        {
-            label: 'TV',
-            target: '/streams/tv',
-            css: '',
-        },
-        {
-            label: 'Scene',
-            target: '/scene',
-            css: '',
-        },
-        {
-            label: 'Hus',
-            target: '/house',
-            css: '',
-        },
-        {
-            label: 'Video',
-            target: '/surveilance',
-            css: '',
-        },
-    ]
-    
+     
     return (
         <div className="tabs">
             { menuLinks.map((menuEntry) => (

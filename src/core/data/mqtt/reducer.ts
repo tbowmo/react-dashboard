@@ -1,4 +1,4 @@
-import { MqttActions } from '../action-types'
+import { MqttActions } from './action-types'
 import { MqttClient } from 'mqtt'
 
 export type MqttDataEntry = {

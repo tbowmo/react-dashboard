@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Card } from '../../core/card/card'
 import './streams.scss'
-import { useMqttClient } from '../../core/mqtt/mqtt'
+import { useMqttClient } from '../../core/data/'
 import { MqttClient } from 'mqtt'
 import TextTruncate from 'react-text-truncate'
 
