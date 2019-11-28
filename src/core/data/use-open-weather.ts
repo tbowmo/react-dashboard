@@ -21,7 +21,7 @@ const apiUrl = 'https://api.openweathermap.org/data/2.5'
 const apiKey = process.env.REACT_APP_OW_KEY
 const city = process.env.REACT_APP_OW_CITYID
 type TimerType = {
-    timer?: number,
+    timer?: ReturnType<typeof setInterval>,
     active: number,
 }
 
@@ -68,7 +68,7 @@ export function useCurrentWeather(): CurrentWeatherDto | undefined {
             dispatch(currentWeather())
         }
         if (weatherTimer.timer === undefined) {
-            weatherTimer.timer = window.setInterval(() => {
+            weatherTimer.timer = setInterval(() => {
                 dispatch(currentWeather())
             }, 600000)
         }
@@ -94,7 +94,7 @@ export function useForecastWeather(): ForecastDto | undefined {
             dispatch(forecastWeather())
         }
         if (forecastTimer.timer === undefined) {
-            forecastTimer.timer = window.setInterval(() => {
+            forecastTimer.timer = setInterval(() => {
                 dispatch(forecastWeather())
             }, 1800000)
         }

@@ -81,7 +81,7 @@ export function Controller() {
         setShowWeather(true)
         setTimeout(() => {
             setShowWeather(false)
-        }, 10000)
+        }, Number(process.env.REACT_APP_ACTION_TIMEOUT))
     }
     
     const media = useMedia()

@@ -1,28 +1,15 @@
 import * as React from 'react'
 import { Card } from '../../core/card/card'
 import './streams.scss'
-import { useMqttClient } from '../../core/data/'
 import { MqttClient } from 'mqtt'
 import TextTruncate from 'react-text-truncate'
+import { useStreams, StreamDto, useMqttClient } from '../../core/data'
 
 type Props = {
-    type: string,
+    type: 'radio' | 'tv',
 }
 
-type Stream = {
-    programme: string,
-    start: string,
-    stop: string,
-    id: string,
-    friendly: string,
-    extra: string,
-    xmlid: string,
-    link: string,
-    media: string,
-    icon: string,
-}
-
-function SelectStream(stream: Stream, mqttClient: MqttClient, setActive: (value: string) => void) {
+function SelectStream(stream: StreamDto, mqttClient: MqttClient, setActive: (value: string) => void) {
     setActive(stream.link)
     mqttClient.publish('media/stuen/control/play', JSON.stringify(stream))
 }
@@ -33,14 +20,7 @@ export function Streams(props: Props) {
     } = props
 
     const [ active, setActive ] = React.useState('')
-    const [ streams, setStreams] = React.useState([])
-
-    React.useEffect(() => {
-        const url = process.env.REACT_APP_BACKEND + `/${type}/list`
-        fetch(url)
-            .then((resp) => resp.json())
-            .then((data) => setStreams(data))
-    }, [type, setStreams])
+    const streams = useStreams(type)
 
     const mqttClient = useMqttClient()
     

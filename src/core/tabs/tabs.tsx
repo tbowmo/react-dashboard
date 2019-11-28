@@ -27,7 +27,7 @@ function buttonClick(menu: MenuEntry, setActive: any) {
         timer = null
     }
     if (menu.target !== '/') {
-        timer = setTimeout(mainPage, 5000)
+        timer = setTimeout(mainPage, Number(process.env.REACT_APP_ACTION_TIMEOUT))
     }
     setActive(menu.target)
     history.replace(menu.target)
