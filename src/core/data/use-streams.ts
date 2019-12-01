@@ -1,8 +1,11 @@
-import { StreamDto } from "./streams/stream-type";
-import { useSelector, useDispatch } from 'react-redux'
-import { combinedState } from "./store";
+import { StreamDto } from './streams/stream-type'
+import {
+    useSelector,
+    useDispatch,
+} from 'react-redux'
+import { combinedState } from './store'
 import { useEffect } from 'react'
-import { fetchStreamSuccess } from "./streams/actions";
+import { fetchStreamSuccess } from './streams/actions'
 
 export function useStreams(type: 'radio' | 'tv'): StreamDto[] | undefined {
     const streamState = useSelector((state: combinedState) => state.streams)

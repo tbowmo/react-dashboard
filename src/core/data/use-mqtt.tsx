@@ -9,7 +9,7 @@ import {
     incommingMsg,
     subscribe,
 } from './mqtt/actions'
-import { MqttState, MqttDataEntry } from './mqtt/reducer'
+import { MqttDataEntry } from './mqtt/reducer'
 
 const match = require('mqtt-match')
 
@@ -33,7 +33,7 @@ export function MqttConnect(props: Props) {
 }
 
 function useSubscribe(topic: string): {topic: string, payload: string} | undefined {
-    const subscriptions = useSelector( state => state.mqtt.subscriptions)
+    const subscriptions = useSelector( (state) => state.mqtt.subscriptions)
     const dispatch = useDispatch()
     const data = useSelector( (state) => state.mqtt.data )
     
@@ -96,6 +96,7 @@ export type Media = {
     album: string,
     album_art: string,
     media_type: number,
+    type: number,
 }
 
 export function useCapabilities(): Capabilities | undefined {
@@ -117,5 +118,5 @@ export function useMedia(): Media | undefined {
 }
 
 export function useMqttClient(): MqttClient | undefined {
-    return useSelector(state => state.mqtt.client)
+    return useSelector( (state) => state.mqtt.client)
 }

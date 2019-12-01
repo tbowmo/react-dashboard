@@ -102,7 +102,7 @@ export function Controller() {
                         <div className="center">
                             <img src={media.album_art || capabilities.app_icon} alt={media.album} />
                         </div>
-                        <Music media={media} />
+                        { media.type === 0 ? (<Music media={media} />) : (<RadioTv media={media} />) }
                     </div>
                 )}
             </Card>
@@ -142,6 +142,38 @@ export function Controller() {
                 </Card>
             ))}
         </div>
+    )
+}
+
+function RadioTv(props: {media: Media}) {
+    const { media } = props
+    return (
+        <React.Fragment>
+            <div>
+                <label className="label">
+                    Program
+                </label>
+                <TextTruncate
+                    line={1}
+                    element="div"
+                    truncateText="…"
+                    text={media.album}
+                    className="info"
+                />
+            </div>
+            <div className="description">
+                <label className="label">
+                    Beskrivelse
+                </label>
+                <TextTruncate
+                    line={4}
+                    element="div"
+                    truncateText="…"
+                    text={media.title}
+                    className="info"
+                />
+            </div>
+        </React.Fragment>
     )
 }
 

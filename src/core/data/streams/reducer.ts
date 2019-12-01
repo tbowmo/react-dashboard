@@ -1,5 +1,5 @@
-import { StreamDto } from "./stream-type";
-import { StreamActions } from "./action-types";
+import { StreamDto } from './stream-type'
+import { StreamActions } from './action-types'
 
 export type StreamState = {
     pending: boolean,
@@ -18,15 +18,15 @@ const initialState: StreamState = {
 
 export function streamReducer(state: StreamState = initialState, action: StreamActions) {
     switch (action.type) {
-        case 'FETCH_STREAM_SUCCESS':
-            return {
-                ...state,
-                streams: {
-                    ...state.streams,
-                    [action.payload.type]: action.payload.data
-                },
-            }
-        default:
-            return state
+    case 'FETCH_STREAM_SUCCESS':
+        return {
+            ...state,
+            streams: {
+                ...state.streams,
+                [action.payload.type]: action.payload.data,
+            },
+        }
+    default:
+        return state
     }
 }

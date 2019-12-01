@@ -3,7 +3,7 @@ WORKDIR /usr/src/app
 COPY package.json ./
 RUN yarn
 COPY . ./
-RUN npm build
+RUN yarn build
 
 
 FROM nginx:1.17-alpine

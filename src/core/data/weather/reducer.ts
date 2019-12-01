@@ -36,7 +36,7 @@ export function weatherReducer(state: WeatherState = initialState, action: Weath
                 ...state.currentWeather,
                 pending: false,
                 data: action.payload,
-            }
+            },
         }
     case 'FETCH_FORECAST_SUCCESS':
         return {
@@ -45,7 +45,7 @@ export function weatherReducer(state: WeatherState = initialState, action: Weath
                 ...state.forecast,
                 pending: false,
                 data: action.payload,
-            }
+            },
         }
     case 'FETCH_FORECAST_PENDING':
         return {
@@ -53,7 +53,7 @@ export function weatherReducer(state: WeatherState = initialState, action: Weath
             currentWeather: {
                 ...state.currentWeather,
                 pending: true,
-            }
+            },
         }
     case 'FETCH_CURRENT_WEATHER_PENDING':
         return {
@@ -61,7 +61,7 @@ export function weatherReducer(state: WeatherState = initialState, action: Weath
             forecast: {
                 ...state.forecast,
                 pending: true,
-            }
+            },
         }
     default:
         return state

@@ -48,7 +48,7 @@ const menuLinks = [
         label: 'TV',
         target: '/streams/tv',
         css: '',
-    },
+    }, /*
     {
         label: 'Scene',
         target: '/scene',
@@ -58,7 +58,7 @@ const menuLinks = [
         label: 'Hus',
         target: '/house',
         css: '',
-    },
+    },*/
     {
         label: 'Video',
         target: '/surveilance',

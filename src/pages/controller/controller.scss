@@ -30,6 +30,9 @@
         color: var(--dash-color-inactive);
         border-bottom: 1px solid;
     }
+    .description {
+        grid-row: span 2;
+    }
     .info {
         color: var(--dash-color-active);
     }

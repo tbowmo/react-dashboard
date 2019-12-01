@@ -5,7 +5,7 @@ export type FetchStreamsSuccess = {
     payload : {
         type: string,
         data: StreamDto[],
-    }
+    },
 }
 
 export type StreamActions =

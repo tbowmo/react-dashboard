@@ -1,7 +1,7 @@
 import { CurrentWeatherDto, ForecastDto } from './weather-types'
 import {
-  useDispatch,
-  useSelector,
+    useDispatch,
+    useSelector,
 } from 'react-redux'
 import {
     CurrentWeather,
@@ -50,7 +50,7 @@ function forecastWeather() {
     return (dispatch, getState) => {
         const { weather } = getState()
         const forecastWeather = (weather as WeatherState).forecast
-        if(!forecastWeather.pending) {
+        if (!forecastWeather.pending) {
             dispatch(fetchForecastPending)
             fetch(`${apiUrl}/forecast?id=${city}&appid=${apiKey}&lang=da&units=metric`)
                 .then((response) => response.json())
@@ -60,7 +60,10 @@ function forecastWeather() {
 }
 
 export function useCurrentWeather(): CurrentWeatherDto | undefined {
-    const weatherState = useSelector((state: combinedState) =>  state.weather.currentWeather) as CurrentWeather || {pending: false, data: undefined}
+    const weatherState = useSelector((state: combinedState) => state.weather.currentWeather) as CurrentWeather || {
+        pending: false,
+        data: undefined,
+    }
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -86,7 +89,10 @@ export function useCurrentWeather(): CurrentWeatherDto | undefined {
 }
 
 export function useForecastWeather(): ForecastDto | undefined {
-    const forecastState = useSelector((state: combinedState) =>  state.weather.forecast) as ForecastWeather || {pending: false, data: undefined}
+    const forecastState = useSelector((state: combinedState) => state.weather.forecast) as ForecastWeather || {
+        pending: false,
+        data: undefined,
+    }
     const dispatch = useDispatch()
 
     useEffect(() => {

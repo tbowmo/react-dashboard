@@ -3,7 +3,11 @@ import { Card } from '../../core/card/card'
 import './streams.scss'
 import { MqttClient } from 'mqtt'
 import TextTruncate from 'react-text-truncate'
-import { useStreams, StreamDto, useMqttClient } from '../../core/data'
+import {
+    useStreams,
+    StreamDto,
+    useMqttClient,
+} from '../../core/data'
 
 type Props = {
     type: 'radio' | 'tv',
@@ -35,7 +39,7 @@ export function Streams(props: Props) {
                         line={1}
                         element="div"
                         truncateText="…"
-                        text={streamEntry.programme || streamEntry.extra}
+                        text={streamEntry.programme || streamEntry.friendly}
                         className="center show"
                     />  
                 </Card>

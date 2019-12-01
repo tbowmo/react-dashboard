@@ -1,7 +1,7 @@
 
 import {
     CurrentWeatherDto,
-    ForecastDto
+    ForecastDto,
 } from '../weather-types'
 
 export type FetchCurrentWeatherPending = {
@@ -14,7 +14,7 @@ export type FetchCurrentWeatherSuccess = {
 }
 
 export type FetchForecastPending = {
-    type: 'FETCH_FORECAST_PENDING'
+    type: 'FETCH_FORECAST_PENDING',
 }
 
 export type FetchForecastSuccess = {
