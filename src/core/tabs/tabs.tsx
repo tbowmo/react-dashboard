@@ -8,6 +8,15 @@ import history from '../../history'
 import { Scene } from '../../pages/scene/scene'
 import { Surveilance } from '../../pages/surveilance/surveilance'
 import { House } from '../../pages/house/house'
+import { 
+    Home,
+    Radio,
+    Tv,
+    Videocam
+} from '@material-ui/icons'
+
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 let timer: ReturnType<typeof setTimeout> | null = null
 type MenuEntry = {
@@ -38,16 +47,19 @@ const menuLinks = [
         label: 'Main',
         target: '/',
         css: 'active',
+        icon: Home,
     },
     {
         label: 'Radio',
         target : '/streams/radio',
         css: '',
+        icon: Radio,
     },
     {
         label: 'TV',
         target: '/streams/tv',
         css: '',
+        icon: Tv,
     }, /*
     {
         label: 'Scene',
@@ -63,6 +75,7 @@ const menuLinks = [
         label: 'Video',
         target: '/surveilance',
         css: '',
+        icon: Videocam,
     },
 ]
 
@@ -74,7 +87,7 @@ export function Tabs() {
             { menuLinks.map((menuEntry) => (
                 <Card key={menuEntry.label} onClick={() => buttonClick(menuEntry, setActive)}>
                     <div className={'center ' + ((menuEntry.target === active) ? 'active' : '')}>
-                        {menuEntry.label}
+                        <menuEntry.icon />&nbsp;{menuEntry.label}
                     </div>
                 </Card>
             ))}
