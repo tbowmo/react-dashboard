@@ -1,9 +1,14 @@
 .App {
   display: grid;
-  grid-template-rows: 125px 1fr 80px;
-  background-color: var(--dash-color-background);
+  grid-template-columns: 1fr 100px;
+  background-image: radial-gradient( circle at top left,#123, #234);
   color: var(--dash-color-inactive);
   width: 100vw;
   height: 100vh; 
   grid-gap: var(--dash-grid-gap);
+  .info {
+    display: grid;
+    grid-template-rows: 120px 1fr ;
+    grid-gap: var(--dash-grid-gap);
+  }
 }

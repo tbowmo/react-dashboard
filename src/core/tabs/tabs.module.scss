@@ -1,0 +1,25 @@
+.tabs {
+    display: grid;
+    grid-template-rows: repeat(5, 1fr);
+    grid-gap: var(--dash-grid-gap); 
+}
+
+.tab {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border: solid 2px #666;
+    border-right: none;
+    background-color:rgba($color: #111, $alpha: 0.2);
+    padding: 10px;
+    > div.center {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+.active {
+    color: var(--dash-color-active);
+    background-color: rgba($color: #111, $alpha: 0.5);
+}

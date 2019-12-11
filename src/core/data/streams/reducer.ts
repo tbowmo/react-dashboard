@@ -11,8 +11,8 @@ export type StreamState = {
 const initialState: StreamState = {
     pending: false,
     streams: {
-        ['radio'] : [],
-        ['tv']: [],
+        radio : [],
+        tv: [],
     },
 }
 

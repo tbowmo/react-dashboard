@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Card } from '../../core/card/card'
-import './streams.scss'
+import style from './streams.module.scss'
 import { MqttClient } from 'mqtt'
 import TextTruncate from 'react-text-truncate'
 import {
@@ -29,18 +29,22 @@ export function Streams(props: Props) {
     const mqttClient = useMqttClient()
     
     return (
-        <div className="streams">
+        <div className={style.streams}>
             {streams.map((streamEntry) => (
-                <Card cols="2" className="singleStream" key={streamEntry.friendly} onClick={() => SelectStream(streamEntry, mqttClient, setActive)}>
-                    <div className={'center channel ' + ((streamEntry.link === active) ? 'active' : '')}>
-                        { streamEntry.icon === '' ? streamEntry.friendly : <img src={streamEntry.icon} /> }
+                <Card cols="2" 
+                    className={style.singleStream}
+                    key={streamEntry.friendly}
+                    onClick={() => SelectStream(streamEntry, mqttClient, setActive)}
+                >
+                    <div className={`${style.center} ${style.channel} ` + ((streamEntry.link === active) ? `${style.active}` : '')}>
+                        { streamEntry.icon === '' ? streamEntry.friendly : <img src={streamEntry.icon} alt={streamEntry.friendly} /> }
                     </div>
                     <TextTruncate
                         line={1}
                         element="div"
                         truncateText="…"
                         text={streamEntry.programme || streamEntry.friendly}
-                        className="center show"
+                        className={`${style.center} show`}
                     />  
                 </Card>
             ))}
