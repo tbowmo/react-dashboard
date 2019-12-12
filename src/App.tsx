@@ -6,8 +6,10 @@ import { Tabs, TabsSwitch } from './core/tabs/tabs'
 const App: React.FC = () => {
     return (
         <div className="App">
-            <DashTop />
-            <TabsSwitch />
+            <div className="info">
+                <DashTop />
+                <TabsSwitch />
+            </div>
             <Tabs />
         </div>
     )

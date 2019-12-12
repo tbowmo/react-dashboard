@@ -1,6 +1,5 @@
 import * as React from 'react'
-import './tabs.scss'
-import { Card } from '../card/card'
+import style from './tabs.module.scss'
 import { Switch, Route } from 'react-router'
 import { Streams } from '../../pages/streams/streams'
 import { Controller } from '../../pages/controller/controller'
@@ -8,6 +7,14 @@ import history from '../../history'
 import { Scene } from '../../pages/scene/scene'
 import { Surveilance } from '../../pages/surveilance/surveilance'
 import { House } from '../../pages/house/house'
+import { Weather } from '../../pages/weather/weather'
+import { 
+    MdHome,
+    MdRadio,
+    MdTv,
+    MdVideocam,
+    MdWbSunny,
+} from 'react-icons/md'
 
 let timer: ReturnType<typeof setTimeout> | null = null
 type MenuEntry = {
@@ -38,16 +45,25 @@ const menuLinks = [
         label: 'Main',
         target: '/',
         css: 'active',
+        icon: MdHome,
     },
     {
         label: 'Radio',
         target : '/streams/radio',
         css: '',
+        icon: MdRadio,
     },
     {
         label: 'TV',
         target: '/streams/tv',
         css: '',
+        icon: MdTv,
+    },
+    {
+        label: 'Weather',
+        target: '/weather',
+        css: '',
+        icon: MdWbSunny,
     }, /*
     {
         label: 'Scene',
@@ -63,6 +79,7 @@ const menuLinks = [
         label: 'Video',
         target: '/surveilance',
         css: '',
+        icon: MdVideocam,
     },
 ]
 
@@ -70,13 +87,17 @@ export function Tabs() {
     const [active, setActive] = React.useState('/')
      
     return (
-        <div className="tabs">
+        <div className={style.tabs}>
             { menuLinks.map((menuEntry) => (
-                <Card key={menuEntry.label} onClick={() => buttonClick(menuEntry, setActive)}>
-                    <div className={'center ' + ((menuEntry.target === active) ? 'active' : '')}>
-                        {menuEntry.label}
+                <div 
+                    key={menuEntry.label} 
+                    onClick={() => buttonClick(menuEntry, setActive)} 
+                    className={((menuEntry.target === active) ? `${style.active} ` : '') + `${style.tab}`}
+                >
+                    <div className={style.center}>
+                        <menuEntry.icon />
                     </div>
-                </Card>
+                </div>
             ))}
         </div>
     )
@@ -111,6 +132,11 @@ export function TabsSwitch() {
                 path="/house"
                 exact={true}
                 component={House}
+            />
+            <Route
+                path="/weather"
+                exact={false}
+                component={Weather}
             />
             <Route
                 path="/"

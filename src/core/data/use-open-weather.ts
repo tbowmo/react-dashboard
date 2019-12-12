@@ -83,7 +83,7 @@ export function useCurrentWeather(): CurrentWeatherDto | undefined {
                 weatherTimer.timer = undefined
             }
         }
-    }, [dispatch])
+    }, [dispatch, weatherState])
 
     return weatherState.data
 }
@@ -112,7 +112,7 @@ export function useForecastWeather(): ForecastDto | undefined {
                 forecastTimer.timer = undefined
             }
         }
-    }, [dispatch])
+    }, [dispatch, forecastState])
 
     return forecastState.data
 }

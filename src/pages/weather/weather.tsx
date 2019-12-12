@@ -3,7 +3,7 @@ import {
     useCurrentWeather,
     useForecastWeather,
     ForecastTupple,
-} from '../../../core/data/'
+} from '../../core/data'
 import './weather.scss'
 import { 
     WiDaySunny,
@@ -20,6 +20,7 @@ import {
     WiNightRain,
     WiDaySnow,
     WiNightSnow,
+    WiWindDeg,
 } from 'react-icons/wi'
 import moment from 'moment'
 import { isNumber } from 'util'
@@ -46,6 +47,8 @@ const iconMap = {
     '50n': WiNightFog,
 }
 
+
+
 function round(value: number, precission: number = 1): number {
     let v = value
     if (isNumber(value)) {
@@ -69,17 +72,19 @@ export function Weather() {
     return (
         <div className="mainWeather">
             <div className="weatherRows">
-                <div>
-                    <div className="temp">{round(weather.main.temp)}&deg;C</div>
-                    <div className="minmax">{round(weather.main.temp_min)}&deg;C / {round(weather.main.temp_max)}&deg;C</div>
-                    <div className="description">{weather.weather[0].description} { weather.clouds.all>20 ? `- ${weather.clouds.all}%` : ''} </div>
-                </div>
-                <div>
-                    Vind: {weather.wind.speed} m/sec<br />retning {weather.wind.deg}<br />
-                </div>
+                <div className="main">{round(weather.main.temp)}&deg;C</div>
+                <div className="secondary">{round(weather.main.temp_min)}&deg;C - {round(weather.main.temp_max)}&deg;C</div>
+                <div className="secondary">{weather.weather[0].description} { weather.clouds.all>20 ? `- ${weather.clouds.all}% skydække` : ''} </div>
             </div>
             <div className="symbol">
                 <Icon />
+            </div>
+            <div className="weatherRows">
+                <div className="main">Vind: {weather.wind.speed} m/sec</div>
+                <div className="secondary">retning {weather.wind.deg}</div>
+            </div>
+            <div className="symbol">
+                <WiWindDeg style={{ transform: `rotate(${weather.wind.deg}deg)` }} />
             </div>
             <Forecast />
         </div>
@@ -96,7 +101,7 @@ export function Forecast() {
     return (
         <div className="forecast">
             { forecast.list.slice(1, 7).map((f) => (
-                <SingleForecast key={f.sys.pod} data={f} />
+                <SingleForecast key={`weather-${f.dt}`} data={f} />
             ))}
         </div>
     )
@@ -105,7 +110,7 @@ export function Forecast() {
 function SingleForecast(props: {data: ForecastTupple} ) {
     const { data } = props
     const Icon = iconMap[data.weather[0].icon]
-    const timeObj = moment.unix(data.dt).local(false)
+    const timeObj = moment.unix(data.dt)
     const timeStr = timeObj.format('HH:mm')
     return (
         <div className='rw-day'>

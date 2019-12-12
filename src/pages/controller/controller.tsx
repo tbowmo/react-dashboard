@@ -1,74 +1,64 @@
 import * as React from 'react'
-import './controller.scss'
-import { Card } from '../../core/card/card'
+import style from './controller.module.scss'
 import {
-    faBackward,
-    faForward,
-    faPause,
-    faPowerOff,
-    faVolumeDown,
-    faVolumeUp,
-    IconDefinition,
-} from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+    MdFastRewind,
+    MdFastForward,
+    MdPause,
+    MdPowerSettingsNew,
+    MdVolumeDown,
+    MdVolumeUp,
+} from 'react-icons/md'
 import {
     useCapabilities,
     useMedia,
     useMqttClient,
     useSubscribeStringPayload,
-    Media,
 } from '../../core/data/'
-import { Card2Line } from '../../core/card-2-line/card-2-line'
-import { Sensor } from '../../core/sensor/sensor'
-import TextTruncate from 'react-text-truncate'
-import { Weather } from './weather/weather'
+import { Weather } from '../weather/weather'
+import { IconType } from 'react-icons/lib/cjs'
+import { Music } from './music'
+import { RadioTv } from './radio-tv'
 
 type controlKey = {
-    icon: IconDefinition,
+    icon: IconType,
     key: string,
-    enabled: boolean,
 }
 
 const functions: controlKey[] = [
     {
-        icon: faVolumeUp,
+        icon: MdVolumeUp,
         key: 'volumeup',
-        enabled: true,
     },
     {
-        icon: faVolumeDown,
+        icon: MdVolumeDown,
         key : 'volumedown',
-        enabled: true,
     },
     {
-        icon: faBackward,
+        icon: MdFastRewind,
         key: 'prev',
-        enabled: true,
     },
     {
-        icon: faPause,
+        icon: MdPause,
         key: 'pause',
-        enabled: true,
     },
     {
-        icon: faForward,
+        icon: MdFastForward,
         key: 'next',
-        enabled: true,
     },
     {
-        icon: faPowerOff,
+        icon: MdPowerSettingsNew,
         key: 'off',
-        enabled: true,
     },
 ]
 
 export function Controller() {
-    const [ showWeather, setShowWeather ] = React.useState<boolean>(false)
+    const [ key, setKey ] = React.useState<string>('')
 
     const mqttClient = useMqttClient()
 
     function onClick(target: controlKey) {
-        if (mqttClient && target.enabled) {
+        setKey(target.key)
+        if (mqttClient) {
             if (target.key === 'off') {
                 mqttClient.publish('avctrl/in/scene', target.key)
             } else {
@@ -77,13 +67,11 @@ export function Controller() {
         }
     }
 
-    function mediaInfoClick() {
-        setShowWeather(true)
-        setTimeout(() => {
-            setShowWeather(false)
-        }, Number(process.env.REACT_APP_ACTION_TIMEOUT))
-    }
-    
+    React.useEffect(() => {
+        if (key !== '') {
+            setTimeout(() => {setKey('')}, 200)
+        }
+    }, [key, setKey])
     const media = useMedia()
     const capabilities = useCapabilities()
     const avcenter = useSubscribeStringPayload('avctrl/out/scene') || ''
@@ -92,132 +80,36 @@ export function Controller() {
         return null
     }
     
+    if (avcenter.toLocaleLowerCase() === 'off') {   
+        return (
+            <Weather />
+        )
+    }
+
     return (
-        <div className="controller">
-            <Card cols="4" rows="2">
-                { showWeather || !avcenter.toLowerCase().includes('stream') ? (
-                    <Weather />
-                ) : (
-                    <div className="mediaInfo" onClick={mediaInfoClick}>
-                        <div className="center">
-                            <img src={media.album_art || capabilities.app_icon} alt={media.album} />
-                        </div>
-                        { media.type === 0 ? (<Music media={media} />) : (<RadioTv media={media} />) }
-                    </div>
-                )}
-            </Card>
-            <Card2Line 
-                cols="2"
-                value={capabilities.app_icon === '' ? avcenter : undefined}
-                label="A/V tilstand"
+        <div className={style.controller}>
+            <div 
+                className={style.mediaInfo} 
+                style={{ 
+                    backgroundImage: `url(${capabilities.app_icon})`, 
+                    backgroundSize: '50px 50px', 
+                    backgroundRepeat: 'no-repeat',
+                }}
             >
-                <div className="avcenter">
-                    <div>{avcenter}</div>
-                    <div><img src={capabilities.app_icon} /></div>
+                <div className={style.albumCover}>
+                    <img src={media.album_art || capabilities.app_icon} alt={media.album} />
                 </div>
-            </Card2Line>
-            <Sensor
-                sensorId={99}
-                type={18}
-                child={2}
-                cols="1"
-                label="EL forbrug i dag"
-                unit="wH"
-                precission={0}
-            />
-            <Sensor
-                cols="1"
-                sensorId={99}
-                type={17}
-                child={1}
-                label="Aktuelt EL forbrug"
-                precission={0}
-                unit="watt"
-            />
-            { functions.map((link) => (
-                <Card key={link.key} onClick={() => onClick(link)}>
-                    <div className="center">
-                        <FontAwesomeIcon icon={link.icon} className={link.enabled ? 'enabled':''} />
+                { media.type === 0 ? (<Music media={media} />) : (<RadioTv media={media} />) }
+            </div>
+            <div className={style.remoteControl}>
+                { functions.map((link) => (
+                    <div key={link.key} className={`${style.remoteButton} ` + (link.key === key ? style.active : '')} onClick={() => onClick(link)}>
+                        <div className={style.center}>
+                            <link.icon />
+                        </div>
                     </div>
-                </Card>
-            ))}
+                ))}
+            </div>
         </div>
     )
 }
-
-function RadioTv(props: {media: Media}) {
-    const { media } = props
-    return (
-        <React.Fragment>
-            <div>
-                <label className="label">
-                    Program
-                </label>
-                <TextTruncate
-                    line={1}
-                    element="div"
-                    truncateText="…"
-                    text={media.album}
-                    className="info"
-                />
-            </div>
-            <div className="description">
-                <label className="label">
-                    Beskrivelse
-                </label>
-                <TextTruncate
-                    line={4}
-                    element="div"
-                    truncateText="…"
-                    text={media.title}
-                    className="info"
-                />
-            </div>
-        </React.Fragment>
-    )
-}
-
-function Music(props: {media: Media}) {
-    const { media } = props
-    return (
-        <React.Fragment>
-            <div>
-                <label className="label">
-                    Kunstner
-                </label>
-                <TextTruncate
-                    line={1}
-                    element="div"
-                    truncateText="…"
-                    text={media.artist}
-                    className="info"
-                />
-            </div>
-            <div>
-                <label className="label">
-                    Album
-                </label>
-                <TextTruncate
-                    line={1}
-                    element="div"
-                    truncateText="…"
-                    text={media.album}
-                    className="info"
-                />
-            </div>
-            <div>
-                <label className="label">
-                    Titel
-                </label>
-                <TextTruncate
-                    line={1}
-                    element="div"
-                    truncateText="…"
-                    text={media.title}
-                    className="info"
-                />
-            </div>
-        </React.Fragment>
-    )    
-}
-
