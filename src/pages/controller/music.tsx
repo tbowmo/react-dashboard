@@ -7,7 +7,7 @@ export function Music(props: {media: Media}) {
     const { media } = props
     return (
         <React.Fragment>
-            { media.artist !== '' ? (
+            { (media.artist ?? '') !== '' ? (
                 <div className={`${style.artist} ${style.info}`}>
                     <label className={style.label}>
                         Kunstner
@@ -20,7 +20,7 @@ export function Music(props: {media: Media}) {
                     />
                 </div>
             ) : null }
-            { media.album !== '' ? (
+            { (media.album ?? '') !== '' ? (
                 <div className={`${style.album} ${style.info}`}>
                     <label className={style.label}>
                         Album
@@ -33,7 +33,7 @@ export function Music(props: {media: Media}) {
                     />
                 </div>
             ): null}
-            { media.title !== '' ? (
+            { (media.title ?? '') !== '' ? (
                 <div className={`${style.title} ${style.info}`}>
                     <label className={style.label}>
                         Titel

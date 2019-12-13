@@ -7,28 +7,32 @@ export function RadioTv(props: {media: Media}) {
     const { media } = props
     return (
         <React.Fragment>
-            <div className={`${style.station} ${style.info}`}>
-                <label className={style.label}>
-                    Program
-                </label>
-                <TextTruncate
-                    line={2}
-                    element="div"
-                    truncateText="…"
-                    text={media.album}
-                />
-            </div>
-            <div className={`${style.description} ${style.info}`}>
-                <label className={style.label}>
-                    Beskrivelse
-                </label>
-                <TextTruncate
-                    line={5}
-                    element="div"
-                    truncateText="…"
-                    text={media.title}
-                />
-            </div>
+            { (media.album ?? '') !== '' ? (
+                <div className={`${style.station} ${style.info}`}>
+                    <label className={style.label}>
+                        Program
+                    </label>
+                    <TextTruncate
+                        line={2}
+                        element="div"
+                        truncateText="…"
+                        text={media.album}
+                    />
+                </div>
+            ): null}
+            { (media.title ?? '') !== '' ? (
+                <div className={`${style.description} ${style.info}`}>
+                    <label className={style.label}>
+                        Beskrivelse
+                    </label>
+                    <TextTruncate
+                        line={5}
+                        element="div"
+                        truncateText="…"
+                        text={media.title}
+                    />
+                </div>
+            ): null}
         </React.Fragment>
     )
 }

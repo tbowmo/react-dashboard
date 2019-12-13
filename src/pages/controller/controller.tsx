@@ -88,14 +88,7 @@ export function Controller() {
 
     return (
         <div className={style.controller}>
-            <div 
-                className={style.mediaInfo} 
-                style={{ 
-                    backgroundImage: `url(${capabilities.app_icon})`, 
-                    backgroundSize: '50px 50px', 
-                    backgroundRepeat: 'no-repeat',
-                }}
-            >
+            <div className={style.mediaInfo}>
                 <div className={style.albumCover}>
                     <img src={media.album_art || capabilities.app_icon} alt={media.album} />
                 </div>
