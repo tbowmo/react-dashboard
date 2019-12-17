@@ -14,7 +14,10 @@ import {
     MdTv,
     MdVideocam,
     MdWbSunny,
+    MdSettingsRemote,
+    MdWifi,
 } from 'react-icons/md'
+import { Wifi } from '../../pages/wifi/wifi'
 
 let timer: ReturnType<typeof setTimeout> | null = null
 type MenuEntry = {
@@ -64,17 +67,19 @@ const menuLinks = [
         target: '/weather',
         css: '',
         icon: MdWbSunny,
-    }, /*
+    }, 
     {
         label: 'Scene',
         target: '/scene',
         css: '',
+        icon: MdSettingsRemote,
     },
     {
-        label: 'Hus',
-        target: '/house',
+        label: 'Wifi',
+        target: '/wifi',
+        icon: MdWifi,
         css: '',
-    },*/
+    },
     {
         label: 'Video',
         target: '/surveilance',
@@ -137,6 +142,11 @@ export function TabsSwitch() {
                 path="/weather"
                 exact={false}
                 component={Weather}
+            />
+            <Route
+                path="/wifi"
+                exact={false}
+                component={Wifi}
             />
             <Route
                 path="/"

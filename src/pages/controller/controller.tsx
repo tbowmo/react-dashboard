@@ -18,6 +18,7 @@ import { Weather } from '../weather/weather'
 import { IconType } from 'react-icons/lib/cjs'
 import { Music } from './music'
 import { RadioTv } from './radio-tv'
+import { Others } from './others'
 
 type controlKey = {
     icon: IconType,
@@ -87,13 +88,22 @@ export function Controller() {
     }
 
     return (
-        <div className={style.controller}>
-            <div className={style.mediaInfo}>
-                <div className={style.albumCover}>
-                    <img src={media.album_art || capabilities.app_icon} alt={media.album} />
+        <div className={style.controller}> 
+            {avcenter.toLocaleLowerCase().includes('stream') ? (
+                <div className={style.mediaInfo}>
+                    { (media.album_art ?? '') !== '' && (capabilities.app_icon ?? '') !== '' ? (
+                        <div className={style.appIcon}>
+                            <img src={capabilities.app_icon} alt={capabilities.app} />
+                        </div>
+                    ) : null}
+                    <div className={style.albumCover}>
+                        <img src={media.album_art || capabilities.app_icon} alt={media.album} />
+                    </div>
+                    { media.type === 0 ? (<Music media={media} />) : (<RadioTv media={media} />) }
                 </div>
-                { media.type === 0 ? (<Music media={media} />) : (<RadioTv media={media} />) }
-            </div>
+            ): (
+                <Others type={avcenter} />
+            )}
             <div className={style.remoteControl}>
                 { functions.map((link) => (
                     <div key={link.key} className={`${style.remoteButton} ` + (link.key === key ? style.active : '')} onClick={() => onClick(link)}>

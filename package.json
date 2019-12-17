@@ -9,6 +9,7 @@
     "moment-timezone": "^0.5.27",
     "mqtt": "^3.0.0",
     "mqtt-match": "^2.0.3",
+    "qrcode.react": "^1.0.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-icons": "^3.8.0",

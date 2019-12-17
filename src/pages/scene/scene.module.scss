@@ -1,0 +1,13 @@
+.scene {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: repeat(4,1fr);
+    grid-gap: var(--dash-grid-gap);
+    .active {
+        color: var(--dash-color-active);
+    }
+    .device {
+        align-content: center;
+    }
+}
+

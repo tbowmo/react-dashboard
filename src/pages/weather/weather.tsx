@@ -24,6 +24,7 @@ import {
 } from 'react-icons/wi'
 import moment from 'moment'
 import { isNumber } from 'util'
+import { getCompassHeading, wind } from './weather-functions'
 
 
 const iconMap = {
@@ -46,8 +47,6 @@ const iconMap = {
     '13n': WiNightSnow,
     '50n': WiNightFog,
 }
-
-
 
 function round(value: number, precission: number = 1): number {
     let v = value
@@ -72,16 +71,26 @@ export function Weather() {
     return (
         <div className="mainWeather">
             <div className="weatherRows">
-                <div className="main">{round(weather.main.temp)}&deg;C</div>
-                <div className="secondary">{round(weather.main.temp_min)}&deg;C - {round(weather.main.temp_max)}&deg;C</div>
-                <div className="secondary">{weather.weather[0].description} { weather.clouds.all>20 ? `- ${weather.clouds.all}% skydække` : ''} </div>
+                <div className="main">
+                    {round(weather.main.temp)}&deg;C
+                </div>
+                <div className="secondary">
+                    {round(weather.main.temp_min)}&deg;C - {round(weather.main.temp_max)}&deg;C
+                </div>
+                <div className="secondary">
+                    {weather.weather[0].description} { weather.clouds.all>20 ? `- ${weather.clouds.all}% skydække` : ''}
+                </div>
             </div>
             <div className="symbol">
                 <Icon />
             </div>
             <div className="weatherRows">
-                <div className="main">Vind: {weather.wind.speed} m/sec</div>
-                <div className="secondary">retning {weather.wind.deg}</div>
+                <div className="main">
+                    Vind: {wind(weather.wind.speed).label}
+                </div>
+                <div className="secondary">
+                    Retning {getCompassHeading(weather.wind.deg).direction} ({weather.wind.speed}m/s - {weather.wind.deg}&deg;)
+                </div>
             </div>
             <div className="symbol">
                 <WiWindDeg style={{ transform: `rotate(${weather.wind.deg}deg)` }} />
