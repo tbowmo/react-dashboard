@@ -1,6 +1,6 @@
 .streams {
     display:grid;
-    grid-template-rows: repeat(3, 1fr);
+    grid-template-rows: repeat(4, 1fr);
     grid-template-columns: repeat(12, 1fr);
     grid-gap: var(--dash-grid-gap);
 }
@@ -17,13 +17,28 @@
 
 .singleStream {
     display: grid;
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: 1fr 60px;
 }
 
 .show {
-    font-size:20pt;
+    font-size: 20pt;
 }
 
 .channel > img {
     height: 70px;
+}
+
+.iconTime {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    .time {
+        display: grid;
+        grid-template-columns: 100px 1fr;
+        grid-template-rows: 1fr 1fr;
+        font-size: 30px;
+        label {
+            font-size: 30px;
+        }
+    }
+
 }

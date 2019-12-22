@@ -1,7 +1,5 @@
 import style from './scene.module.scss'
 import * as React from 'react'
-import { useMqttClient } from '../../core/data'
-import { Card } from '../../core/card/card'
 import { IconType } from 'react-icons/lib/cjs'
 import {
     MdAlbum,
@@ -10,8 +8,8 @@ import {
     MdVideoLabel,
     MdPowerSettingsNew,
 } from 'react-icons/md'
-import history from '../../history'
 import { LightDimmer } from './mqtt-light-dimmer'
+import { MqttButton } from './mqtt-button'
 
 type Action = {
     label: string,
@@ -48,32 +46,25 @@ const actionList: Action[] = [
 ]
 
 export function Scene() {
-    const [ key, setKey ] = React.useState<string>('')
-    const mqtt = useMqttClient()
-
-    function click(action: Action) {
-        setKey(action.action)
-        mqtt.publish('avctrl/in/scene', action.action)
-    } 
-
-    React.useEffect(() => {
-        if (key !== '') {
-            setTimeout(() => {
-                setKey('')
-                history.replace('/')
-            }, 200)
-        }
-    }, [key, setKey])
-
     return (
         <div className={style.scene}>
-            { actionList.map((action) => (
-                <Card key={action.action} className={`${style.device} ` + (action.action === key ? style.active : '')} onClick={() => click(action)}>
-                    {action.label} <br />
-                    <action.icon />
-                </Card>
-            ))}
-            <LightDimmer label="test" mqttPath="test" />
+            <div className={style.remote}>
+                { actionList.map((action) => (
+                    <MqttButton
+                        key={action.label}
+                        label={action.label}
+                        mqttTopic="avctrl/in/scene"
+                        mqttPayload={action.action}
+                        icon={action.icon}
+                    />
+                ))}
+            </div>
+            <div className={style.lights}>
+                <LightDimmer label="sofabord" mqttTopic="sofabord" />
+                <LightDimmer label="spisebord" mqttTopic="spisebord" />
+                <LightDimmer label="fjernsyn" mqttTopic="tv" />
+                <LightDimmer label="Alt stuen" mqttTopic="all" />
+            </div>
         </div>
     )
 }

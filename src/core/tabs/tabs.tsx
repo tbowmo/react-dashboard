@@ -1,6 +1,10 @@
 import * as React from 'react'
 import style from './tabs.module.scss'
-import { Switch, Route } from 'react-router'
+import {
+    Switch,
+    Route,
+    useLocation,
+} from 'react-router'
 import { Streams } from '../../pages/streams/streams'
 import { Controller } from '../../pages/controller/controller'
 import history from '../../history'
@@ -15,31 +19,35 @@ import {
     MdVideocam,
     MdWbSunny,
     MdSettingsRemote,
-    MdWifi,
 } from 'react-icons/md'
 import { Wifi } from '../../pages/wifi/wifi'
 
 let timer: ReturnType<typeof setTimeout> | null = null
+
 type MenuEntry = {
     label: string,
     target: string,
     css: string,
 }
 
-function buttonClick(menu: MenuEntry, setActive: any) {
+export function resetTimer(timeout = Number(process.env.REACT_APP_ACTION_TIMEOUT)) {
     if (timer !== null) {
         clearTimeout(timer)
-        timer = null
     }
     function mainPage() {
         history.replace('/')
-        setActive('/')
         timer = null
     }
-    if (menu.target !== '/') {
-        timer = setTimeout(mainPage, Number(process.env.REACT_APP_ACTION_TIMEOUT))
+    timer = setTimeout(mainPage, timeout)
+}
+
+function stopTimer() {
+    if (timer !== null) {
+        clearTimeout(timer)
     }
-    setActive(menu.target)
+}
+
+function buttonClick(menu: MenuEntry) {
     history.replace(menu.target)
 }
 
@@ -75,12 +83,6 @@ const menuLinks = [
         icon: MdSettingsRemote,
     },
     {
-        label: 'Wifi',
-        target: '/wifi',
-        icon: MdWifi,
-        css: '',
-    },
-    {
         label: 'Video',
         target: '/surveilance',
         css: '',
@@ -89,15 +91,25 @@ const menuLinks = [
 ]
 
 export function Tabs() {
-    const [active, setActive] = React.useState('/')
-     
+    const location = useLocation()
+
+    React.useEffect(() => {
+        if (location.pathname === '/') {
+            stopTimer()
+        } else {
+            resetTimer()
+        }
+    }, [location])
+
     return (
         <div className={style.tabs}>
             { menuLinks.map((menuEntry) => (
                 <div 
                     key={menuEntry.label} 
-                    onClick={() => buttonClick(menuEntry, setActive)} 
-                    className={((menuEntry.target === active) ? `${style.active} ` : '') + `${style.tab}`}
+                    onClick={() => buttonClick(menuEntry)} 
+                    className={((menuEntry.target === location.pathname) 
+                        ? `${style.active} ` 
+                        : '') + `${style.tab}`}
                 >
                     <div className={style.center}>
                         <menuEntry.icon />

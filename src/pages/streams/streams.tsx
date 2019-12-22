@@ -8,15 +8,13 @@ import {
     StreamDto,
     useMqttClient,
 } from '../../core/data'
+import { resetTimer } from '../../core/tabs/tabs'
+import moment from 'moment'
 
 type Props = {
     type: 'radio' | 'tv',
 }
 
-function SelectStream(stream: StreamDto, mqttClient: MqttClient, setActive: (value: string) => void) {
-    setActive(stream.link)
-    mqttClient.publish('media/stuen/control/play', JSON.stringify(stream))
-}
 
 export function Streams(props: Props) {
     const {
@@ -26,18 +24,45 @@ export function Streams(props: Props) {
     const [ active, setActive ] = React.useState('')
     const streams = useStreams(type)
 
-    const mqttClient = useMqttClient()
-    
+    const mqtt = useMqttClient()
+
+    function SelectStream(stream: StreamDto, mqttClient: MqttClient) {
+        setActive(stream.link)
+        mqttClient.publish('media/stuen/control/play', JSON.stringify(stream))
+    }
+
+    React.useEffect( () => {
+        if (active !== '') {
+            const timer = setTimeout(() => {
+                setActive('')
+                resetTimer(200)
+            }, 200)
+            return () => {clearTimeout(timer)}
+        } 
+    }, [active, mqtt])
+
     return (
         <div className={style.streams}>
             {streams.map((streamEntry) => (
                 <Card cols="2" 
-                    className={style.singleStream}
+                    className={ `${style.singleStream} ` + ((streamEntry.link === active) ? style.active : '')}
                     key={streamEntry.friendly}
-                    onClick={() => SelectStream(streamEntry, mqttClient, setActive)}
+                    onClick={() => SelectStream(streamEntry, mqtt)}
                 >
-                    <div className={`${style.center} ${style.channel} ` + ((streamEntry.link === active) ? `${style.active}` : '')}>
-                        { streamEntry.icon === '' ? streamEntry.friendly : <img src={streamEntry.icon} alt={streamEntry.friendly} /> }
+                    <div className={style.iconTime}>
+                        <div className={`${style.center} ${style.channel}`}>
+                            { streamEntry.icon === '' ? streamEntry.friendly : <img src={streamEntry.icon} alt={streamEntry.friendly} /> }
+                        </div>
+                        <div className={style.time}>
+                            { streamEntry.start !== streamEntry.stop ? ( 
+                                <React.Fragment>
+                                    <label className={style.startText}>Start</label>
+                                    <div className={style.startTime}>{moment(streamEntry.start).format('HH:mm')}</div>
+                                    <label className={style.endText}>Slut</label>
+                                    <div className={style.endtime}>{moment(streamEntry.stop).format('HH:mm')}</div>
+                                </React.Fragment>
+                            ) : null }
+                        </div>
                     </div>
                     <TextTruncate
                         line={1}

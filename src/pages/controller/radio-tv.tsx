@@ -26,7 +26,7 @@ export function RadioTv(props: {media: Media}) {
                         Beskrivelse
                     </label>
                     <TextTruncate
-                        line={5}
+                        line={4}
                         element="div"
                         truncateText="…"
                         text={media.title}

@@ -7,7 +7,7 @@ import { MqttButton } from './mqtt-button'
 export function Scene() {
     return (
         <div className="scene">
-            <LightDimmer mqttPath="test" label="stuen" />
+            <LightDimmer mqttTopic="test" label="stuen" />
             <MqttSwitch mqttPath="" label="tv" />
             <MqttButton mqttPath="" label="tv" />
         </div>

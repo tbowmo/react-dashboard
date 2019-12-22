@@ -1,8 +1,26 @@
+$column: 12;
+$remote: 4;
+$rows: 4;
+$lights: calc(#{$column} - #{$remote});
+
 .scene {
     display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    grid-template-rows: repeat(4,1fr);
+    grid-template-columns: repeat(#{$column}, 1fr);
     grid-gap: var(--dash-grid-gap);
+    .remote {
+        grid-column: span #{$remote};
+        grid-gap: var(--dash-grid-gap);
+        display: grid;
+        grid-template-rows: repeat(#{$rows}, 1fr) ;
+        grid-template-columns: repeat(#{$remote}, 1fr);
+    }
+    .lights {
+        grid-gap: var(--dash-grid-gap);
+        display: grid;
+        grid-column: span #{$lights};
+        grid-template-columns: repeat(#{$lights}, 1fr);
+        grid-template-rows: repeat(#{$rows}, 1fr);
+    }
     .active {
         color: var(--dash-color-active);
     }
@@ -11,3 +29,9 @@
     }
 }
 
+.light {
+    padding: 10px;
+    display : grid;
+    grid-template-columns: 50px 1fr;
+    grid-template-rows: 1fr;
+}

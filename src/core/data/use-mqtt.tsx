@@ -72,7 +72,6 @@ export function useSubscribeNumberPayload(topic: string): number | undefined {
     if (value) {
         return parseFloat(value.payload)
     }
-    return -999
 }
 
 type Capabilities = {
