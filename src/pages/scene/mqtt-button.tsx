@@ -4,6 +4,7 @@ import { useMqttClient } from '../../core/data'
 import { IconType } from 'react-icons/lib/cjs'
 import { Card } from '../../core/card/card'
 import { resetTimer } from '../../core/tabs/tabs'
+import clsx from 'clsx'
 
 export type Props = {
     label?: string,
@@ -32,7 +33,7 @@ export function MqttButton(props: Props) {
     }, [keyActivated, mqtt, props])
 
     return (
-        <Card className={`${style.device} ` + ( keyActivated ? style.active : '')} onClick={click}>
+        <Card className={clsx(style.device, keyActivated && style.active)} onClick={click}>
             {props.label}
             { props.icon ? (<props.icon />) : null }
         </Card>

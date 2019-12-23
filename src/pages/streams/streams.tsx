@@ -10,6 +10,7 @@ import {
 } from '../../core/data'
 import { resetTimer } from '../../core/tabs/tabs'
 import moment from 'moment'
+import clsx from 'clsx'
 
 type Props = {
     type: 'radio' | 'tv',
@@ -45,12 +46,12 @@ export function Streams(props: Props) {
         <div className={style.streams}>
             {streams.map((streamEntry) => (
                 <Card cols="2" 
-                    className={ `${style.singleStream} ` + ((streamEntry.link === active) ? style.active : '')}
+                    className={clsx(style.singleStream, (streamEntry.link === active) && style.active)}
                     key={streamEntry.friendly}
                     onClick={() => SelectStream(streamEntry, mqtt)}
                 >
                     <div className={style.iconTime}>
-                        <div className={`${style.center} ${style.channel}`}>
+                        <div className={clsx(style.center, style.channel)}>
                             { streamEntry.icon === '' ? streamEntry.friendly : <img src={streamEntry.icon} alt={streamEntry.friendly} /> }
                         </div>
                         <div className={style.time}>
@@ -69,7 +70,7 @@ export function Streams(props: Props) {
                         element="div"
                         truncateText="…"
                         text={streamEntry.programme || streamEntry.friendly}
-                        className={`${style.center} show`}
+                        className={clsx(style.center, style.show)}
                     />  
                 </Card>
             ))}

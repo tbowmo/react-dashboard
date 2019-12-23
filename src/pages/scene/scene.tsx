@@ -64,6 +64,7 @@ export function Scene() {
                 <LightDimmer label="spisebord" mqttTopic="spisebord" />
                 <LightDimmer label="fjernsyn" mqttTopic="tv" />
                 <LightDimmer label="Alt stuen" mqttTopic="all" />
+                <LightDimmer label="Hjørnet" mqttTopic="corner" />
             </div>
         </div>
     )

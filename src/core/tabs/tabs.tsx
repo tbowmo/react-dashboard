@@ -21,6 +21,7 @@ import {
     MdSettingsRemote,
 } from 'react-icons/md'
 import { Wifi } from '../../pages/wifi/wifi'
+import clsx from 'clsx'
 
 let timer: ReturnType<typeof setTimeout> | null = null
 
@@ -107,9 +108,7 @@ export function Tabs() {
                 <div 
                     key={menuEntry.label} 
                     onClick={() => buttonClick(menuEntry)} 
-                    className={((menuEntry.target === location.pathname) 
-                        ? `${style.active} ` 
-                        : '') + `${style.tab}`}
+                    className={clsx((menuEntry.target === location.pathname) && style.active, style.tab)}
                 >
                     <div className={style.center}>
                         <menuEntry.icon />

@@ -3,12 +3,12 @@ import { Slider } from '@material-ui/core'
 import style from './scene.module.scss'
 import { Card2Line } from '../../core/card-2-line/card-2-line'
 import { useMqttClient, useSubscribeNumberPayload } from '../../core/data'
-import { FaLightbulb } from 'react-icons/fa'
+import { FaLightbulb, FaRegLightbulb } from 'react-icons/fa'
+import { resetTimer } from '../../core/tabs/tabs'
 
 type Props = {
     mqttTopic: string,
     label: string,
-    callBack?: (value: number) => void,
 }
 
 function rgbToHex(rgb: number): string { 
@@ -31,6 +31,8 @@ function pickHex(color1, color2, weight): string {
 
 export function LightDimmer(props: Props) {
     const [ lightIntensity, setLightIntensity ] = React.useState(100)
+    const [ disabled, setDisabled ] = React.useState(false)
+
     const mqtt = useMqttClient()
 
     const endColor: number[] = [0x15, 0x15, 0x15]
@@ -38,34 +40,39 @@ export function LightDimmer(props: Props) {
 
     function valueUpdate(_event, value) {
         setLightIntensity(value)
-        if (props.callBack) {
-            props.callBack(value)
-        }
+        resetTimer()
     }
 
     function valueCommit(_event, value) {
         mqtt.publish(`light/${props.mqttTopic}/set`, value.toString())
     }
     
-    const lightBulb = useSubscribeNumberPayload(`light/${props.mqttTopic}`)
+    const mqttLightIntensity = useSubscribeNumberPayload(`light/${props.mqttTopic}`)
     
     React.useEffect(() => {
-        setLightIntensity(lightBulb)
-    }, [lightBulb])
+        if (mqttLightIntensity < 0) {
+            setLightIntensity(0)
+            setDisabled(true)
+        } else {
+            setLightIntensity(mqttLightIntensity)
+            setDisabled(false)
+        }
+    }, [mqttLightIntensity])
     
-    if (lightBulb === undefined) return null
+    if (lightIntensity === undefined) return null
 
     return (
         <Card2Line cols="2" label={props.label}>
             <div className={style.light}>
                 <div style={{ color: '#' + pickHex(startColor, endColor, lightIntensity) }}>
-                    <FaLightbulb />
+                    { disabled ? (<FaRegLightbulb />) : (<FaLightbulb />) }
                 </div>
 
                 <div className={style.slider}>
                     <Slider 
-                        defaultValue={lightBulb}
-                        aria-labelledby="discrete-slider-always"
+                        value={lightIntensity}
+                        name={props.mqttTopic}
+                        disabled={disabled}
                         step={10}
                         onChange={valueUpdate}
                         onChangeCommitted={valueCommit}

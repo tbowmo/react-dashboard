@@ -19,6 +19,7 @@ import { IconType } from 'react-icons/lib/cjs'
 import { Music } from './music'
 import { RadioTv } from './radio-tv'
 import { Others } from './others'
+import clsx from 'clsx'
 
 type controlKey = {
     icon: IconType,
@@ -106,7 +107,7 @@ export function Controller() {
             )}
             <div className={style.remoteControl}>
                 { functions.map((link) => (
-                    <div key={link.key} className={`${style.remoteButton} ` + (link.key === key ? style.active : '')} onClick={() => onClick(link)}>
+                    <div key={link.key} className={clsx(style.remoteButton, (link.key === key) && style.active)} onClick={() => onClick(link)}>
                         <div className={style.center}>
                             <link.icon />
                         </div>
