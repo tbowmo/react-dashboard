@@ -77,12 +77,8 @@ export function Controller() {
     const media = useMedia()
     const capabilities = useCapabilities()
     const avcenter = useSubscribeStringPayload('avctrl/out/scene') || ''
-
-    if (media === undefined || capabilities === undefined) {
-        return null
-    }
-    
-    if (avcenter.toLocaleLowerCase() === 'off') {   
+   
+    if (avcenter.toLocaleLowerCase() === 'off' || media === undefined || capabilities === undefined) {   
         return (
             <Weather />
         )
