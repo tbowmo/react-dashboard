@@ -1,12 +1,13 @@
 import React from 'react'
-import './App.scss'
+import style from './app.module.scss'
 import { DashTop } from './core/dash-top/dash-top'
 import { Tabs, TabsSwitch } from './core/tabs/tabs'
 
-const App: React.FC = () => {
+export function App() {
+
     return (
-        <div className="App">
-            <div className="info">
+        <div className={style.App}>
+            <div className={style.info}>
                 <DashTop />
                 <TabsSwitch />
             </div>
@@ -14,5 +15,3 @@ const App: React.FC = () => {
         </div>
     )
 }
-
-export default App
