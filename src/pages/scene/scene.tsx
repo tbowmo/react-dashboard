@@ -10,6 +10,9 @@ import {
 } from 'react-icons/md'
 import { LightDimmer } from './mqtt-light-dimmer'
 import { MqttButton } from './mqtt-button'
+import { MqttToggle } from './mqtt-toggle'
+import { useSubscribeStringPayload } from '../../core/data'
+import clsx from 'clsx'
 
 type Action = {
     label: string,
@@ -46,11 +49,14 @@ const actionList: Action[] = [
 ]
 
 export function Scene() {
+    const activeScene = (useSubscribeStringPayload('avctrl/out/scene') || '').toLowerCase()
+
     return (
         <div className={style.scene}>
             <div className={style.remote}>
                 { actionList.map((action) => (
                     <MqttButton
+                        className={clsx(((activeScene.includes(action.action.toLowerCase())) && style.activeDevice) )}
                         key={action.label}
                         label={action.label}
                         mqttTopic="avctrl/in/scene"
@@ -65,6 +71,12 @@ export function Scene() {
                 <LightDimmer label="fjernsyn" mqttTopic="tv" />
                 <LightDimmer label="Alt stuen" mqttTopic="all" />
                 <LightDimmer label="Hjørnet" mqttTopic="corner" />
+                <MqttToggle
+                    label="Auto lys"
+                    mqttTopic="light/followchrome"
+                    onPayload="true"
+                    offPayload="false"
+                />
             </div>
         </div>
     )

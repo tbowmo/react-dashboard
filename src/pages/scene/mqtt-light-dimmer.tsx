@@ -1,12 +1,21 @@
 import React from 'react'
-import { Slider } from '@material-ui/core'
+import { Slider, makeStyles } from '@material-ui/core'
 import style from './scene.module.scss'
-import { Card2Line } from '../../core/card-2-line/card-2-line'
 import { useMqttClient, useSubscribeNumberPayload } from '../../core/data'
 import { FaLightbulb, FaRegLightbulb } from 'react-icons/fa'
 import { resetTimer } from '../../core/tabs/tabs'
+import clsx from 'clsx'
+
+const useStyles = makeStyles({
+    slider: {
+        '@media (pointer: coarse)': {
+            padding: '10px 0',
+        },
+    },
+})
 
 type Props = {
+    className?: string,
     mqttTopic: string,
     label: string,
 }
@@ -32,6 +41,8 @@ function pickHex(color1, color2, weight): string {
 export function LightDimmer(props: Props) {
     const [ lightIntensity, setLightIntensity ] = React.useState(100)
     const [ disabled, setDisabled ] = React.useState(false)
+
+    const classes = useStyles({})
 
     const mqtt = useMqttClient()
 
@@ -62,14 +73,15 @@ export function LightDimmer(props: Props) {
     if (lightIntensity === undefined) return null
 
     return (
-        <Card2Line cols="2" label={props.label}>
-            <div className={style.light}>
+        <div className={clsx(style.mqttBase, style.mqttLight, props.className)}>
+            <div className={clsx(style.light)}>
                 <div style={{ color: '#' + pickHex(startColor, endColor, lightIntensity) }}>
                     { disabled ? (<FaRegLightbulb />) : (<FaLightbulb />) }
                 </div>
 
                 <div className={style.slider}>
                     <Slider 
+                        className={classes.slider}
                         value={lightIntensity}
                         name={props.mqttTopic}
                         disabled={disabled}
@@ -79,6 +91,9 @@ export function LightDimmer(props: Props) {
                     />
                 </div>
             </div>
-        </Card2Line>
+            <div className={style.center}>
+                {props.label}
+            </div>
+        </div>
     )
 }
