@@ -13,7 +13,7 @@ export function RadioTv(props: {media: Media}) {
                         Program
                     </label>
                     <TextTruncate
-                        line={2}
+                        line={1}
                         element="div"
                         truncateText="…"
                         text={media.album}

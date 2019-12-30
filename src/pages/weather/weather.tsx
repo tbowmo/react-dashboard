@@ -22,6 +22,9 @@ import {
     WiNightSnow,
     WiWindDeg,
 } from 'react-icons/wi'
+import {
+    MdQuestionAnswer, 
+} from 'react-icons/md'
 import moment from 'moment'
 import { isNumber } from 'util'
 import { getCompassHeading, wind } from './weather-functions'
@@ -67,7 +70,8 @@ export function Weather() {
         return null
     }
 
-    const Icon = iconMap[weather.weather[0].icon]
+    const Icon = weather?.weather ? iconMap[weather.weather[0].icon] : MdQuestionAnswer
+
     return (
         <div className="mainWeather">
             <div className="weatherRows">
@@ -75,10 +79,10 @@ export function Weather() {
                     {round(weather.main.temp)}&deg;C
                 </div>
                 <div className="secondary">
-                    {round(weather.main.temp_min)}&deg;C - {round(weather.main.temp_max)}&deg;C
+                    {round(weather?.main?.temp_min ?? -99)}&deg;C - {round(weather?.main?.temp_max ?? -99)}&deg;C
                 </div>
                 <div className="secondary">
-                    {weather.weather[0].description} { weather.clouds.all>20 ? `- ${weather.clouds.all}% skydække` : ''}
+                    {weather?.weather[0]?.description ?? ''} { weather?.clouds?.all ?? 0 > 20 ? `- ${weather?.clouds?.all ?? ''}% skydække` : ''}
                 </div>
             </div>
             <div className="symbol">
@@ -118,15 +122,15 @@ export function Forecast() {
 
 function SingleForecast(props: {data: ForecastTupple} ) {
     const { data } = props
-    const Icon = iconMap[data.weather[0].icon]
+    const Icon = data?.weather ? iconMap[data.weather[0].icon] : MdQuestionAnswer
     const timeObj = moment.unix(data.dt)
     const timeStr = timeObj.format('HH:mm')
     return (
         <div className='rw-day'>
             <div className="rw-date">Kl. {timeStr}</div>
             <Icon className="wicon" />
-            <div className="rw-desc">{data.weather[0].description}</div>
-            <div className="rw-range">{round(data.main.temp_max)} / {round(data.main.temp_min)}&deg;C</div>
+            <div className="rw-desc">{data?.weather[0]?.description || ''}</div>
+            <div className="rw-range">{round(data?.main?.temp_max || -99)} / {round(data?.main?.temp_min || -99)}&deg;C</div>
         </div>
     )
 }
