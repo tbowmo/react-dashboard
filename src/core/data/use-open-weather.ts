@@ -14,8 +14,11 @@ import {
     fetchCurrentWeatherSuccess,
     fetchForecastPending,
     fetchForecastSuccess,
+    fetchCurrentWeatherFailed,
+    fetchForecastFailed,
 } from './weather/actions'
 import { useEffect } from 'react'
+import { useMqttClient } from './use-mqtt'
 
 const apiUrl = 'https://api.openweathermap.org/data/2.5'
 const apiKey = process.env.REACT_APP_OW_KEY
@@ -37,11 +40,14 @@ function currentWeather() {
     return (dispatch, getState) => {
         const { weather } = getState()
         const currentWeather = (weather as WeatherState).currentWeather
-        if (!currentWeather.pending) {
+        if (!currentWeather.pending && !currentWeather.failed) {
             dispatch(fetchCurrentWeatherPending)
             fetch(`${apiUrl}/weather?id=${city}&appid=${apiKey}&lang=da&units=metric`)
                 .then((resp) => resp.json())
                 .then((data) => dispatch(fetchCurrentWeatherSuccess(data)))
+                .catch(() => {
+                    dispatch(fetchCurrentWeatherFailed)
+                })
         }
     }
 }
@@ -50,11 +56,14 @@ function forecastWeather() {
     return (dispatch, getState) => {
         const { weather } = getState()
         const forecastWeather = (weather as WeatherState).forecast
-        if (!forecastWeather.pending) {
+        if (!forecastWeather.pending && !forecastWeather.failed) {
             dispatch(fetchForecastPending)
             fetch(`${apiUrl}/forecast?id=${city}&appid=${apiKey}&lang=da&units=metric`)
                 .then((response) => response.json())
                 .then((data) => dispatch(fetchForecastSuccess(data)))
+                .catch(() => {
+                    dispatch(fetchForecastFailed)
+                })
         }
     }
 }
@@ -63,19 +72,25 @@ export function useCurrentWeather(): CurrentWeatherDto | undefined {
     const weatherState = useSelector((state: combinedState) => state.weather.currentWeather) as CurrentWeather || {
         pending: false,
         data: undefined,
+        failed: false,
     }
     const dispatch = useDispatch()
+    const mqtt = useMqttClient()
 
     useEffect(() => {
-        if (weatherState.data === undefined && !weatherState.pending) {
-            dispatch(currentWeather())
-        }
-        if (weatherTimer.timer === undefined) {
-            weatherTimer.timer = setInterval(() => {
+        if (!weatherState.failed) {
+            if (weatherState.data === undefined && !weatherState.pending) {
+                mqtt.publish('dash/fetchWeather', '1')
                 dispatch(currentWeather())
-            }, 600000)
+            }
+            if (weatherTimer.timer === undefined) {
+                weatherTimer.timer = setInterval(() => {
+                    dispatch(currentWeather())
+                    mqtt.publish('dash/fetchWeather', '2')
+                }, 600000)
+            }
+            weatherTimer.active++
         }
-        weatherTimer.active++
         return () => {
             weatherTimer.active--
             if (weatherTimer.active === 0) {
@@ -83,7 +98,7 @@ export function useCurrentWeather(): CurrentWeatherDto | undefined {
                 weatherTimer.timer = undefined
             }
         }
-    }, [dispatch, weatherState])
+    }, [dispatch, weatherState, mqtt])
 
     return weatherState.data
 }
@@ -92,19 +107,25 @@ export function useForecastWeather(): ForecastDto | undefined {
     const forecastState = useSelector((state: combinedState) => state.weather.forecast) as ForecastWeather || {
         pending: false,
         data: undefined,
+        failed: false,
     }
     const dispatch = useDispatch()
+    const mqtt = useMqttClient()
 
     useEffect(() => {
-        if (forecastState.data === undefined ) {
-            dispatch(forecastWeather())
-        }
-        if (forecastTimer.timer === undefined) {
-            forecastTimer.timer = setInterval(() => {
+        if (!forecastState.failed) {
+            if (forecastState.data === undefined ) {
+                mqtt.publish('dash/fetcForecast', '1')
                 dispatch(forecastWeather())
-            }, 1800000)
+            }
+            if (forecastTimer.timer === undefined) {
+                forecastTimer.timer = setInterval(() => {
+                    mqtt.publish('dash/fetcForecast', '2')
+                    dispatch(forecastWeather())
+                }, 1800000)
+            }
+            forecastTimer.active++
         }
-        forecastTimer.active++
         return () => {
             forecastTimer.active--
             if (forecastTimer.active === 0) {
@@ -112,7 +133,16 @@ export function useForecastWeather(): ForecastDto | undefined {
                 forecastTimer.timer = undefined
             }
         }
-    }, [dispatch, forecastState])
+    }, [dispatch, forecastState, mqtt])
 
     return forecastState.data
+}
+
+export function useFailureStatus(): {forecastFailed: boolean, currentWeatherFailed: boolean } {
+    const forecastState = useSelector((state: combinedState) => state.weather.forecast) as ForecastWeather
+    const currentWeatherState = useSelector((state: combinedState) => state.weather.currentWeather) as CurrentWeather
+    return {
+        forecastFailed: forecastState.failed,
+        currentWeatherFailed: currentWeatherState.failed,
+    }
 }
