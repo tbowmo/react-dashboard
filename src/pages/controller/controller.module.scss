@@ -53,6 +53,10 @@
             widows: 3em;
         }
     }
+    .time {
+        grid-row: 1 / 2;
+        grid-column: 3/4;
+    }
     .artist {
         grid-row: 2 / 3;
     }
@@ -79,9 +83,26 @@
             opacity: 0.2;
         }
     }
+    .raiseAppIcon {
+        z-index: 100;
+    }
 }
 
 .enabled {
     color: var(--dash-color-active);
 }
 
+.blink {
+    animation: blink 2s linear infinite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@keyframes blink{
+    0%{opacity: 0;}
+    25%{opacity: .5;}
+    50%{opacity: 1;}
+    75%{opacity: .5;}
+    100%{opacity: 0;}
+}

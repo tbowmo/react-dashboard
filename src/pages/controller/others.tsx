@@ -5,6 +5,7 @@ import {
     MdGames,
 } from 'react-icons/md'
 import style from './controller.module.scss'
+import { MediaProp } from './media-prop'
 
 
 type Props = {
@@ -30,10 +31,11 @@ export function Others(props: Props) {
             <div className={style.albumCover}>
                 <Icon type={props.type} />
             </div>
-            <div className={`${style.artist} ${style.info}`}>
-                <label className={style.label}>{props.type}</label>
-                <div>Ingen information</div>
-            </div>
+            <MediaProp
+                label=""
+                className={style.artist}
+                value="Ingen information"
+            />
         </div>
     )
 }
