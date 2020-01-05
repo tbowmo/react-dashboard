@@ -40,7 +40,12 @@ function currentWeather() {
     return (dispatch, getState) => {
         const { weather } = getState()
         const currentWeather = (weather as WeatherState).currentWeather
-        if (!currentWeather.pending && !currentWeather.failed) {
+
+        // Ensure that we do not flood OWM with requests
+        const secondsSinceLast = Math.round((new Date()).getTime() / 1000) - currentWeather.lastFetchTime
+        const secondsBeforeRefetch = 300
+
+        if (!currentWeather.pending && secondsSinceLast > secondsBeforeRefetch) { 
             dispatch(fetchCurrentWeatherPending)
             fetch(`${apiUrl}/weather?id=${city}&appid=${apiKey}&lang=da&units=metric`)
                 .then((resp) => resp.json())
@@ -56,7 +61,12 @@ function forecastWeather() {
     return (dispatch, getState) => {
         const { weather } = getState()
         const forecastWeather = (weather as WeatherState).forecast
-        if (!forecastWeather.pending && !forecastWeather.failed) {
+
+        // Ensure that we do not flood OWM with requests
+        const secondsSinceLast = Math.round((new Date()).getTime() / 1000) - forecastWeather.lastFetchTime
+        const secondsBeforeRefetch = 900
+        
+        if (!forecastWeather.pending && secondsSinceLast > secondsBeforeRefetch) {
             dispatch(fetchForecastPending)
             fetch(`${apiUrl}/forecast?id=${city}&appid=${apiKey}&lang=da&units=metric`)
                 .then((response) => response.json())
@@ -138,11 +148,16 @@ export function useForecastWeather(): ForecastDto | undefined {
     return forecastState.data
 }
 
-export function useFailureStatus(): {forecastFailed: boolean, currentWeatherFailed: boolean } {
-    const forecastState = useSelector((state: combinedState) => state.weather.forecast) as ForecastWeather
-    const currentWeatherState = useSelector((state: combinedState) => state.weather.currentWeather) as CurrentWeather
+export function useWeatherFailure(): {forecastFailed: boolean, currentWeatherFailed: boolean } {
+    const { failed: forecastFailed } = useSelector((state: combinedState) => state.weather.forecast) as ForecastWeather || {
+        failed: false,
+    }
+    const { failed: currentWeatherFailed } = useSelector((state: combinedState) => state.weather.currentWeather) as CurrentWeather || {
+        failed: false,
+    }
+
     return {
-        forecastFailed: forecastState.failed,
-        currentWeatherFailed: currentWeatherState.failed,
+        forecastFailed,
+        currentWeatherFailed,
     }
 }

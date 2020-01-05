@@ -74,7 +74,7 @@ export function useSubscribeNumberPayload(topic: string): number | undefined {
     }
 }
 
-type Capabilities = {
+export type Capabilities = {
     app: string,
     state: string,
     volume: number,
@@ -96,6 +96,9 @@ export type Media = {
     album_art: string,
     media_type: number,
     type: number,
+    duration: number,
+    current_time: number,
+    start_time: number,
 }
 
 export function useCapabilities(): Capabilities | undefined {

@@ -3,13 +3,15 @@ import { ForecastDto, CurrentWeatherDto } from '../weather-types'
 
 export type CurrentWeather = {
     pending: boolean,
-    data: CurrentWeatherDto | undefined,
     failed: boolean,
+    lastFetchTime: number,
+    data: CurrentWeatherDto | undefined,
 }
 
 export type ForecastWeather = {
     pending: boolean,
     failed: boolean,
+    lastFetchTime: number,
     data: ForecastDto | undefined,
 }
 
@@ -23,11 +25,13 @@ const initialState: WeatherState = {
         pending: false,
         data: undefined,
         failed: false,
+        lastFetchTime: 0,
     },
     currentWeather: {
         pending: false,
         data: undefined,
         failed: false,
+        lastFetchTime: 0,
     },
 }
 
@@ -40,6 +44,7 @@ export function weatherReducer(state: WeatherState = initialState, action: Weath
                 ...state.currentWeather,
                 pending: false,
                 data: action.payload,
+                lastFetch: Math.round((new Date()).getTime() / 1000),
             },
         }
     case 'FETCH_FORECAST_SUCCESS':
@@ -49,6 +54,7 @@ export function weatherReducer(state: WeatherState = initialState, action: Weath
                 ...state.forecast,
                 pending: false,
                 data: action.payload,
+                lastFetch: Math.round((new Date()).getTime() / 1000),
             },
         }
     case 'FETCH_FORECAST_PENDING':
