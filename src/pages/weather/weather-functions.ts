@@ -266,5 +266,5 @@ const windSpeed: WindSpeed[] = [
 ]
 
 export function wind(speed: number): WindSpeed {
-    return windSpeed.find((w) => w.windspeed < speed)
+    return windSpeed.find((w) => w.windspeed <= speed)
 }

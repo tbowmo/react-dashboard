@@ -76,13 +76,13 @@ export function Weather() {
         <div className="mainWeather">
             <div className="weatherRows">
                 <div className="main">
-                    {round(weather.main.temp)}&deg;C
+                    {round(weather?.main?.temp || -99)}&deg;C
                 </div>
                 <div className="secondary">
                     {round(weather?.main?.temp_min ?? -99)}&deg;C - {round(weather?.main?.temp_max ?? -99)}&deg;C
                 </div>
                 <div className="secondary">
-                    {weather?.weather[0]?.description ?? ''} { weather?.clouds?.all ?? 0 > 20 ? `- ${weather?.clouds?.all ?? ''}% skydække` : ''}
+                    {weather?.weather ? weather.weather[0]?.description ?? '' : ''} { weather?.clouds?.all ?? 0 > 20 ? `- ${weather?.clouds?.all ?? ''}% skydække` : ''}
                 </div>
             </div>
             <div className="symbol">
@@ -90,14 +90,14 @@ export function Weather() {
             </div>
             <div className="weatherRows">
                 <div className="main">
-                    Vind: {wind(weather.wind.speed).label}
+                    Vind: {wind(weather?.wind?.speed || 0).label}
                 </div>
                 <div className="secondary">
-                    Retning {getCompassHeading(weather.wind.deg).direction} ({weather.wind.speed}m/s - {weather.wind.deg}&deg;)
-                </div>
+                    Retning {getCompassHeading(weather?.wind?.deg ?? 0).direction} ({weather?.wind?.speed || 0}m/s - {weather?.wind?.deg ?? 0}&deg;)
+                </div> 
             </div>
             <div className="symbol">
-                <WiWindDeg style={{ transform: `rotate(${weather.wind.deg}deg)` }} />
+                <WiWindDeg style={{ transform: `rotate(${weather?.wind?.deg ?? 0}deg)` }} />
             </div>
             <Forecast />
         </div>
@@ -107,7 +107,7 @@ export function Weather() {
 export function Forecast() {
     const forecast = useForecastWeather()
 
-    if (forecast === undefined) {
+    if (forecast === undefined || forecast.list === undefined) {
         return null
     }
 
@@ -129,7 +129,7 @@ function SingleForecast(props: {data: ForecastTupple} ) {
         <div className='rw-day'>
             <div className="rw-date">Kl. {timeStr}</div>
             <Icon className="wicon" />
-            <div className="rw-desc">{data?.weather[0]?.description || ''}</div>
+            <div className="rw-desc">{data?.weather ? data.weather[0]?.description || '' : ''}</div>
             <div className="rw-range">{round(data?.main?.temp_max || -99)} / {round(data?.main?.temp_min || -99)}&deg;C</div>
         </div>
     )
