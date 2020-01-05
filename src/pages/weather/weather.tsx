@@ -82,7 +82,8 @@ export function Weather() {
                     {round(weather?.main?.temp_min ?? -99)}&deg;C - {round(weather?.main?.temp_max ?? -99)}&deg;C
                 </div>
                 <div className="secondary">
-                    {weather?.weather ? weather.weather[0]?.description ?? '' : ''} { weather?.clouds?.all ?? 0 > 20 ? `- ${weather?.clouds?.all ?? ''}% skydække` : ''}
+                    {weather?.weather ? weather.weather[0]?.description ?? '' : ''}&nbsp;
+                    {weather?.clouds?.all ?? 0 > 20 ? `- ${weather?.clouds?.all ?? ''}% skydække` : ''}
                 </div>
             </div>
             <div className="symbol">

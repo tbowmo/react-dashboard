@@ -45,12 +45,12 @@ export function Controller() {
             { isStreaming ? (
                 <div className={style.mediaInfo}>
                     { (media.album_art ?? '') !== '' && (capabilities.app_icon ?? '') !== '' ? (
-                        <div className={style.appIcon} >
-                            <img src={capabilities.app_icon} alt={capabilities.app}/>
+                        <div className={style.appIcon}>
+                            <img src={capabilities.app_icon} alt={capabilities.app} />
                         </div>
                     ) : null}
                     <div className={clsx(style.albumCover, showAlbumCover && style.raiseAppIcon)}>
-                        <img src={media.album_art || capabilities.app_icon} alt={media.album} onClick={clickAlbumCover}/>
+                        <img src={media.album_art || capabilities.app_icon} alt={media.album} onClick={clickAlbumCover} />
                     </div>
                     { media.type === 0 ? (<Music media={media} />) : (<RadioTv media={media} />) }
                 </div>
