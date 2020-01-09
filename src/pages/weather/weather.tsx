@@ -4,7 +4,7 @@ import {
     useForecastWeather,
     ForecastTupple,
 } from '../../core/data'
-import './weather.scss'
+import style from './weather.module.scss'
 import { 
     WiDaySunny,
     WiDayCloudy,
@@ -23,7 +23,7 @@ import {
     WiWindDeg,
 } from 'react-icons/wi'
 import {
-    MdQuestionAnswer, 
+    MdBlock, 
 } from 'react-icons/md'
 import moment from 'moment'
 import { isNumber } from 'util'
@@ -70,34 +70,34 @@ export function Weather() {
         return null
     }
 
-    const Icon = weather?.weather ? iconMap[weather.weather[0].icon] : MdQuestionAnswer
+    const Icon = weather?.weather ? iconMap[weather.weather[0].icon] : MdBlock
 
     return (
-        <div className="mainWeather">
-            <div className="weatherRows">
-                <div className="main">
+        <div className={style.mainWeather}>
+            <div className={style.weatherRows}>
+                <div className={style.main}>
                     {round(weather?.main?.temp || -99)}&deg;C
                 </div>
-                <div className="secondary">
+                <div className={style.secondary}>
                     {round(weather?.main?.temp_min ?? -99)}&deg;C - {round(weather?.main?.temp_max ?? -99)}&deg;C
                 </div>
-                <div className="secondary">
+                <div className={style.secondary}>
                     {weather?.weather ? weather.weather[0]?.description ?? '' : ''}&nbsp;
                     {weather?.clouds?.all ?? 0 > 20 ? `- ${weather?.clouds?.all ?? ''}% skydække` : ''}
                 </div>
             </div>
-            <div className="symbol">
+            <div className={style.symbol}>
                 <Icon />
             </div>
-            <div className="weatherRows">
-                <div className="main">
+            <div className={style.weatherRows}>
+                <div className={style.main}>
                     Vind: {wind(weather?.wind?.speed || 0).label}
                 </div>
-                <div className="secondary">
+                <div className={style.secondary}>
                     Retning {getCompassHeading(weather?.wind?.deg ?? 0).direction} ({weather?.wind?.speed || 0}m/s - {weather?.wind?.deg ?? 0}&deg;)
                 </div> 
             </div>
-            <div className="symbol">
+            <div className={style.symbol}>
                 <WiWindDeg style={{ transform: `rotate(${weather?.wind?.deg ?? 0}deg)` }} />
             </div>
             <Forecast />
@@ -113,7 +113,7 @@ export function Forecast() {
     }
 
     return (
-        <div className="forecast">
+        <div className={style.forecast}>
             { forecast.list.slice(1, 7).map((f) => (
                 <SingleForecast key={`weather-${f.dt}`} data={f} />
             ))}
@@ -123,15 +123,15 @@ export function Forecast() {
 
 function SingleForecast(props: {data: ForecastTupple} ) {
     const { data } = props
-    const Icon = data?.weather ? iconMap[data.weather[0].icon] : MdQuestionAnswer
+    const Icon = data?.weather ? iconMap[data.weather[0].icon] : MdBlock
     const timeObj = moment.unix(data.dt)
     const timeStr = timeObj.format('HH:mm')
     return (
-        <div className='rw-day'>
-            <div className="rw-date">Kl. {timeStr}</div>
-            <Icon className="wicon" />
-            <div className="rw-desc">{data?.weather ? data.weather[0]?.description || '' : ''}</div>
-            <div className="rw-range">{round(data?.main?.temp_max || -99)} / {round(data?.main?.temp_min || -99)}&deg;C</div>
+        <div className={style.rwDay}>
+            <div className={style.rwDate}>Kl. {timeStr}</div>
+            <Icon className={style.rwIcon} />
+            <div className={style.rwDesc}>{data?.weather ? data.weather[0]?.description || '' : ''}</div>
+            <div className={style.rwRange}>{round(data?.main?.temp_max || -99)} / {round(data?.main?.temp_min || -99)}&deg;C</div>
         </div>
     )
 }

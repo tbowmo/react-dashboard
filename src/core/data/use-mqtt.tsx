@@ -9,7 +9,7 @@ import {
     incommingMsg,
     subscribe,
 } from './mqtt/actions'
-import { MqttDataEntry } from './mqtt/reducer'
+import { MqttDataEntry, MqttState } from './mqtt/reducer'
 
 const match = require('mqtt-match')
 
@@ -33,9 +33,8 @@ export function MqttConnect(props: Props) {
 }
 
 function useSubscribe(topic: string): {topic: string, payload: string} | undefined {
-    const subscriptions = useSelector( (state) => state.mqtt.subscriptions)
     const dispatch = useDispatch()
-    const data = useSelector( (state) => state.mqtt.data )
+    const { data, subscriptions } = useSelector( (state) => state.mqtt ) as MqttState
     
     const x = React.useMemo(() => {
         let d = data[topic]
@@ -53,7 +52,8 @@ function useSubscribe(topic: string): {topic: string, payload: string} | undefin
     }, [data, topic])
 
     React.useEffect(() => {
-        if (!(topic in subscriptions)) {
+        const s = subscriptions.find((sub) => match(topic, sub))
+        if (s === undefined) {
             dispatch(subscribe(topic))
         }
     }, [subscriptions, dispatch, topic])

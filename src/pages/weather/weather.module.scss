@@ -3,6 +3,7 @@
     grid-template-columns: 1fr 200px;
     grid-template-rows: 1fr 1fr 150px;
     height: 100%;
+    color: var(--dash-color-label);
     .symbol {
         grid-column: 2;
         width:100%;
@@ -30,23 +31,23 @@
         grid-column: span 2;
         display: grid;
         grid-template-columns: repeat(6, 1fr);
-        .rw-day:not(:first-child) {
+        .rwDay:not(:first-child) {
             border-left: solid 1px #555;
             padding-left: 5px;
         }
-        .rw-date{
+        .rwDate{
             font-size:18px;
             font-weight: bold;
         }
-        .rw-desc{
+        .rwDesc{
             margin:10px 0 10px 0;
             font-size:18px;
             width:100%;
         }
-        .rw-range{
+        .rwRange{
             font-size:18px;
         }
-        .wicon {
+        .rwIcon {
             margin-left: 10px;
             margin-top:10px;
             color:#4BC4F7;

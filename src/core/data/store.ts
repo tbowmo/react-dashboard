@@ -16,6 +16,7 @@ import {
     streamReducer,
     StreamState,
 } from './streams/reducer'
+import { composeWithDevTools } from 'redux-devtools-extension'
 
 export const reducers = combineReducers({
     mqtt: mqttReducer,
@@ -29,7 +30,15 @@ export type combinedState = {
     streams: StreamState,
 }
 
+
 export default function configureStore(initialState?) {
+    if (process.env.NODE_ENV === 'development') {
+        return createStore(reducers, 
+            initialState, composeWithDevTools(
+                applyMiddleware(thunk),
+            ))
+    }
+
     return createStore(
         reducers,
         initialState,
