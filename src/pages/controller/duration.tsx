@@ -1,7 +1,6 @@
 import { Media, useCapabilities } from '../../core/data'
 import * as React from 'react'
 import clsx from 'clsx'
-import moment from 'moment'
 import style from './controller.module.scss'
 
 type Props = {
@@ -9,7 +8,19 @@ type Props = {
 }
 
 function getTimePast(start_time): number {
-    return Math.floor((new Date()).getTime() / 1000 - start_time)
+    return Math.floor((Date.now() / 1000) - start_time)
+}
+
+function secondsToHms(d) {
+
+    const lz = (n: number):string => n>9 ? `${n}` : `0${n}`
+
+    d = Number(d)
+    const h = Math.floor(d / 3600)
+    const m = Math.floor(d % 3600 / 60)
+    const s = Math.floor(d % 3600 % 60)
+
+    return ((h>0)? `${h}:`: '') + `${lz(m)}:${lz(s)}`
 }
 
 let timer: ReturnType<typeof setInterval> | undefined = undefined
@@ -40,17 +51,17 @@ export function Duration(props: Props) {
     const { totalTime, currentTime, fontSize, remainingTime } = React.useMemo(() => {
         if (media.duration > 3600) {
             return {
-                totalTime: moment.unix(media.duration).format('HH:mm:ss'),
-                currentTime: moment.unix(time).format('HH:mm:ss'),
-                remainingTime: moment.unix(media.duration - time).format('HH:mm:ss'),
-                fontSize: '25pt',
+                totalTime: secondsToHms(media.duration),
+                currentTime: secondsToHms(time),
+                remainingTime: secondsToHms(media.duration - time),
+                fontSize: '32pt',
             }
         } else {
             return {
-                totalTime: moment.unix(media.duration).format('mm:ss'),
-                currentTime: moment.unix(time).format('mm:ss'),
-                remainingTime: moment.unix(media.duration - time).format('mm:ss'),
-                fontSize: '30pt',
+                totalTime: secondsToHms(media.duration),
+                currentTime: secondsToHms(time),
+                remainingTime: secondsToHms(media.duration - time),
+                fontSize: '40pt',
             }
         }
     }, [media.duration, time])
@@ -66,13 +77,13 @@ export function Duration(props: Props) {
     return (
         <div className={clsx(style.time, style.info)} onClick={toggleRemaining}>
             <label className={style.label}>
-                Tid {remaining ? 'tilbage' : ''}
+                Tid
             </label>
             { capabilities.state === 'PAUSED' ? (
                 <div className={style.blink}> PAUSE </div>
             ) : (
                 <div style={{ fontSize }}>
-                    {remaining ? remainingTime : `${currentTime} - ${totalTime}`}
+                    {currentTime} - {remaining ? remainingTime : `${totalTime}`}
                 </div>
             )}
         </div>

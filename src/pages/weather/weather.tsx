@@ -29,7 +29,6 @@ import moment from 'moment'
 import { isNumber } from 'util'
 import { getCompassHeading, wind } from './weather-functions'
 
-
 const iconMap = {
     '01d': WiDaySunny,
     '02d': WiDayCloudy,
