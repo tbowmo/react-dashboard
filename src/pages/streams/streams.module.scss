@@ -16,6 +16,11 @@
 }
 
 .singleStream {
+    grid-column: span var(--dash-grid2);
+    border-radius: 10px;
+    border: solid 2px #666;
+    background-color: rgba(#111, 0.2);
+    padding: 10px;
     display: grid;
     grid-template-rows: 1fr 40px;
 }

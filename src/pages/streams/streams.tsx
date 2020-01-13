@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { Card } from '../../core/card/card'
 import style from './streams.module.scss'
 import { MqttClient } from 'mqtt'
 import TextTruncate from 'react-text-truncate'
@@ -45,7 +44,7 @@ export function Streams(props: Props) {
     return (
         <div className={style.streams}>
             {streams.map((streamEntry) => (
-                <Card cols="2" 
+                <div 
                     className={clsx(style.singleStream, (streamEntry.link === active) && style.active)}
                     key={streamEntry.friendly}
                     onClick={() => SelectStream(streamEntry, mqtt)}
@@ -72,7 +71,7 @@ export function Streams(props: Props) {
                         text={streamEntry.programme || streamEntry.friendly}
                         className={clsx(style.center, style.show)}
                     />  
-                </Card>
+                </div>
             ))}
         </div>
     )

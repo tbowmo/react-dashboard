@@ -1,11 +1,11 @@
 import * as React from 'react'
-import {
-    Card,
-    colSize,
-    rowSize,
-} from '../card/card'
-import './card-2-line.scss'
 import { isNumber } from 'util'
+import style from './card-2-line.module.scss'
+import clsx from 'clsx'
+
+export type colSize = '1' | '2' | '3' | '4' | '5' | '6'
+
+export type rowSize = '1' | '2' | '3'
 
 type Props = {
     cols?: colSize,
@@ -15,6 +15,8 @@ type Props = {
     label: string,
     unit?: string,
     precission?: number,
+    onClick?: (event: React.MouseEvent<HTMLDivElement>) => void,
+    className?,
 }
 
 export function Card2Line(props: Props) {
@@ -26,6 +28,8 @@ export function Card2Line(props: Props) {
         unit,
         children,
         precission = 0,
+        onClick,
+        className,
     } = props
 
     let v = value
@@ -36,13 +40,17 @@ export function Card2Line(props: Props) {
             v = Math.round(value * (10*precission)) / (10*precission)
         }
     }
-    
+
+    const rowColumnClass = React.useMemo(() => {
+        return clsx(style.card, style[`cols${cols}`], style[`rows${rows}`], className)
+    }, [cols, rows, className])
+
     return (
-        <Card cols={cols} rows={rows}>
-            <div className="card2line">
-                { value !== undefined ? <div className="section value"><span>{v}</span></div> : children }
-                <div className="section label">{label}{unit? `(${unit})` : ''}</div>
+        <div className={rowColumnClass} onClick={onClick}>
+            <div className={style.card2line}>
+                { value !== undefined ? <div className={clsx(style.section, style.value)}><span>{v}</span></div> : children }
+                <div className={clsx(style.section, style.label)}>{label}{unit? `(${unit})` : ''}</div>
             </div>
-        </Card>
+        </div>
     )
 }
