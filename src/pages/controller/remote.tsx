@@ -60,25 +60,22 @@ const functions: controlKey[] = [
     },
 ]
 
-let interVal: any
+let repeatIntervalTimer: ReturnType<typeof setInterval> | undefined
 
 export function Remote() {
     const [ key, setKey ] = React.useState<string>('')
-    const [ repeat, setRepeat ] = React.useState<string>('')
+    const [ repeat, setRepeat ] = React.useState<controlKey | undefined>(undefined)
 
     const mqttClient = useMqttClient()
     const capabilities = useCapabilities()
     
-    function onMouseDown(target: controlKey) {
-        if (target.repeat) {
-            setRepeat(target.key)
-        }
+    function buttonDown(target: controlKey) {
+        setRepeat(target)
     }
 
-    function onMouseUp(target: controlKey) {
-        if (target.repeat) {
-            setRepeat('')
-        } else {
+    function buttonRelease(target: controlKey) {
+        setRepeat(undefined)
+        if (!target.repeat) {
             setKey(target.key)
             if (mqttClient && !target.repeat) {
                 if (target.key === 'off') {
@@ -88,22 +85,28 @@ export function Remote() {
                 }
             }
         }
-
     }
 
     React.useEffect(() => {
-        if (mqttClient && repeat !== '') {
-            mqttClient.publish('avctrl/in/control', repeat)   
-            setKey(repeat)  
-            interVal = setInterval( () => {
-                mqttClient.publish('avctrl/in/control', repeat)   
-                setKey(repeat)  
+        if (
+            mqttClient 
+            && repeat !== undefined 
+            && repeat.repeat
+            && repeatIntervalTimer === undefined
+        ) {
+            mqttClient.publish('avctrl/in/control', repeat.key)   
+            setKey(repeat.key)  
+            repeatIntervalTimer = setInterval( () => {
+                mqttClient.publish('avctrl/in/control', repeat.key)   
+                setKey(repeat.key)  
             }, 300)
         } else {
-            clearInterval(interVal)
+            clearInterval(repeatIntervalTimer)
+            repeatIntervalTimer = undefined
         }
         return () => {
-            clearInterval(interVal)
+            clearInterval(repeatIntervalTimer)
+            repeatIntervalTimer = undefined
         }
     }, [repeat, mqttClient])
 
@@ -121,9 +124,10 @@ export function Remote() {
                 <div 
                     key={link.key}
                     className={clsx(style.remoteButton, (link.key === key) && style.active)}
-                    //onClick={() => onClick(link)}
-                    onMouseDown={() => onMouseDown(link)}
-                    onMouseUp={() => onMouseUp(link)}
+                    onTouchStart={() => buttonDown(link)}
+                    onTouchEnd={() => buttonRelease(link)}
+                    onMouseDown={() => buttonDown(link)}
+                    onMouseUp={() => buttonRelease(link)}
                 >
                     <div className={style.center}>
                         <link.icon />
