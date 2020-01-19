@@ -1,5 +1,12 @@
 .wifi {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr 2300px;
+        .headline {
+                text-align: center;
+        }
+        .code {
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 30pt;
+        }
 }

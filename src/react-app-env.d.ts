@@ -13,4 +13,3 @@ declare namespace NodeJS {
         REACT_APP_ACTION_TIMEOUT: number,        
     }
 }
-    

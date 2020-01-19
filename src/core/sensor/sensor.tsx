@@ -8,7 +8,7 @@ type Props = {
     type? : number,
     child?: number,
     label: string,
-    unit?: string,
+    unit?: string | string[],
     precission?: number,
     cols?: colSize,
     rows?: rowSize,
@@ -25,19 +25,38 @@ export function Sensor(props: Props) {
         rows,
         cols,
         onClick,
-        scale,
     } = props
     const child = props.child || '+'
     const topic = `dashboard/sensors/${sensorId}/${child}/1/+/${type}`
-    let value = useSubscribeNumberPayload(topic)
-    let scaleIndex = 0
-    if (scale !== undefined) {
-        while (value > 999 && scaleIndex < scale.length) {
-            value = value / 1000
-            scaleIndex++
+    const sensorValue = useSubscribeNumberPayload(topic)
+
+
+    const {
+        unit,
+        value,
+    } = React.useMemo(() => {
+        if (props.unit !== undefined && Array.isArray(props.unit)) {
+            let value = sensorValue
+            let scaleIndex = 0
+            while (value > 999 && scaleIndex < props.unit.length) {
+                value = value / 1000
+                scaleIndex++
+            }
+            return {
+                unit: props.unit[scaleIndex],
+                value,
+            }
+        } else if ( props.unit !== undefined && typeof props.unit === 'string'){
+            return {
+                unit: props.unit,
+                value: sensorValue,
+            }
         }
-    }
-    const unit = scale ? scale[scaleIndex] : props.unit
+        return {
+            value: sensorValue,
+        }
+    }, [props.unit, sensorValue])
+
     return (
         <Card2Line
             value={value}

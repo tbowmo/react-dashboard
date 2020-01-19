@@ -19,6 +19,7 @@ import {
     MdVideocam,
     MdWbSunny,
     MdSettingsRemote,
+    MdWifi,
 } from 'react-icons/md'
 import { Wifi } from '../../pages/wifi/wifi'
 import clsx from 'clsx'
@@ -88,6 +89,12 @@ const menuLinks = [
         target: '/surveilance',
         css: '',
         icon: MdVideocam,
+    },
+    {
+        label: 'Wifi',
+        target: '/wifi',
+        css: '',
+        icon: MdWifi,
     },
 ]
 

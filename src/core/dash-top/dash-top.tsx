@@ -63,7 +63,7 @@ export function DashTop() {
     const { main } = currentWeather
 
     const total = totals[totalIndex]
-    const scale=['Wh', 'kWh']
+    const scale=['Wh', 'kWh', 'MWh']
 
     return (
         <div className="topdashboard">
@@ -78,9 +78,8 @@ export function DashTop() {
                 child={total.sensor}
                 cols="1"
                 label={total.label}
-                unit="wH"
-                precission={2}
-                scale={scale}
+                precission={1}
+                unit={scale}
             />
             <Sensor
                 cols="1"
