@@ -1,0 +1,15 @@
+{
+   "extends": "../../tsconfig.json",
+   "compilerOptions": {
+     "jsx": "react",
+     "module": "none",
+     "noEmit": false,
+     "outDir": "./lib",
+     "target": "es2019",
+     "experimentalDecorators": true,
+     "emitDecoratorMetadata": true
+   },
+   "include": [
+     "./src/**/*"
+   ]
+ }

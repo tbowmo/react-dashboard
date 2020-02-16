@@ -1,25 +1,33 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "allowJs": false,
+    "checkJs": false,
+    "declaration": true,
+    "jsx": "react",
     "lib": [
       "dom",
-      "dom.iterable",
+      "es5",
+      "es2017",
       "esnext"
     ],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": false,
-    "forceConsistentCasingInFileNames": true,
-    "module": "esnext",
+    "locale": "en",
+    "module": "commonjs",
     "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
+    "newLine": "LF",
     "noEmit": true,
-    "jsx": "react"
+    "noEmitOnError": false,
+    "noErrorTruncation": true,
+    "noImplicitAny": false,
+    "noImplicitReturns": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": false,
+    "outDir": "./lib",
+    "pretty": true,
+    "removeComments": false,
+    "resolveJsonModule": false,
+    "sourceMap": true,
+    "strict": true,
+    "target": "es2019"
   },
-  "include": [
-    "src"
-  ]
+  "compileOnSave": false
 }
