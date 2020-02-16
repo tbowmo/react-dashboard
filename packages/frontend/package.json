@@ -1,0 +1,73 @@
+{
+  "name": "@dashboard/frontend",
+  "version": "1.0.0",
+  "license": "mit",
+  "private": true,
+  "dependencies": {
+    "@dashboard/types": "1.0.0",
+    "@material-ui/core": "^4.8.0",
+    "clsx": "^1.0.4",
+    "history": "^4.10.1",
+    "moment": "^2.24.0",
+    "moment-timezone": "^0.5.27",
+    "mqtt": "^3.0.0",
+    "mqtt-match": "^2.0.3",
+    "qrcode.react": "^1.0.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-hooks-sse": "^1.0.0",
+    "react-icons": "^3.8.0",
+    "react-redux": "^7.1.3",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "3.3.0",
+    "react-text-truncate": "^0.15.0",
+    "redux": "^4.0.4",
+    "redux-devtools-extension": "^2.13.8",
+    "redux-thunk": "^2.3.0",
+    "screenfull": "^5.0.0",
+    "weather-icons": "^1.3.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "lint": "eslint --ext=jsx,ts,tsx src",
+    "test:types": "tsc --project ./tsconfig.json --noEmit"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "proxy": "http://localhost:5000",
+  "devDependencies": {
+    "@dashboard/types": "1.0.0",
+    "@types/jest": "24.9.1",
+    "@types/node": "13.5.0",
+    "@types/react": "16.9.19",
+    "@types/react-dom": "16.9.5",
+    "@types/react-router-dom": "^5.1.3",
+    "@typescript-eslint/eslint-plugin": "^2.17.0",
+    "@typescript-eslint/parser": "^2.17.0",
+    "dotenv": "^8.2.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.18.0",
+    "eslint-plugin-react-hooks": "^2.3.0",
+    "node-sass": "^4.13.1",
+    "typescript": "3.7.5"
+  }
+}

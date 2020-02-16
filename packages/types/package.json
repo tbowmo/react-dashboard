@@ -1,0 +1,11 @@
+{
+  "name": "@dashboard/types",
+  "version": "1.0.0",
+  "license": "MIT",
+  "private": true,
+  "description": "Global type definitions for the project",
+  "keywords": [],
+  "directories": {
+    "lib": "lib"
+  }
+}
