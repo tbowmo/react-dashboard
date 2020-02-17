@@ -13,8 +13,8 @@ mqtt.addListener('home/#', (topic: string, payload: string) => {
     const type = updateStore(topic, payload)
     if (type) {
         sse.send({
-            payload, 
-            topic
+            payload,
+            topic,
         }, 'updates')
         sse.updateInit(getStore(), 'initial')
     }

@@ -24,9 +24,9 @@ export namespace Chromecast {
         app: string,
         state: string,
         volume: number,
-        muted: boolean, 
+        muted: boolean,
         app_icon: string,
-        supported_features: supportedFeatures
+        supported_features: supportedFeatures,
     }
 
     export type Chrome = {
@@ -50,34 +50,35 @@ export type Room = {
     sensors: RoomSensor,
     avctrl: {
         scene: string,
-    }
+    },
     media?: Chromecast.Chrome,
     light: {
         [key: string]: number,
-    }
+    },
 }
+
 export type Garden = {
     chickencoop: {
-
-    }
+        door: boolean,
+    },
 }
 
 export type Presence = {
     [person: string]: {
         [device: string] : boolean,
-    } 
+    },
 }
 
 export type Global = {
     utility: {
-        [key: string]: number
+        [key: string]: number,
     },
     heating: {
         [key: string]: number,
-    }
+    },
 }
 
 export type Home = {
-    [keys: string]: Room | Presence | Global | Garden
+    [keys: string]: Room | Presence | Global | Garden,
 }
 
