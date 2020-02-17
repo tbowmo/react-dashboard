@@ -2,6 +2,7 @@ import {
     Request,
 } from 'express'
 import { Mqtt } from '../../mqtt/mqtt'
+import { getStore } from '../../mqtt/memory-store'
 
 export class RemoteController {
     private mqtt: Mqtt = Mqtt.getInstance()
@@ -37,13 +38,18 @@ export class RemoteController {
         return 'ok'
     }
 
-    async button(request: Request) {
+    async deviceSet(request: Request) {
         const {
             room,
             type,
             device,
-            value
+            value,
         } = request.params
-        this.mqtt.publish(`home/${room}/${type}/${device}/set`, value)
+
+        const state = getStore()
+        if (Object.keys(state).includes(room) && type in ['light', 'switch', 'chicken']) {
+            this.mqtt.publish(`home/${room}/${type}/${device}/set`, value)
+            return 'ok'
+        }
     }
 }

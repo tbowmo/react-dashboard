@@ -1,6 +1,6 @@
 import {
     Request,
-    Response, 
+    Response,
 } from 'express'
 import axios from 'axios'
 import { Weather } from '../entity/Weather'
@@ -39,7 +39,7 @@ export class WeatherController {
         let cachedValue = await this.getCachedValue(requestType)
         if (!cachedValue || cachedValue.timestamp < ((Date.now() / 1000) - timeout) ) {
             try {
-                const response = await axios.get(this.buildOWUrl(requestType)) 
+                const response = await axios.get(this.buildOWUrl(requestType))
                 await this.setCachedValue(requestType, JSON.stringify(response.data))
                 return response.data
             // eslint-disable-next-line no-empty

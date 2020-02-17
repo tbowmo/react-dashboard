@@ -31,18 +31,8 @@ export const Routes: Route[] = [{
     action: 'remote',
 }, {
     method: 'get',
-    route: '/lights/:room/:device/:value',
+    route: '/deviceSet/:room/:type/:device/:value',
     controller: RemoteController,
-    action: 'light',
-}, {
-    method: 'get',
-    route: '/switch/:room/:device/:value',
-    controller: RemoteController,
-    action: 'switch',
-},{
-    method: 'get',
-    route: '/button/:room/:type/:device/:value',
-    controller: RemoteController,
-    action: 'button',
+    action: 'deviceSet',
 },
 ]

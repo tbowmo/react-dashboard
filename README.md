@@ -1,6 +1,8 @@
 React dashboard
 ===
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=tbowmo_react-dashboard&metric=alert_status)](https://sonarcloud.io/dashboard?id=tbowmo_react-dashboard)
+
 Work in progress, and react playground. This is my attempt at creating an interface for my home automation setup, targeted at tablets.
 
 the plan is to use an old tablet, mounted in a frame on the wall as interface for controlling various things in the house. Including chromecast audio / video streams.

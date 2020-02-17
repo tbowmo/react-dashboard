@@ -1,5 +1,7 @@
 import {
-    Entity, PrimaryGeneratedColumn, Column, 
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
 } from 'typeorm'
 
 @Entity()
@@ -13,7 +15,7 @@ export class StreamEntity {
 
     @Column()
     json!: string;
-    
+
     @Column()
     type!: 'tv' | 'audio'
 
