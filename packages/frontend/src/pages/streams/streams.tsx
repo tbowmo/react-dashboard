@@ -24,7 +24,12 @@ export function Streams(props: Props) {
 
     function SelectStream(stream: StreamDto) {
         setActive(stream.link)
-        // mqttClient.publish('media/stuen/control/play', JSON.stringify(stream))
+        console.log('Selecting stream')
+        const xhttp = new XMLHttpRequest()
+        xhttp.open('POST', '/media/stuen/play', true)
+        xhttp.setRequestHeader('Content-type', 'application/json')
+        xhttp.send(JSON.stringify(stream))
+        // mqttsClient.publish('media/stuen/control/play', JSON.stringify(stream))
     }
 
     React.useEffect( () => {
@@ -34,13 +39,13 @@ export function Streams(props: Props) {
                 resetTimer(200)
             }, 200)
             return () => {clearTimeout(timer)}
-        } 
+        }
     }, [active])
 
     return (
         <div className={style.streams}>
             {streams?.map((streamEntry) => (
-                <div 
+                <div
                     className={clsx(style.singleStream, (streamEntry.link === active) && style.active)}
                     key={streamEntry.friendly}
                     onClick={() => SelectStream(streamEntry)}
@@ -50,7 +55,7 @@ export function Streams(props: Props) {
                             { streamEntry.icon === '' ? streamEntry.friendly : <img src={streamEntry.icon} alt={streamEntry.friendly} /> }
                         </div>
                         <div className={style.time}>
-                            { streamEntry.start !== streamEntry.stop ? ( 
+                            { streamEntry.start !== streamEntry.stop ? (
                                 <React.Fragment>
                                     <label className={style.startText}>Start</label>
                                     <div className={style.startTime}>{moment(streamEntry.start).format('HH:mm')}</div>
@@ -66,7 +71,7 @@ export function Streams(props: Props) {
                         truncateText="…"
                         text={streamEntry.programme || streamEntry.friendly}
                         className={clsx(style.center, style.show)}
-                    />  
+                    />
                 </div>
             ))}
         </div>

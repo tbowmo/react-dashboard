@@ -5,18 +5,20 @@ import {
 } from 'typeorm'
 
 @Entity()
-export class StreamEntity {
+export class Stream {
 
     @PrimaryGeneratedColumn()
-    id!: number;
+    id!: number
 
     @Column()
-    name!: string;
+    name!: string
 
     @Column()
-    json!: string;
+    json!: string
 
     @Column()
     type!: 'tv' | 'audio'
 
+    @Column()
+    xmlid!: string
 }

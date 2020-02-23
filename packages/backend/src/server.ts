@@ -5,10 +5,11 @@ import * as bodyParser from 'body-parser'
 import { Request, Response } from 'express'
 import { Routes } from './server/routes'
 import * as path from 'path'
-import { Weather } from './server/entity/Weather'
+import { Weather } from './server/entity/weather'
 import * as dotenv from 'dotenv'
 import * as fs from 'fs'
 import ServerSide from './server/controller/sse'
+import { Stream } from './server/entity/stream'
 
 const cors = require('cors')
 
@@ -37,6 +38,7 @@ createConnection(
         synchronize: true,
         logging: logging,
         entities: [
+            Stream,
             Weather,
         ],
     },
@@ -62,6 +64,8 @@ createConnection(
     })
 
     app.use(express.static(path.resolve('packages', 'frontend', 'build')))
+
+    app.use('/mediaIcons', express.static(path.resolve('xmltv')))
 
     app.get('*', (_req, res) =>{
         res.sendFile(path.resolve('packages', 'frontend', 'build', 'index.html'))

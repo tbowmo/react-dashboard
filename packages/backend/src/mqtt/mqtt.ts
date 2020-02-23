@@ -16,7 +16,7 @@ export class Mqtt {
     public static getInstance(host?: string) {
         if (!Mqtt.instance) {
             if (host === undefined) {
-                throw('Host is not defined in initial call!')
+                throw ('Host is not defined in initial call!')
             }
             Mqtt.instance=new Mqtt(host)
         }
@@ -25,6 +25,7 @@ export class Mqtt {
 
     private constructor(host: string) {
         this.client = MQTT.connect(host)
+        // eslint-disable-next-line no-console
         this.client.on('error', (error) => console.log(error))
         this.client.on('message', (topic, payload) => {
             this.handleCallbacks(topic, payload)

@@ -7,7 +7,7 @@ import { SSEHandler } from './core/data'
 
 export function App() {
     return (
-        <SSEProvider endpoint="/api/sse">
+        <SSEProvider endpoint={process.env.NODE_ENV === 'development' ? 'http://localhost:5000/api/sse' : '/api/sse'}>
             <SSEHandler>
                 <div className={style.App}>
                     <div className={style.info}>

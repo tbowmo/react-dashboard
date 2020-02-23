@@ -8,12 +8,12 @@ import {
 export class Weather {
 
     @PrimaryColumn()
-    type!: string;
+    type!: string
 
     @Column()
-    timestamp!: number;
+    timestamp!: number
 
     @Column()
-    json!: string;
+    json!: string
 
 }

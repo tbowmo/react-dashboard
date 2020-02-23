@@ -3,14 +3,15 @@ import style from './scene.module.scss'
 import { IconType } from 'react-icons/lib/cjs'
 import { resetTimer } from '../../core/tabs/tabs'
 import clsx from 'clsx'
+import { deviceSet, DeviceType } from './device-set'
 
 export type Props = {
     className: string,
     label?: string,
     room?: string,
-    type?: string,
+    type?: DeviceType,
     device: string,
-    payload?: string,
+    payload: string,
     icon?: IconType,
 }
 
@@ -28,8 +29,8 @@ export function MqttButton(props: Props) {
 
     function click() {
         setKey(true)
-        fetch(`button/${room}/${type}/${device}/${payload}`)
-    } 
+        deviceSet(room, type, device, payload)
+    }
 
     React.useEffect( () => {
         if (keyActivated) {

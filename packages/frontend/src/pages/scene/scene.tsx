@@ -8,6 +8,10 @@ import {
     MdVideoLabel,
     MdPowerSettingsNew,
 } from 'react-icons/md'
+import {
+    FaDoorOpen,
+    FaDoorClosed,
+} from 'react-icons/fa'
 import { LightDimmer } from './mqtt-light-dimmer'
 import { MqttButton } from './mqtt-button'
 import { MqttToggle } from './mqtt-toggle'
@@ -22,23 +26,23 @@ type Action = {
 
 const actionList: Action[] = [
     {
-        label: 'DVD', 
-        action: 'dvd', 
+        label: 'DVD',
+        action: 'dvd',
         icon: MdAlbum,
     },
     {
-        label: 'WII', 
-        action: 'wii', 
+        label: 'WII',
+        action: 'wii',
         icon: MdGames,
     },
     {
-        label: 'Musik', 
+        label: 'Musik',
         action: 'audio',
         icon: MdMusicNote,
     },
     {
-        label: 'Video', 
-        action: 'video', 
+        label: 'Video',
+        action: 'video',
         icon: MdVideoLabel,
     },
     {
@@ -80,6 +84,16 @@ export function Scene() {
                         offPayload={false}
                     />
                 ))}
+                <MqttToggle
+                    label="Hønsehus"
+                    device="door"
+                    room="garden"
+                    type="chicken"
+                    onPayload={true}
+                    offPayload={false}
+                    iconOn={FaDoorOpen}
+                    iconOff={FaDoorClosed}
+                />
             </div>
         </div>
     )

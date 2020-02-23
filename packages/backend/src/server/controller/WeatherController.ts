@@ -3,7 +3,7 @@ import {
     Response,
 } from 'express'
 import axios from 'axios'
-import { Weather } from '../entity/Weather'
+import { Weather } from '../entity/weather'
 import { getRepository } from 'typeorm'
 
 type RequestType = 'weather' | 'forecast'

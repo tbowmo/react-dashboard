@@ -5,6 +5,7 @@ import { useSubscribeNumberPayload } from '../../core/data'
 import { FaLightbulb, FaRegLightbulb } from 'react-icons/fa'
 import { resetTimer } from '../../core/tabs/tabs'
 import clsx from 'clsx'
+import { deviceSet } from './device-set'
 
 const useStyles = makeStyles({
     slider: {
@@ -21,7 +22,7 @@ type Props = {
     label: string,
 }
 
-function rgbToHex(rgb: number): string { 
+function rgbToHex(rgb: number): string {
     var hex = Number(rgb).toString(16)
     if (hex.length < 2) {
         hex = '0' + hex
@@ -58,11 +59,11 @@ export function LightDimmer(props: Props) {
     }
 
     function valueCommit(_event, value) {
-        fetch(`/light/${room}/${light}/${value}`).then(() => {})
+        deviceSet(room, 'light', light, value)
     }
-    
+
     const currentLightIntensity = useSubscribeNumberPayload(room, 'light', light) || 0
-    
+
     React.useEffect(() => {
         if (currentLightIntensity < 0) {
             setLightIntensity(0)
@@ -72,7 +73,7 @@ export function LightDimmer(props: Props) {
             setDisabled(false)
         }
     }, [currentLightIntensity])
-    
+
     if (lightIntensity === undefined) return null
 
     return (
@@ -83,7 +84,7 @@ export function LightDimmer(props: Props) {
                 </div>
 
                 <div className={style.slider}>
-                    <Slider 
+                    <Slider
                         className={classes.slider}
                         value={lightIntensity}
                         name={props.device}

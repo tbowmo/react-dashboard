@@ -7,14 +7,16 @@ import {
     FaToggleOff,
     FaToggleOn,
 } from 'react-icons/fa'
+import { deviceSet, DeviceType } from './device-set'
 
 type Props = {
     className?: string,
     label: string,
     room?: string,
+    type?: DeviceType,
     device: string,
-    onPayload: boolean,
-    offPayload: boolean,
+    onPayload: boolean | string,
+    offPayload: boolean | string,
     iconOn?: IconType,
     iconOff?: IconType,
 }
@@ -24,21 +26,22 @@ export function MqttToggle(props: Props) {
         iconOn: IconOn = FaToggleOn,
         iconOff: IconOff = FaToggleOff,
         room = 'stuen',
+        type = 'switch',
         device,
     } = props
     const [ active, setActive ] = React.useState(false)
 
-    const currentState = useSubscribeBooleanPayload(room, 'switch', device)
+    const currentState = useSubscribeBooleanPayload(room, type, device)
 
     function onClick() {
         const value = active ? props.offPayload : props.onPayload
-        fetch(`/switch/${room}/${device}/${value}`).then(() => {})
+        deviceSet(room, type, device, value.toString())
     }
 
     React.useEffect(() => {
         if (currentState !== undefined) {
             setActive(currentState === props.onPayload)
-        } 
+        }
     }, [currentState, props])
 
     return (
@@ -49,4 +52,4 @@ export function MqttToggle(props: Props) {
             <div className={style.center}>{props.label}</div>
         </div>
     )
-} 
+}

@@ -34,5 +34,10 @@ export const Routes: Route[] = [{
     route: '/deviceSet/:room/:type/:device/:value',
     controller: RemoteController,
     action: 'deviceSet',
+}, {
+    method: 'post',
+    route: '/media/:room/play',
+    controller: RemoteController,
+    action: 'mediaPlay',
 },
 ]

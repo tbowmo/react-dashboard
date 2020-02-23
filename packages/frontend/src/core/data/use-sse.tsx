@@ -61,7 +61,12 @@ export function useSubscribeNumberPayload(room: string, deviceType: string, devi
 }
 
 export function useSubscribeBooleanPayload(room: string, deviceType: string, device: string): boolean {
-    return (useSubscribeStringPayload(room, deviceType, device) as any) as boolean
+    const value = useSubscribeStringPayload(room, deviceType, device)
+    let bool: any
+    try {
+        bool = JSON.parse(value || '0')
+    } catch {}
+    return bool === 1 || bool === '1' || bool || false
 }
 
 export function useChromecast(room: string = 'stuen'): Chromecast.Chrome | undefined {
