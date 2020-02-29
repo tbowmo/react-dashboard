@@ -29,7 +29,6 @@ export function Streams(props: Props) {
         xhttp.open('POST', '/media/stuen/play', true)
         xhttp.setRequestHeader('Content-type', 'application/json')
         xhttp.send(JSON.stringify(stream))
-        // mqttsClient.publish('media/stuen/control/play', JSON.stringify(stream))
     }
 
     React.useEffect( () => {
@@ -47,20 +46,20 @@ export function Streams(props: Props) {
             {streams?.map((streamEntry) => (
                 <div
                     className={clsx(style.singleStream, (streamEntry.link === active) && style.active)}
-                    key={streamEntry.friendly}
+                    key={streamEntry.xmlid}
                     onClick={() => SelectStream(streamEntry)}
                 >
                     <div className={style.iconTime}>
                         <div className={clsx(style.center, style.channel)}>
-                            { streamEntry.icon === '' ? streamEntry.friendly : <img src={streamEntry.icon} alt={streamEntry.friendly} /> }
+                            { streamEntry.icon === '' ? streamEntry.xmlid : <img src={streamEntry.icon} alt={streamEntry.xmlid} /> }
                         </div>
                         <div className={style.time}>
-                            { streamEntry.start !== streamEntry.stop ? (
+                            { streamEntry.programmes[0].start !== streamEntry.programmes[0].end ? (
                                 <React.Fragment>
                                     <label className={style.startText}>Start</label>
-                                    <div className={style.startTime}>{moment(streamEntry.start).format('HH:mm')}</div>
+                                    <div className={style.startTime}>{moment(streamEntry.programmes[0].start).format('HH:mm')}</div>
                                     <label className={style.endText}>Slut</label>
-                                    <div className={style.endtime}>{moment(streamEntry.stop).format('HH:mm')}</div>
+                                    <div className={style.endtime}>{moment(streamEntry.programmes[0].end).format('HH:mm')}</div>
                                 </React.Fragment>
                             ) : null }
                         </div>
@@ -69,7 +68,7 @@ export function Streams(props: Props) {
                         line={1}
                         element="div"
                         truncateText="…"
-                        text={streamEntry.programme || streamEntry.friendly}
+                        text={streamEntry.programmes[0].title}
                         className={clsx(style.center, style.show)}
                     />
                 </div>

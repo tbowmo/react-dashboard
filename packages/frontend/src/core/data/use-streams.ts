@@ -11,7 +11,7 @@ export function useStreams(type: 'radio' | 'tv'): StreamDto[] | undefined {
     const streamState = useSelector((state: combinedState) => state.streams)
     const dispatch = useDispatch()
     useEffect(() => {
-        const url = process.env.REACT_APP_BACKEND + `/${type}/list`
+        const url = `/channels/list/${type}`
         fetch(url)
             .then((resp) => resp.json())
             .then((data) => dispatch(fetchStreamSuccess(type, data)))

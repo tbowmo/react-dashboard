@@ -1,5 +1,5 @@
 import { WeatherController } from './controller/WeatherController'
-import { StreamController } from './controller/StreamController'
+import { ChannelController } from './controller/ChannelController'
 import { RemoteController } from './controller/remote'
 
 type Route = {
@@ -21,9 +21,14 @@ export const Routes: Route[] = [{
     action: 'currentWeather',
 }, {
     method: 'get',
-    route: '/streams/list/:type',
-    controller: StreamController,
-    action: 'streamList',
+    route: '/channels/list/:type',
+    controller: ChannelController,
+    action: 'channelList',
+}, {
+    method: 'get',
+    route: '/channels/current/:xmlid',
+    controller: ChannelController,
+    action: 'currentProgramme',
 }, {
     method: 'get',
     route: '/remote/:room/:command',

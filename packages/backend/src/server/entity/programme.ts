@@ -1,8 +1,10 @@
 import {
     Entity,
-    PrimaryGeneratedColumn,
     Column,
+    ManyToOne,
+    PrimaryGeneratedColumn,
 } from 'typeorm'
+import { Channel } from './channel'
 
 @Entity()
 export class Programme {
@@ -11,11 +13,20 @@ export class Programme {
     id!: number
 
     @Column()
-    name!: string
+    title!: string
 
     @Column()
-    json!: string
+    start!: Date
 
     @Column()
-    xmlid!: string
+    end!: Date
+
+    @Column()
+    description!: string
+
+    @Column()
+    category!: string
+
+    @ManyToOne((type) => Channel, (channel) => channel.programmes)
+    channel!: Channel
 }

@@ -8,16 +8,16 @@ export function RadioTv(props: {media: Chromecast.Media}) {
     const { media } = props
     return (
         <React.Fragment>
-            <Duration media={media} />
+            <Duration />
             <MediaProp
                 label="Program"
                 className={style.station}
-                value={media.album}
+                value={media?.album}
             />
             <MediaProp
                 label="Beskrivelse"
                 className={style.description}
-                value={media.title}
+                value={media?.title}
                 lines={4}
             />
         </React.Fragment>

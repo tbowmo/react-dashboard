@@ -9,15 +9,26 @@ app.get('/api/sse', sse.init)
 
 const mqtt = Mqtt.getInstance('mqtt://192.168.1.64')
 
-mqtt.addListener('home/#', (topic: string, payload: string) => {
-    const type = updateStore(topic, payload)
-    if (type) {
-        sse.send({
-            payload,
-            topic,
-        }, 'updates')
-        sse.updateInit(getStore(), 'initial')
-    }
-})
+function initMqttListener() {
+    mqtt.addListener('home/#', async (topic: string, payload: string) => {
+        if (!topic.endsWith('/dt')
+            && !topic.endsWith('/set')
+            && !topic.endsWith('/control')
+        ) {
+            const enrichedPayload = await updateStore(topic, payload)
+            if (enrichedPayload !== undefined) {
+                sse.send({
+                    payload: enrichedPayload,
+                    topic,
+                }, 'updates')
+                sse.updateInit(getStore(), 'initial')
+            }
+        }
+    })
+
+}
+
+// Delay mqtt listener startup, in order to stabilize database layer.
+setTimeout(initMqttListener, 2000)
 
 export default app

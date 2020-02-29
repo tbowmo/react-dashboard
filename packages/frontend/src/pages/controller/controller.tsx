@@ -30,7 +30,7 @@ export function Controller() {
         }
     }, [showAlbumCover])
 
-    if (avcenter.toLocaleLowerCase() === 'off' || cast === undefined) {   
+    if (avcenter.toLocaleLowerCase() === 'off' || cast === undefined) {
         return (
             <Weather />
         )
@@ -39,18 +39,18 @@ export function Controller() {
     const isStreaming = avcenter.toLocaleLowerCase().includes('stream')
 
     return (
-        <div className={style.controller}> 
+        <div className={style.controller}>
             { isStreaming ? (
                 <div className={style.mediaInfo}>
-                    { (cast.media.album_art ?? '') !== '' && (cast.capabilities.app_icon ?? '') !== '' ? (
+                    { (cast?.media?.album_art ?? '') !== '' && (cast?.capabilities?.app_icon ?? '') !== '' ? (
                         <div className={style.appIcon}>
-                            <img src={cast.capabilities.app_icon} alt={cast.capabilities.app} />
+                            <img src={cast?.capabilities?.app_icon} alt={cast?.capabilities?.app} />
                         </div>
                     ) : null}
                     <div className={clsx(style.albumCover, showAlbumCover && style.raiseAppIcon)}>
-                        <img src={cast.media.album_art || cast.capabilities.app_icon} alt={cast.media.album} onClick={clickAlbumCover} />
+                        <img src={cast?.media?.album_art || cast.capabilities?.app_icon} alt={cast?.media?.album} onClick={clickAlbumCover} />
                     </div>
-                    { cast.media.type === 0 ? (<Music media={cast.media} />) : (<RadioTv media={cast.media} />) }
+                    { cast?.media?.type === 0 ? (<Music media={cast?.media} />) : (<RadioTv media={cast?.media} />) }
                 </div>
             ): (
                 <Others type={avcenter} />

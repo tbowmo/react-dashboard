@@ -1,12 +1,18 @@
+type Programme = {
+    id: number,
+    title: string,
+    start: Date,
+    end: Date,
+    description: string,
+    category: string,
+}
+
 export type StreamDto = {
-    programme: string,
-    start: string,
-    stop: string,
-    id: string,
-    friendly: string,
-    extra: string,
+    name: string,
     xmlid: string,
     link: string,
-    media: string,
+    type: string,
     icon: string,
+    programmes: Programme[]
 }
+

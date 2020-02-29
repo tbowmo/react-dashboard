@@ -13,23 +13,23 @@ export function Music(props: Props) {
 
     return (
         <React.Fragment>
-            <Duration media={media} />
-            <MediaProp 
+            <Duration />
+            <MediaProp
                 label="Kunstner"
                 className={style.artist}
-                value={media.artist}
+                value={media?.artist}
             />
-            <MediaProp 
+            <MediaProp
                 label="Album"
                 className={style.album}
-                value={media.album}
+                value={media?.album}
             />
             <MediaProp
                 label="Titel"
                 className={style.title}
-                value={media.title}
+                value={media?.title}
             />
         </React.Fragment>
-    )    
+    )
 }
 
