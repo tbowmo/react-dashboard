@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Chromecast } from '@dashboard/types'
-import style from './controller.module.scss'
+import style from './media.module.scss'
 import { Duration } from './duration'
 import { MediaProp } from './media-prop'
 

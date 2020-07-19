@@ -9,14 +9,14 @@ import {
     MdPlayArrow,
 } from 'react-icons/md'
 import { IconType } from 'react-icons/lib/cjs'
-import style from './controller.module.scss'
+import style from './media.module.scss'
 import clsx from 'clsx'
 import { useChromecast } from '../../core/data'
 
 type controlKey = {
-    icon: IconType,
+    icon: IconType | undefined,
     key: string,
-    state: 'ALL' | 'PAUSED' | 'PLAYING',
+    state: 'ALL' | 'PAUSED' | 'PLAYING' | 'none',
     repeat?: boolean,
 }
 
@@ -47,6 +47,11 @@ const functions: controlKey[] = [
         icon: MdPlayArrow,
         key: 'play',
         state: 'PAUSED',
+    },
+    {
+        icon: undefined,
+        key: 'noKey',
+        state: 'none',
     },
     {
         icon: MdFastForward,
@@ -87,7 +92,7 @@ export function Remote() {
 
     React.useEffect(() => {
         if (
-            repeat?.repeat 
+            repeat?.repeat
             && repeatIntervalTimer === undefined
         ) {
             repeatIntervalTimer = setInterval( () => {
@@ -105,13 +110,21 @@ export function Remote() {
             setTimeout(() => setActiveKey(''), 200)
         }
     }, [activeKey, setActiveKey])
- 
+
+    const remoteButtons = functions.filter((button) => {
+        if (button.state === 'ALL') return true
+        const state = capabilities?.state || 'none'
+        if (['PLAYING', 'PAUSED'].includes(state)) {
+            return (button.state === state)
+        } else {
+            return button.state === 'none'
+        }
+    })
+
     return (
         <div className={style.remoteControl}>
-            { functions.filter((link) => {
-                return link.state === 'ALL' || link.state === capabilities?.state || ''
-            }).map((link) => (
-                <div 
+            { remoteButtons.map((link) => (
+                <div
                     key={link.key}
                     className={clsx(style.remoteButton, (link.key === activeKey) && style.active)}
                     onTouchStart={() => buttonDown(link)}
@@ -120,7 +133,7 @@ export function Remote() {
                     onMouseUp={() => buttonRelease()}
                 >
                     <div className={style.center}>
-                        <link.icon />
+                        { link.icon ? (<link.icon />) : null }
                     </div>
                 </div>
             ))}

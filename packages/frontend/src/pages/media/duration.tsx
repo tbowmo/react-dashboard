@@ -1,12 +1,9 @@
 import { useChromecast } from '../../core/data'
 import * as React from 'react'
 import clsx from 'clsx'
-import style from './controller.module.scss'
+import style from './media.module.scss'
 
 
-function getTimePast(start_time): number {
-    return Math.floor((Date.now() / 1000) - start_time)
-}
 
 function secondsToHms(d) {
 
@@ -28,13 +25,17 @@ export function Duration() {
 
     const [time, setTime] = React.useState<number>(0)
     const [remaining, setRemaining] = React.useState<boolean>(false)
+    const current_time = media?.media?.current_time
+
+    React.useEffect(() => {
+        fetch(`/media/stuen/update`).then(() => {})
+    }, [])
 
     React.useEffect(() => {
         if (timer === undefined) {
-            setTime(getTimePast(media?.media?.start_time))
             timer = setInterval(() => {
                 if (media?.state === 'PLAYING') {
-                    setTime(getTimePast(media?.media?.start_time))
+                    setTime(time+1)
                 }
             }, 1000)
         }
@@ -44,7 +45,11 @@ export function Duration() {
                 timer = undefined
             }
         }
-    }, [media])
+    }, [media, setTime, time])
+
+    React.useEffect(() => {
+        setTime(current_time || 0)
+    }, [current_time])
 
     const { totalTime, currentTime, fontSize, remainingTime } = React.useMemo(() => {
         if (media?.media?.duration || 0 > 3600) {

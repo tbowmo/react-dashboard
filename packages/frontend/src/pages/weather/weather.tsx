@@ -3,6 +3,7 @@ import {
     useCurrentWeather,
     useForecastWeather,
     ForecastTupple,
+    useSubscribeNumberPayload,
 } from '../../core/data'
 import style from './weather.module.scss'
 import { 
@@ -65,6 +66,8 @@ function round(value: number, precission: number = 1): number {
 export function Weather() {
     const weather = useCurrentWeather()
 
+    const temperature = useSubscribeNumberPayload('garden', 'climacell', 'temperature')
+
     if (weather === undefined) {
         return null
     }
@@ -75,7 +78,7 @@ export function Weather() {
         <div className={style.mainWeather}>
             <div className={style.weatherRows}>
                 <div className={style.main}>
-                    {round(weather?.main?.temp || -99)}&deg;C
+                    {round(temperature || -99)}&deg;C
                 </div>
                 <div className={style.secondary}>
                     {round(weather?.main?.temp_min ?? -99)}&deg;C - {round(weather?.main?.temp_max ?? -99)}&deg;C
@@ -104,7 +107,7 @@ export function Weather() {
     )
 }
 
-export function Forecast() {
+function Forecast() {
     const forecast = useForecastWeather()
 
     if (forecast === undefined || forecast.list === undefined) {

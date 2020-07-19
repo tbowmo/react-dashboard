@@ -1,10 +1,11 @@
 import { Request } from 'express'
 import { Mqtt } from '../../mqtt/mqtt'
-import { getStore } from '../../mqtt/memory-store'
+import { MemoryStore } from '../../mqtt/memory-store'
 
 export class RemoteController {
     private mqtt: Mqtt = Mqtt.getInstance()
     private readonly scenes = ['dvd', 'audio', 'video', 'wii', 'off', 'ps2']
+    private store = MemoryStore.get()
 
     async remote(request: Request) {
         const { room, command } = request.params
@@ -34,12 +35,21 @@ export class RemoteController {
             value,
         } = request.params
 
-        const state = getStore()
+        const state = this.store.getStore()
         if (Object.keys(state).includes(room) && ['light', 'switch', 'chicken', 'avctrl'].includes(type)) {
             this.mqtt.publish(`home/${room}/${type}/${device}/set`, value)
             return 204
         } else {
             return 400
         }
+    }
+
+    async updateMedia(request:Request) {
+        const {
+            room,
+        } = request.params
+
+        this.mqtt.publish(`home/${room}/media/control/update`, '1')
+        return 204
     }
 }

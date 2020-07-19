@@ -92,6 +92,8 @@ export function LightDimmer(props: Props) {
                         step={10}
                         onChange={valueUpdate}
                         onChangeCommitted={valueCommit}
+                        min={0}
+                        max={100}
                     />
                 </div>
             </div>

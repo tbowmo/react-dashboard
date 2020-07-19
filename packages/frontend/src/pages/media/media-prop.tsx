@@ -1,6 +1,6 @@
 import * as React from 'react'
 import clsx from 'clsx'
-import style from './controller.module.scss'
+import style from './media.module.scss'
 import TextTruncate from 'react-text-truncate'
 
 type Props = {

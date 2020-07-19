@@ -4,7 +4,7 @@ import {
     MdTv,
     MdGames,
 } from 'react-icons/md'
-import style from './controller.module.scss'
+import style from './media.module.scss'
 import { MediaProp } from './media-prop'
 
 

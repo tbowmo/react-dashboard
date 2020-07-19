@@ -1,9 +1,9 @@
 import * as React from 'react'
-import style from './controller.module.scss'
+import style from './media.module.scss'
 import {
     useChromecast,
     useSubscribeStringPayload,
-} from '../../core/data/'
+} from '../../core/data'
 import { Weather } from '../weather/weather'
 import { Music } from './music'
 import { RadioTv } from './radio-tv'
@@ -42,15 +42,15 @@ export function Controller() {
         <div className={style.controller}>
             { isStreaming ? (
                 <div className={style.mediaInfo}>
-                    { (cast?.media?.album_art ?? '') !== '' && (cast?.capabilities?.app_icon ?? '') !== '' ? (
+                    { (cast.media?.album_art ?? '') !== '' && (cast.capabilities?.app_icon ?? '') !== '' ? (
                         <div className={style.appIcon}>
-                            <img src={cast?.capabilities?.app_icon} alt={cast?.capabilities?.app} />
+                            <img src={cast.capabilities?.app_icon} alt={cast.capabilities?.app} />
                         </div>
                     ) : null}
                     <div className={clsx(style.albumCover, showAlbumCover && style.raiseAppIcon)}>
-                        <img src={cast?.media?.album_art || cast.capabilities?.app_icon} alt={cast?.media?.album} onClick={clickAlbumCover} />
+                        <img src={cast.media?.album_art || cast.capabilities?.app_icon} alt={cast.media?.album} onClick={clickAlbumCover} />
                     </div>
-                    { cast?.media?.type === 0 ? (<Music media={cast?.media} />) : (<RadioTv media={cast?.media} />) }
+                    { cast.media?.metadata_type === 3 ? (<Music media={cast.media} />) : (<RadioTv media={cast.media} />) }
                 </div>
             ): (
                 <Others type={avcenter} />
