@@ -15,8 +15,8 @@ type Props = {
     room?: string,
     type?: DeviceType,
     device: string,
-    onPayload: boolean | string,
-    offPayload: boolean | string,
+    onPayload: boolean | string | number,
+    offPayload: boolean | string | number,
     iconOn?: IconType,
     iconOff?: IconType,
 }

@@ -89,8 +89,8 @@ export function Scene() {
                     device="door"
                     room="garden"
                     type="chicken"
-                    onPayload={true}
-                    offPayload={false}
+                    onPayload={1}
+                    offPayload={0}
                     iconOn={FaDoorOpen}
                     iconOff={FaDoorClosed}
                 />
