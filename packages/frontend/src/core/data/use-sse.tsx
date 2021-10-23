@@ -7,6 +7,7 @@ import { Chromecast, Home, Room } from '@dashboard/types'
 import { SSEState } from './sse/reducer'
 import { useSSE } from 'react-hooks-sse'
 import { initialData, incomming } from './sse/actions'
+import { combinedState } from './store'
 
 type Props = {
     children?: any,
@@ -49,19 +50,19 @@ export function SSEHandler(props: Props) {
     )
 }
 
-export function useSubscribeStringPayload(room: string, deviceType: string, device: string): string | undefined {
-    const data = useSelector( (state) => state.sse ) as SSEState
+export function useSSEString(room: string, deviceType: string, device: string): string | undefined {
+    const data = useSelector( (state: combinedState) => state.sse ) as SSEState
     if (data[room] && data[room][deviceType]) {
         return data[room][deviceType][device]
     }
 }
 
-export function useSubscribeNumberPayload(room: string, deviceType: string, device: string): number | undefined {
-    return parseFloat(useSubscribeStringPayload(room, deviceType, device) || '-9999')
+export function useSSENumber(room: string, deviceType: string, device: string): number | undefined {
+    return parseFloat(useSSEString(room, deviceType, device) || '-9999')
 }
 
-export function useSubscribeBooleanPayload(room: string, deviceType: string, device: string): boolean {
-    const value = useSubscribeStringPayload(room, deviceType, device)
+export function useSSEBoolean(room: string, deviceType: string, device: string): boolean {
+    const value = useSSEString(room, deviceType, device)
     let bool: any
     try {
         bool = JSON.parse(value || '0')
@@ -70,14 +71,14 @@ export function useSubscribeBooleanPayload(room: string, deviceType: string, dev
 }
 
 export function useChromecast(room: string = 'stuen'): Chromecast.Chrome | undefined {
-    const data = useSelector( (state) => state.sse ) as SSEState
+    const data = useSelector( (state: combinedState) => state.sse ) as SSEState
     if (data[room]) {
         return (data[room] as Room)?.media
     }
 }
 
-export function useDevices(room, type): string[] {
-    const data = useSelector((state) => state.sse) as SSEState
+export function useDevices(room: string, type: string): string[] {
+    const data = useSelector((state: combinedState) => state.sse) as SSEState
     if (data[room] && data[room][type]) {
         return Object.keys(data[room][type])
     }

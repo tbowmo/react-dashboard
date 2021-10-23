@@ -1,13 +1,15 @@
 import * as express from 'express'
 import * as SSE from 'express-sse'
 import { Mqtt } from '../../mqtt/mqtt'
-import { updateStore, getStore } from '../../mqtt/memory-store'
+import { MemoryStore } from '../../mqtt/memory-store'
 const app = express()
 
 const sse = new SSE({}, { initialEvent: 'initial' })
 app.get('/api/sse', sse.init)
 
-const mqtt = Mqtt.getInstance('mqtt://192.168.1.64')
+const store = MemoryStore.get(sse)
+
+const mqtt = Mqtt.getInstance('mqtt://192.168.3.117')
 
 function initMqttListener() {
     mqtt.addListener('home/#', async (topic: string, payload: string) => {
@@ -15,17 +17,9 @@ function initMqttListener() {
             && !topic.endsWith('/set')
             && !topic.endsWith('/control')
         ) {
-            const enrichedPayload = await updateStore(topic, payload)
-            if (enrichedPayload !== undefined) {
-                sse.send({
-                    payload: enrichedPayload,
-                    topic,
-                }, 'updates')
-                sse.updateInit(getStore(), 'initial')
-            }
+            await store.updateStore(topic, payload)
         }
     })
-
 }
 
 // Delay mqtt listener startup, in order to stabilize database layer.

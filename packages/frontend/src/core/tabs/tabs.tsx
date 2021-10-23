@@ -6,7 +6,7 @@ import {
     useLocation,
 } from 'react-router'
 import { Streams } from '../../pages/streams/streams'
-import { Controller } from '../../pages/controller/controller'
+import { Controller } from '../../pages/media/media'
 import history from '../../history'
 import { Scene } from '../../pages/scene/scene'
 import { Surveilance } from '../../pages/surveilance/surveilance'

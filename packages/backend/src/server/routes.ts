@@ -44,5 +44,10 @@ export const Routes: Route[] = [{
     route: '/media/:room/play',
     controller: RemoteController,
     action: 'mediaPlay',
-},
+}, {
+    method: 'get',
+    route: '/media/:room/update',
+    controller: RemoteController,
+    action: 'updateMedia',
+}
 ]

@@ -2,8 +2,8 @@
 import { Channel } from '../server/entity/channel'
 import {
     getRepository,
-    Equal,
     Raw,
+    Brackets,
 } from 'typeorm'
 import * as path from 'path'
 import * as md5File from 'md5-file/promise'
@@ -27,32 +27,34 @@ async function processProgrammes(filePath: string) {
     const toDay = new Date()
     parser.on('programme', async (programme) => {
         if (programme.end > toDay) {
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const prg = await getRepository(Programme)
-                .find({
-                    where: {
-                        start: Raw((alias) => `datetime(${alias}) = datetime("${programme.start.toISOString()}")`),
-                        end: Raw((alias) => `datetime(${alias}) = datetime("${programme.end.toISOString()}")`),
-                        channel: {
-                            xmlid: Equal(programme.channel),
-                        },
-                    },
-                })
+            const prg = await getRepository(Programme).createQueryBuilder('programme')
+                .where('programme.channel = :xml', { xml: programme.channel })
+                .andWhere(new Brackets((qb) => {
+                    qb.where('datetime(start) >= datetime(:start) and datetime(start) <= datetime(:end)', {
+                        start: programme.start.toISOString(),
+                        end: programme.end.toISOString(),
+                    }).orWhere('datetime(:start) >= datetime(start) and datetime(:start) <= datetime(end)', {
+                        start: programme.start.toISOString(),
+                    })
+                }))
+                .getMany()
 
-            if (prg.length === 0) {
-                console.log('updating')
-                const newPrg = getRepository(Programme).create({
-                    start: format(programme.start, 'yyyy-MM-dd HH:mm:SS.000'),
-                    end: format(programme.end, 'yyyy-MM-dd HH:mm:SS.000'),
-                    title: programme.title[0] || '',
-                    description: programme.desc[0] || '',
-                    category: programme.category.join(','),
-                    channel: {
-                        xmlid: programme.channel,
-                    },
-                })
-                await getRepository(Programme).save(newPrg)
+            if (prg.length > 0) {
+                const idToDelete = prg.map((programme) => programme.id)
+                await getRepository(Programme).delete(idToDelete)
             }
+            console.log('updating')
+            const newPrg = getRepository(Programme).create({
+                start: format(programme.start, 'yyyy-MM-dd HH:mm:SS.000'),
+                end: format(programme.end, 'yyyy-MM-dd HH:mm:SS.000'),
+                title: programme.title[0] || '',
+                description: programme.desc[0] || '',
+                category: programme.category.join(','),
+                channel: {
+                    xmlid: programme.channel,
+                },
+            })
+            await getRepository(Programme).save(newPrg)
         }
     })
     console.log('end parsing xml', filePath)
@@ -92,7 +94,7 @@ async function updateChannels(filePath: string) {
                 link: '',
                 type: 'audio/mp3',
             })
-            await getRepository(Channel).save(newChannel, {transaction: false})
+            await getRepository(Channel).save(newChannel, { transaction: false })
         }
     })
 }

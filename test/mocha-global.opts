@@ -1,0 +1,7 @@
+--harmony
+--reporter mocha-multi-reporters
+--reporter-options configFile=test/mocha-global-reporter.json
+--sort
+--watch-extensions ts,tsx,scss
+test/**/*.test.ts
+packages/*/src/**/*.test.{ts,tsx}

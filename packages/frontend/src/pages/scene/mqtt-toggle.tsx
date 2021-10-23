@@ -1,7 +1,7 @@
 import * as React from 'react'
 import style from './scene.module.scss'
 import { IconType } from 'react-icons/lib/cjs'
-import { useSubscribeBooleanPayload } from '../../core/data'
+import { useSSEBoolean } from '../../core/data'
 import clsx from 'clsx'
 import {
     FaToggleOff,
@@ -15,8 +15,8 @@ type Props = {
     room?: string,
     type?: DeviceType,
     device: string,
-    onPayload: boolean | string,
-    offPayload: boolean | string,
+    onPayload: boolean | string | number,
+    offPayload: boolean | string | number,
     iconOn?: IconType,
     iconOff?: IconType,
 }
@@ -31,7 +31,7 @@ export function MqttToggle(props: Props) {
     } = props
     const [ active, setActive ] = React.useState(false)
 
-    const currentState = useSubscribeBooleanPayload(room, type, device)
+    const currentState = useSSEBoolean(room, type, device)
 
     function onClick() {
         const value = active ? props.offPayload : props.onPayload

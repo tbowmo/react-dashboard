@@ -2,7 +2,6 @@ import * as React from 'react'
 import { Card2Line } from '../card-2-line/card-2-line'
 import moment from 'moment'
 import { Sensor } from '../sensor/sensor'
-import { useCurrentWeather } from '../data/'
 import './dash-top.scss'
 
 type TotalEntry = {
@@ -14,25 +13,40 @@ type TotalEntry = {
 const totals: TotalEntry[] = [
     {
         label: 'El dag',
-        sensor: 'day_Kwh',
+        sensor: 'day_Wh',
         div: 1,
     },
     {
         label: 'El uge',
-        sensor: 'week_Kwh',
+        sensor: 'week_Wh',
         div: 1000,
     },
     {
         label: 'El måned',
-        sensor: 'month_Kwh',
+        sensor: 'month_Wh',
         div: 1000,
     },
 ]
 
+type HumidDewP = {
+    sensor: string,
+    unit: string,
+}
+
+const humidDewPoint: HumidDewP[] = [
+    {
+        sensor: 'humidity',
+        unit: 'RH%'
+    },
+    {
+        sensor: 'dewpoint',
+        unit: 'dp °C'
+    }
+]
 export function DashTop() {
     const [date, setDate] = React.useState(moment())
-    const [totalIndex, setTotalIndex] = React.useState(0)
-  
+    const [totalIndex, setTotalIndex] = React.useState<number>(0)
+    const [dpIndex, setDpIndex] = React.useState<number>(0)
     React.useEffect(() => {
         const timerID = setInterval(() => setDate(moment()), 1000)
         return () => {
@@ -55,22 +69,48 @@ export function DashTop() {
             return () => {clearTimeout(timeout)}
         }
     }, [totalIndex])
-    
-    const currentWeather = useCurrentWeather()
-    if (!currentWeather) {
-        return null
+
+    const dpClick = () => { 
+        setDpIndex(dpIndex + 1)
+        if (dpIndex >= humidDewPoint.length-1) {
+            setDpIndex(0)
+        }
     }
-    const { main } = currentWeather
+
+    React.useEffect(() => {
+        if (dpIndex !== 0) {
+            const timeout = setTimeout(() => {
+                setDpIndex(0)
+            }, 5000)
+            return () => {clearTimeout(timeout)}
+        }
+    }, [dpIndex])
 
     const total = totals[totalIndex]
+    const humidDp = humidDewPoint[dpIndex]
     const scale=['Wh', 'kWh', 'MWh']
 
     return (
         <div className="topdashboard">
-            <Card2Line value={main?.temp || ''} cols="1" label="Udendørs" unit="&deg;C" />
-            <Card2Line value={main?.humidity || ''} cols="1" label="Udendørs" unit="RH%" />
+            <Sensor room="garden" sensorType="climacell" sensorName="temperature" cols="1" label="Udendørs" unit="&deg;C" />
+            <Sensor 
+                onClick={() => {dpClick()}}
+                room="garden"
+                sensorType="climacell"
+                sensorName={humidDp.sensor}
+                cols="1"
+                label="Udendørs"
+                unit={humidDp.unit}
+            />
             <Sensor room='stuen' sensorName='temperature' cols="1" label="Stuen" unit="&deg;C" />
-            <Sensor room="stuen" sensorName="humidity" cols="1" label="Stuen" unit="RH%" />
+            <Sensor 
+                onClick={() => {dpClick()}}
+                room="stuen"
+                sensorName={humidDp.sensor}
+                cols="1"
+                label="Stuen"
+                unit={humidDp.unit}
+            />
             <Sensor 
                 onClick={() => {elClick()}}
                 room='global'

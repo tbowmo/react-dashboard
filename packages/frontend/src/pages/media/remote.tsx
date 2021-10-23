@@ -9,7 +9,7 @@ import {
     MdPlayArrow,
 } from 'react-icons/md'
 import { IconType } from 'react-icons/lib/cjs'
-import style from './controller.module.scss'
+import style from './media.module.scss'
 import clsx from 'clsx'
 import { useChromecast } from '../../core/data'
 

@@ -1,7 +1,7 @@
 import { Card2Line } from '../card-2-line/card-2-line'
 import * as React from 'react'
 import { colSize, rowSize } from '../card-2-line/card-2-line'
-import { useSubscribeNumberPayload } from '../data'
+import { useSSENumber } from '../data'
 
 type Props = {
     room: string,
@@ -27,7 +27,7 @@ export function Sensor(props: Props) {
         cols,
         onClick,
     } = props
-    const sensorValue = useSubscribeNumberPayload(room, sensorType, sensorName)
+    const sensorValue = useSSENumber(room, sensorType, sensorName)
 
 
     const {

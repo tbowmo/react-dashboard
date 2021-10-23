@@ -1,7 +1,7 @@
 import React from 'react'
 import { Slider, makeStyles } from '@material-ui/core'
 import style from './scene.module.scss'
-import { useSubscribeNumberPayload } from '../../core/data'
+import { useSSENumber } from '../../core/data'
 import { FaLightbulb, FaRegLightbulb } from 'react-icons/fa'
 import { resetTimer } from '../../core/tabs/tabs'
 import clsx from 'clsx'
@@ -62,7 +62,7 @@ export function LightDimmer(props: Props) {
         deviceSet(room, 'light', light, value)
     }
 
-    const currentLightIntensity = useSubscribeNumberPayload(room, 'light', light) || 0
+    const currentLightIntensity = useSSENumber(room, 'light', light) || 0
 
     React.useEffect(() => {
         if (currentLightIntensity < 0) {
@@ -92,6 +92,8 @@ export function LightDimmer(props: Props) {
                         step={10}
                         onChange={valueUpdate}
                         onChangeCommitted={valueCommit}
+                        min={0}
+                        max={100}
                     />
                 </div>
             </div>

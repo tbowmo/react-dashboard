@@ -15,7 +15,7 @@ import {
 import { LightDimmer } from './mqtt-light-dimmer'
 import { MqttButton } from './mqtt-button'
 import { MqttToggle } from './mqtt-toggle'
-import { useSubscribeStringPayload, useDevices } from '../../core/data'
+import { useSSEString, useDevices } from '../../core/data'
 import clsx from 'clsx'
 
 type Action = {
@@ -53,7 +53,7 @@ const actionList: Action[] = [
 ]
 
 export function Scene() {
-    const activeScene = (useSubscribeStringPayload('stuen', 'avctrl', 'scene') || '').toLowerCase()
+    const activeScene = (useSSEString('stuen', 'avctrl', 'scene') || '').toLowerCase()
     const lights = (useDevices('stuen', 'light') || []).sort()
     const switches = (useDevices('stuen', 'switch') || []).sort()
     return (
@@ -89,8 +89,8 @@ export function Scene() {
                     device="door"
                     room="garden"
                     type="chicken"
-                    onPayload={true}
-                    offPayload={false}
+                    onPayload={1}
+                    offPayload={0}
                     iconOn={FaDoorOpen}
                     iconOff={FaDoorClosed}
                 />
