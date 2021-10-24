@@ -1,9 +1,10 @@
 import React from 'react'
 import style from './app.module.scss'
 import { DashTop } from './core/dash-top/dash-top'
-import { Tabs, TabsSwitch } from './core/tabs/tabs'
+import { Tabs } from './core/tabs/tabs'
 import { SSEProvider } from 'react-hooks-sse'
 import { SSEHandler } from './core/data'
+import { TabsSwitch } from './core/tabs/tabs-switch'
 
 export function App() {
     return (

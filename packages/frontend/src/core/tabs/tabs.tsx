@@ -1,17 +1,10 @@
 import * as React from 'react'
 import style from './tabs.module.scss'
 import {
-    Switch,
-    Route,
     useLocation,
+    useHistory,
 } from 'react-router'
-import { Streams } from '../../pages/streams/streams'
-import { Controller } from '../../pages/media/media'
-import history from '../../history'
-import { Scene } from '../../pages/scene/scene'
-import { Surveilance } from '../../pages/surveilance/surveilance'
-import { House } from '../../pages/house/house'
-import { Weather } from '../../pages/weather/weather'
+
 import { 
     MdHome,
     MdRadio,
@@ -21,36 +14,14 @@ import {
     MdSettingsRemote,
     MdWifi,
 } from 'react-icons/md'
-import { Wifi } from '../../pages/wifi/wifi'
-import clsx from 'clsx'
 
-let timer: ReturnType<typeof setTimeout> | null = null
+import clsx from 'clsx'
+import { useTimeout } from './timeout'
 
 type MenuEntry = {
     label: string,
     target: string,
     css: string,
-}
-
-export function resetTimer(timeout = Number(process.env.REACT_APP_ACTION_TIMEOUT)) {
-    if (timer !== null) {
-        clearTimeout(timer)
-    }
-    function mainPage() {
-        history.replace('/')
-        timer = null
-    }
-    timer = setTimeout(mainPage, timeout)
-}
-
-function stopTimer() {
-    if (timer !== null) {
-        clearTimeout(timer)
-    }
-}
-
-function buttonClick(menu: MenuEntry) {
-    history.replace(menu.target)
 }
 
 const menuLinks = [
@@ -100,15 +71,22 @@ const menuLinks = [
 
 export function Tabs() {
     const location = useLocation()
+    const timeout = useTimeout()
 
     React.useEffect(() => {
         if (location.pathname === '/') {
-            stopTimer()
+            timeout.stopTimer()
         } else {
-            resetTimer()
+            timeout.startTimer()
         }
     }, [location])
 
+    const history = useHistory()
+
+    function buttonClick(menu: MenuEntry) {
+        history.replace(menu.target)
+    }
+    
     return (
         <div className={style.tabs}>
             { menuLinks.map((menuEntry) => (
@@ -123,54 +101,5 @@ export function Tabs() {
                 </div>
             ))}
         </div>
-    )
-}
-
-function StreamRender(props : { match: { params: {type: any}} }) {
-    const { type } = props.match.params
-    return (
-        <Streams type={type} />
-    )
-}
-
-export function TabsSwitch() {
-    return (
-        <Switch>
-            <Route 
-                path="/scene"
-                exact={true}
-                component={Scene}
-            />
-            <Route
-                path="/streams/:type"
-                exact={false}
-                component={StreamRender}
-            />
-            <Route
-                path="/surveilance"
-                exact={true}
-                component={Surveilance}
-            />
-            <Route
-                path="/house"
-                exact={true}
-                component={House}
-            />
-            <Route
-                path="/weather"
-                exact={false}
-                component={Weather}
-            />
-            <Route
-                path="/wifi"
-                exact={false}
-                component={Wifi}
-            />
-            <Route
-                path="/"
-                exact={false}
-                component={Controller}
-            />
-        </Switch>
     )
 }

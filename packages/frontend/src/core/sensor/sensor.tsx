@@ -1,6 +1,5 @@
-import { Card2Line } from '../card-2-line/card-2-line'
+import { Card2Line, colSize, rowSize } from '../card-2-line/card-2-line'
 import * as React from 'react'
-import { colSize, rowSize } from '../card-2-line/card-2-line'
 import { useSSENumber } from '../data'
 
 type Props = {

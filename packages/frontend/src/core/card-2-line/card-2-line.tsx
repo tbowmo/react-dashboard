@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { isNumber } from 'util'
 import style from './card-2-line.module.scss'
 import clsx from 'clsx'
 
@@ -33,7 +32,7 @@ export function Card2Line(props: Props) {
     } = props
 
     let v = value
-    if (isNumber(value)) {
+    if (typeof value === 'number') {
         if (precission === 0) {
             v = Math.round(value)
         } else {

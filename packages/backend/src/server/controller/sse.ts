@@ -4,7 +4,7 @@ import { Mqtt } from '../../mqtt/mqtt'
 import { MemoryStore } from '../../mqtt/memory-store'
 const app = express()
 
-const sse = new SSE({}, { initialEvent: 'initial' })
+const sse = new SSE()
 app.get('/api/sse', sse.init)
 
 const store = MemoryStore.get(sse)

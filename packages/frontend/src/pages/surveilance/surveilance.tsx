@@ -6,10 +6,10 @@ export function Surveilance() {
         <React.Fragment>
             <div className="surveilance">
                 <div>
-                    <img src="https://zm.juletraesfoden.dk/zm/cgi-bin/nph-zms?scale=100&width=640px&height=480px&mode=jpeg&maxfps=30&monitor=4&auth=a7432e25f55198a3136e35a8cd811ce5&connkey=39971&rand=1617648227" alt="" />
+                    <img src="https://zm.juletraesfoden.dk/zm/cgi-bin/nph-zms?scale=100&width=640px&height=480px&mode=jpeg&maxfps=30&monitor=6&auth=265314e47bf5414bd3030e21b7fb1ec9&connkey=559372&rand=1634554934" alt="" />
                 </div>
-                <div>
-                    <img src="https://zm.juletraesfoden.dk/zm/cgi-bin/nph-zms?scale=100&width=1280px&height=720px&mode=jpeg&maxfps=30&monitor=1&auth=a7432e25f55198a3136e35a8cd811ce5&connkey=27115&rand=1617648293" alt="" />
+                <div>   
+                    <img src="https://zm.juletraesfoden.dk/zm/cgi-bin/nph-zms?scale=100&width=640px&height=480px&mode=jpeg&maxfps=30&monitor=4&auth=265314e47bf5414bd3030e21b7fb1ec9&connkey=860544&rand=1634554889" alt="" />
                 </div>
             </div>
         </React.Fragment>

@@ -1,4 +1,4 @@
-import { Home, Chromecast } from '@dashboard/types'
+import { Home, Chromecast, Room } from '@dashboard/types'
 import { getRepository } from 'typeorm'
 import { Channel } from '../server/entity/channel'
 import * as SSE from 'express-sse'
@@ -83,20 +83,38 @@ export class MemoryStore {
         return v
     }
 
+    private isRoom(room): room is Room {
+        return (<Room>room).media !== undefined
+    }
+
     private async updateMedia() {
         const now = Date.now()
         if (now - this.lastMediaUpdate > 60000) {
             this.lastMediaUpdate = now
-            for (let [room, value] of Object.entries(this.store)) {
-                if (Object.keys(value).includes('media')) {
-                    const oldMedia = this.store[room]['media']['media']
+            for (const roomKey of Object.keys(this.store)) {
+                const room = this.store[roomKey]
+                if (this.isRoom(room)) {
+                    const oldMedia = room?.media?.media
                     const newMedia = await this.handleMedia({
                         ...oldMedia,
                         artist: '',
                         title : '',
                     })
                     if (!this.isEmpty(newMedia.title) && !this.isEmpty(newMedia.artist)) {
-                        this.store[room]['media']['media'] = newMedia
+                        const updatedRoom = {
+                            ...room, 
+                            ...{
+                                media: {
+                                    ...room.media,
+                                    media: newMedia
+                                }
+                            }
+                        }
+    
+                        this.store = {
+                            ...this.store,
+                            [roomKey]: updatedRoom, 
+                        }
                         this.sse.updateInit(this.store, 'initial')
                         this.sse.send({
                             payload: newMedia,
@@ -111,15 +129,21 @@ export class MemoryStore {
     public async updateStore(topic: string, value: string): Promise<void> {
         let changed = false
         const { room, type, sensor } = this.decodeTopic(topic)
-        if (!this.store[room]) {
-            this.store[room] = {}
-        }
-        if (!this.store[room][type]) {
-            this.store[room][type] = {}
-        }
+  
         const v = await this.enrichPayload(topic, value)
-        changed = !(this.store[room][type][sensor] === v)
-        this.store[room][type][sensor] = v
+        changed = !(this.store?.[room]?.[type]?.[sensor] === v)
+
+        this.store = {
+            ...this.store,
+            [room]: {
+                ...this.store[room],
+                [type]: {
+                    ...this.store?.[room]?.[type],
+                    [sensor] : v                     
+                }
+            },
+        }
+
         if (changed) {
             this.sse.send({
                 payload: v,

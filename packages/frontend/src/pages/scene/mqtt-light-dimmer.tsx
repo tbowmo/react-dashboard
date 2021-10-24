@@ -1,19 +1,11 @@
 import React from 'react'
-import { Slider, makeStyles } from '@material-ui/core'
+import { Slider } from '@mui/material'
 import style from './scene.module.scss'
 import { useSSENumber } from '../../core/data'
 import { FaLightbulb, FaRegLightbulb } from 'react-icons/fa'
-import { resetTimer } from '../../core/tabs/tabs'
 import clsx from 'clsx'
 import { deviceSet } from './device-set'
-
-const useStyles = makeStyles({
-    slider: {
-        '@media (pointer: coarse)': {
-            padding: '10px 0',
-        },
-    },
-})
+import { useTimeout } from '../../core/tabs/timeout'
 
 type Props = {
     className?: string,
@@ -48,14 +40,13 @@ export function LightDimmer(props: Props) {
     const [ lightIntensity, setLightIntensity ] = React.useState(100)
     const [ disabled, setDisabled ] = React.useState(false)
 
-    const classes = useStyles({})
-
     const endColor: number[] = [0x15, 0x15, 0x15]
     const startColor: number[] = [0xff, 0x8c, 0x00]
-
+    const { startTimer } = useTimeout()
+    
     function valueUpdate(_event, value) {
         setLightIntensity(value)
-        resetTimer()
+        startTimer()
     }
 
     function valueCommit(_event, value) {
@@ -85,7 +76,11 @@ export function LightDimmer(props: Props) {
 
                 <div className={style.slider}>
                     <Slider
-                        className={classes.slider}
+                        sx={{
+                            '@media (pointer: coarse)': {
+                                padding: '10px 0',
+                            },
+                        }}
                         value={lightIntensity}
                         name={props.device}
                         disabled={disabled}

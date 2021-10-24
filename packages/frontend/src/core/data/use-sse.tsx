@@ -3,7 +3,7 @@ import {
     useDispatch,
     useSelector,
 } from 'react-redux'
-import { Chromecast, Home, Room } from '@dashboard/types'
+import { Chromecast, Room } from '@dashboard/types'
 import { SSEState } from './sse/reducer'
 import { useSSE } from 'react-hooks-sse'
 import { initialData, incomming } from './sse/actions'
@@ -15,23 +15,24 @@ type Props = {
 
 export function SSEHandler(props: Props) {
     const dispatch = useDispatch()
-    const initial = useSSE('initial', {
-        initialState: undefined,
+    const initial = useSSE('message',{},
+        {
         stateReducer(_state, changes) {
-            return changes.data[0]
+            console.log(changes)
+            return changes.data
         },
-        parser(input) {
+        parser(input: any) {
             return JSON.parse(input)
         },
-    }) as Home
+    })
     React.useEffect(() => {
         if (initial) {
             dispatch(initialData(initial))
         }
     }, [initial, dispatch])
 
-    const updates = useSSE('updates', {
-        initialState: undefined,
+    const updates = useSSE('updates', {topic: '', payload: ''},
+        {   
         stateReducer(_state, changes) {
             return changes.data
         },
@@ -41,10 +42,12 @@ export function SSEHandler(props: Props) {
     })
 
     React.useEffect(() => {
+        console.log(updates)
         if (updates) {
             dispatch(incomming(updates.topic, updates.payload))
         }
     }, [updates, dispatch])
+    
     return (
         props.children
     )
@@ -52,8 +55,8 @@ export function SSEHandler(props: Props) {
 
 export function useSSEString(room: string, deviceType: string, device: string): string | undefined {
     const data = useSelector( (state: combinedState) => state.sse ) as SSEState
-    if (data[room] && data[room][deviceType]) {
-        return data[room][deviceType][device]
+    if (data[room] && data[room]?.[deviceType]) {
+        return data[room]?.[deviceType]?.[device]
     }
 }
 
@@ -79,8 +82,8 @@ export function useChromecast(room: string = 'stuen'): Chromecast.Chrome | undef
 
 export function useDevices(room: string, type: string): string[] {
     const data = useSelector((state: combinedState) => state.sse) as SSEState
-    if (data[room] && data[room][type]) {
-        return Object.keys(data[room][type])
+    if (data[room] && data[room]?.[type]) {
+        return Object.keys(data[room]?.[type])
     }
     return []
 }

@@ -6,7 +6,7 @@ import {
     Brackets,
 } from 'typeorm'
 import * as path from 'path'
-import * as md5File from 'md5-file/promise'
+import * as md5File from 'md5-file'
 import {
     createReadStream, readFileSync,
 } from 'fs'

@@ -5,9 +5,9 @@ import {
     useStreams,
     StreamDto,
 } from '../../core/data'
-import { resetTimer } from '../../core/tabs/tabs'
 import moment from 'moment'
 import clsx from 'clsx'
+import { useTimeout } from '../../core/tabs/timeout'
 
 type Props = {
     type: 'radio' | 'tv',
@@ -31,15 +31,17 @@ export function Streams(props: Props) {
         xhttp.send(JSON.stringify(stream))
     }
 
+    const {startTimer} = useTimeout()
+
     React.useEffect( () => {
         if (active !== '') {
             const timer = setTimeout(() => {
                 setActive('')
-                resetTimer(200)
+                startTimer(200)
             }, 200)
             return () => {clearTimeout(timer)}
         }
-    }, [active])
+    }, [active, startTimer])
 
     return (
         <div className={style.streams}>

@@ -1,9 +1,9 @@
 import * as React from 'react'
 import style from './scene.module.scss'
 import { IconType } from 'react-icons/lib/cjs'
-import { resetTimer } from '../../core/tabs/tabs'
 import clsx from 'clsx'
 import { deviceSet, DeviceType } from './device-set'
+import { useTimeout } from '../../core/tabs/timeout'
 
 export type Props = {
     className: string,
@@ -31,16 +31,18 @@ export function MqttButton(props: Props) {
         setKey(true)
         deviceSet(room, type, device, payload)
     }
-
+    
+    const {startTimer} = useTimeout()
+    
     React.useEffect( () => {
         if (keyActivated) {
             const timer = setTimeout(() => {
                 setKey(false)
-                resetTimer(200)
+                startTimer(200)
             }, 200)
             return () => {clearTimeout(timer)}
         } 
-    }, [keyActivated, props])
+    }, [keyActivated, startTimer])
 
     return (
         <div className={clsx(style.mqttBase, keyActivated && style.active, className)} onClick={click}>

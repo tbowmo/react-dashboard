@@ -47,13 +47,13 @@ export type RoomSensor = {
 }
 
 export type Room = {
-    sensors: RoomSensor,
-    avctrl: {
+    sensors?: RoomSensor,
+    avctrl?: {
         scene: string,
     },
-    media?: Chromecast.Chrome,
-    light: {
-        [key: string]: number,
+    media: Chromecast.Chrome,
+    light?: {
+        [keys in string]?: number
     },
 }
 
@@ -64,21 +64,21 @@ export type Garden = {
 }
 
 export type Presence = {
-    [person: string]: {
-        [device: string] : boolean,
-    },
+    [person in string]?: {
+        [device in string]?: boolean
+    }
 }
 
 export type Global = {
-    utility: {
-        [key: string]: number,
+    utility?: {
+        [key in string]?: number
     },
-    heating: {
-        [key: string]: number,
+    heating?: {
+        [key in string]?: number
     },
 }
 
 export type Home = {
-    [keys: string]: Room | Presence | Global | Garden,
+    [keys in string]?: Room | Presence | Global | Garden
 }
 
