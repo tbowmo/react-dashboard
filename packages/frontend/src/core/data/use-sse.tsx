@@ -18,7 +18,6 @@ export function SSEHandler(props: Props) {
     const initial = useSSE('message',{},
         {
         stateReducer(_state, changes) {
-            console.log(changes)
             return changes.data
         },
         parser(input: any) {
@@ -42,7 +41,6 @@ export function SSEHandler(props: Props) {
     })
 
     React.useEffect(() => {
-        console.log(updates)
         if (updates) {
             dispatch(incomming(updates.topic, updates.payload))
         }
@@ -53,18 +51,22 @@ export function SSEHandler(props: Props) {
     )
 }
 
-export function useSSEString(room: string, deviceType: string, device: string): string | undefined {
+export function useSSEString(room: string | undefined, deviceType: string | undefined, device: string | undefined): string | undefined {
     const data = useSelector( (state: combinedState) => state.sse ) as SSEState
+    if (!room || !deviceType || !device) {
+        return
+    }
     if (data[room] && data[room]?.[deviceType]) {
         return data[room]?.[deviceType]?.[device]
     }
 }
 
-export function useSSENumber(room: string, deviceType: string, device: string): number | undefined {
-    return parseFloat(useSSEString(room, deviceType, device) || '-9999')
+export function useSSENumber(room: string | undefined, deviceType: string | undefined, device: string | undefined): number | undefined {
+    const value = useSSEString(room, deviceType, device)
+    return value ? parseFloat(value) : undefined
 }
 
-export function useSSEBoolean(room: string, deviceType: string, device: string): boolean {
+export function useSSEBoolean(room: string | undefined, deviceType: string | undefined, device: string | undefined): boolean | undefined {
     const value = useSSEString(room, deviceType, device)
     let bool: any
     try {

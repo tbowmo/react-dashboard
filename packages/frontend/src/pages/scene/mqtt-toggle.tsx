@@ -1,13 +1,14 @@
 import * as React from 'react'
 import style from './scene.module.scss'
-import { IconType } from 'react-icons/lib/cjs'
 import { useSSEBoolean } from '../../core/data'
-import clsx from 'clsx'
 import {
-    FaToggleOff,
-    FaToggleOn,
-} from 'react-icons/fa'
+    ToggleOff,
+    ToggleOn,
+} from '@mui/icons-material'
 import { deviceSet, DeviceType } from './device-set'
+import { GridCard } from '../../core/card-2-line/grid-card'
+import { CardContent, Box, Typography } from '@mui/material'
+import { SvgIconComponent } from '@mui/icons-material'
 
 type Props = {
     className?: string,
@@ -17,14 +18,14 @@ type Props = {
     device: string,
     onPayload: boolean | string | number,
     offPayload: boolean | string | number,
-    iconOn?: IconType,
-    iconOff?: IconType,
+    iconOn?: SvgIconComponent,
+    iconOff?: SvgIconComponent,
 }
 
 export function MqttToggle(props: Props) {
     const {
-        iconOn: IconOn = FaToggleOn,
-        iconOff: IconOff = FaToggleOff,
+        iconOn: IconOn = ToggleOn,
+        iconOff: IconOff = ToggleOff,
         room = 'stuen',
         type = 'switch',
         device,
@@ -44,12 +45,13 @@ export function MqttToggle(props: Props) {
         }
     }, [currentState, props])
 
+    const StateIcon = active ? IconOn : IconOff
     return (
-        <div className={clsx(style.mqttBase, props.className)} onClick={onClick}>
-            <div className={clsx(style.center, active && style.active)}>
-                { active ? (<IconOn />) : (<IconOff />) }
-            </div>
-            <div className={style.center}>{props.label}</div>
-        </div>
+        <GridCard onClick={onClick} xs>
+            <CardContent>
+            <StateIcon fontSize="large" />
+            <Typography>{props.label}</Typography>
+            </CardContent>
+        </GridCard>
     )
 }

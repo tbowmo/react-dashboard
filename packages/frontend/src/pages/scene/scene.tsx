@@ -1,54 +1,53 @@
 import style from './scene.module.scss'
 import * as React from 'react'
-import { IconType } from 'react-icons/lib/cjs'
 import {
-    MdAlbum,
-    MdGames,
-    MdMusicNote,
-    MdVideoLabel,
-    MdPowerSettingsNew,
-} from 'react-icons/md'
-import {
-    FaDoorOpen,
-    FaDoorClosed,
-} from 'react-icons/fa'
+    Album,
+    Games,
+    MusicNote,
+    VideoLabel,
+    PowerSettingsNew,
+    SvgIconComponent,
+    MeetingRoom,
+    DoorBack,
+} from '@mui/icons-material'
 import { LightDimmer } from './mqtt-light-dimmer'
 import { MqttButton } from './mqtt-button'
 import { MqttToggle } from './mqtt-toggle'
 import { useSSEString, useDevices } from '../../core/data'
 import clsx from 'clsx'
+import { Box, Grid } from '@mui/material'
 
 type Action = {
     label: string,
     action: string,
-    icon: IconType,
+    icon: SvgIconComponent,
 }
 
 const actionList: Action[] = [
     {
         label: 'DVD',
         action: 'dvd',
-        icon: MdAlbum,
+        icon: Album,
     },
     {
         label: 'WII',
         action: 'wii',
-        icon: MdGames,
+        icon: Games,
     },
     {
         label: 'Musik',
         action: 'audio',
-        icon: MdMusicNote,
+        icon: MusicNote,
     },
     {
         label: 'Video',
         action: 'video',
-        icon: MdVideoLabel,
+        icon: VideoLabel,
     },
     {
         label: 'OFF',
         action: 'off',
-        icon: MdPowerSettingsNew,
+        icon: PowerSettingsNew,
     },
 ]
 
@@ -57,21 +56,22 @@ export function Scene() {
     const lights = (useDevices('stuen', 'light') || []).sort()
     const switches = (useDevices('stuen', 'switch') || []).sort()
     return (
-        <div className={style.scene}>
-            <div className={style.remote}>
+        <Box sx={{display: 'grid', gridTemplateColumns: 'min-content auto'}}>
+            <Box>
                 { actionList.map((action) => (
                     <MqttButton
-                        className={clsx(((activeScene.includes(action.action.toLowerCase())) && style.activeDevice) )}
+                        active={activeScene.includes(action.action.toLowerCase())}
                         key={action.label}
                         label={action.label}
                         type="avctrl"
                         device="scene"
                         payload={action.action}
-                        icon={action.icon}
+                        icon={action.icon}                        
                     />
                 ))}
-            </div>
-            <div className={style.lights}>
+            </Box>
+            <Box>
+                <Grid container>
                 {lights.map((device) => (
                     <LightDimmer key={device} label={device} device={device} />
                 ))}
@@ -91,10 +91,11 @@ export function Scene() {
                     type="chicken"
                     onPayload={1}
                     offPayload={0}
-                    iconOn={FaDoorOpen}
-                    iconOff={FaDoorClosed}
+                    iconOn={MeetingRoom}
+                    iconOff={DoorBack}
                 />
-            </div>
-        </div>
+                </Grid>
+            </Box>
+        </Box>
     )
 }

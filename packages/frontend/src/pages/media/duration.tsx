@@ -1,7 +1,8 @@
-import { useChromecast } from '../../core/data'
 import * as React from 'react'
-import clsx from 'clsx'
-import style from './media.module.scss'
+import { Typography } from '@mui/material'
+import { keyframes } from '@mui/system'
+import { MediaCard } from './media-card'
+import { Chromecast } from '@dashboard/types'
 
 function secondsToHms(d) {
 
@@ -17,13 +18,20 @@ function secondsToHms(d) {
 
 let timer: ReturnType<typeof setInterval> | undefined = undefined
 
-export function Duration() {
+const blink = keyframes`
+    0%{opacity: 0;}
+    25%{opacity: .5;}
+    50%{opacity: 1;}
+    75%{opacity: .5;}
+    100%{opacity: 0;}
+`
 
-    const media = useChromecast()
+export function Duration(props: {media: Chromecast.Media, state: Chromecast.Capabilities['state']}) {
+    const { media, state } = props
 
     const [time, setTime] = React.useState<number>(0)
     const [remaining, setRemaining] = React.useState<boolean>(false)
-    const current_time = media?.media?.current_time
+    const current_time = media.current_time
 
     React.useEffect(() => {
         fetch(`/media/stuen/update`).then(() => {})
@@ -32,7 +40,7 @@ export function Duration() {
     React.useEffect(() => {
         if (timer === undefined) {
             timer = setInterval(() => {
-                if (media?.state === 'PLAYING') {
+                if (state === 'PLAYING') {
                     setTime(time+1)
                 }
             }, 1000)
@@ -50,24 +58,15 @@ export function Duration() {
     }, [current_time])
 
     const { totalTime, currentTime, fontSize, remainingTime } = React.useMemo(() => {
-        if (media?.media?.duration || 0 > 3600) {
-            return {
-                totalTime: secondsToHms(media?.media?.duration),
-                currentTime: secondsToHms(time),
-                remainingTime: secondsToHms(media?.media?.duration || 0 - time),
-                fontSize: '32pt',
-            }
-        } else {
-            return {
-                totalTime: secondsToHms(media?.media?.duration),
-                currentTime: secondsToHms(time),
-                remainingTime: secondsToHms(media?.media?.duration ||  - time),
-                fontSize: '40pt',
-            }
+        return {
+            totalTime: secondsToHms(media.duration),
+            currentTime: secondsToHms(time),
+            remainingTime: secondsToHms(media.duration || 0 - time),
+            fontSize: media.duration || 0 > 3600 ? '32pt' : '40pt',
         }
     }, [media, time])
 
-    if ((media?.media?.duration || 0) < 1) {
+    if ((media.duration || 0) < 1) {
         return null
     }
 
@@ -76,17 +75,17 @@ export function Duration() {
     }
 
     return (
-        <div className={clsx(style.time, style.info)} onClick={toggleRemaining}>
-            <label className={style.label}>
-                Tid
-            </label>
-            { media?.state === 'PAUSED' ? (
-                <div className={style.blink}> PAUSE </div>
-            ) : (
-                <div style={{ fontSize }}>
-                    {currentTime} - {remaining ? remainingTime : `${totalTime}`}
-                </div>
-            )}
-        </div>
+        <MediaCard onClick={toggleRemaining} label="Tid">
+            <Typography 
+                align="center"
+                gutterBottom={false}
+                sx={{
+                    animation: state === 'PAUSED' ? `${blink} 2s linear infinite` : undefined,
+                    fontSize
+                }}
+            > 
+                {state === 'PAUSED' ? 'PAUSE' : `${currentTime} - ${remaining ? remainingTime : totalTime}`}
+            </Typography>
+        </MediaCard>
     )
 }

@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { Card2Line } from '../card-2-line/card-2-line'
 import moment from 'moment'
-import { Sensor } from '../sensor/sensor'
-import './dash-top.scss'
+import { Sensor } from '../card-2-line/sensor'
+import { Grid } from '@mui/material'
+import { Card2Line } from '../card-2-line/card-2-line'
 
 type TotalEntry = {
     label: string,
@@ -91,46 +91,45 @@ export function DashTop() {
     const scale=['Wh', 'kWh', 'MWh']
 
     return (
-        <div className="topdashboard">
-            <Sensor room="garden" sensorType="climacell" sensorName="temperature" cols="1" label="Udendørs" unit="&deg;C" />
+        <Grid container sx={{width: '100%'}}>
             <Sensor 
-                onClick={() => {dpClick()}}
                 room="garden"
                 sensorType="climacell"
-                sensorName={humidDp.sensor}
-                cols="1"
+                sensorName1="temperature"
+                sensorName2={humidDp.sensor}
                 label="Udendørs"
-                unit={humidDp.unit}
-            />
-            <Sensor room='stuen' sensorName='temperature' cols="1" label="Stuen" unit="&deg;C" />
-            <Sensor 
+                unit1="&deg;C"
+                unit2={humidDp.unit} 
                 onClick={() => {dpClick()}}
-                room="stuen"
-                sensorName={humidDp.sensor}
-                cols="1"
-                label="Stuen"
-                unit={humidDp.unit}
+                xs
             />
             <Sensor 
+                xs
+                room='stuen'
+                sensorName1='temperature'
+                sensorName2={humidDp.sensor}
+                label="Stuen"
+                unit1="&deg;C"
+                unit2={humidDp.unit}
+                onClick={() => {dpClick()}}
+            />
+            <Sensor 
+                xs
                 onClick={() => {elClick()}}
                 room='global'
                 sensorType="utility"
-                sensorName={total.sensor}
-                cols="1"
+                sensorName1="current_W"
+                sensorName2={total.sensor}
                 label={total.label}
                 precission={1}
-                unit={scale}
+                unit1="watt"
+                unit2={scale}
             />
-            <Sensor
-                cols="1"
-                room="global"
-                sensorType="utility"
-                sensorName="current_W"
-                label="EL aktuelt"
-                precission={0}
-                unit="watt"
+            <Card2Line 
+                xs
+                value={date.format('HH:mm:ss')}
+                label={date.format('dddd Do MMMM - YYYY')}
             />
-            <Card2Line cols="2" value={date.format('HH:mm:ss')} label={date.format('dddd Do MMMM - YYYY')} />
-        </div>
+        </Grid>
     )
 }

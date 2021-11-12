@@ -1,42 +1,50 @@
 import * as React from 'react'
 import { 
-    MdAlbum,
-    MdTv,
-    MdGames,
-} from 'react-icons/md'
-import style from './media.module.scss'
+    Album,
+    Tv,
+    Games,
+} from '@mui/icons-material'
 import { MediaProp } from './media-prop'
-
+import { Box } from '@mui/material'
 
 type Props = {
     type: string,
 }
 
-function Icon(props: {type: string}): React.ReactElement{
-    switch (props.type.toLowerCase())
-    {
-    case 'tv' :
-        return ( <MdTv /> )
-    case 'wii':
-    case 'ps2':
-        return ( <MdGames /> )
-    default:
-        return ( <MdAlbum /> )
-    }
-}
-
 export function Others(props: Props) {
+
+    const Icon = React.useMemo(() => {
+        switch (props.type.toLowerCase())
+        {
+            case 'tv' :
+                return Tv
+            case 'wii':
+            case 'ps2':
+                return Games
+            default:
+                return Album
+        }
+    }, [props.type])
+
     return (
-        <div className={style.mediaInfo}>
-            <div className={style.albumCover}>
-                <Icon type={props.type} />
-            </div>
+        <Box sx={{
+            width: '100%',
+            height: '100%',            
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+        }}>
+            <Box sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+            }}>
+                <Icon sx={{fontSize: '80pt'}} />
+            </Box>
             <MediaProp
                 label=""
-                className={style.artist}
                 value="Ingen information"
             />
-        </div>
+        </Box>
     )
 }
 

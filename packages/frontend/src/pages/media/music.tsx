@@ -1,35 +1,33 @@
 import * as React from 'react'
 import { Chromecast } from '@dashboard/types'
-import style from './media.module.scss'
 import { Duration } from './duration'
 import { MediaProp } from './media-prop'
+import { Box } from '@mui/system'
 
 type Props = {
     media: Chromecast.Media,
+    state: Chromecast.Capabilities['state'],
 }
 
 export function Music(props: Props) {
-    const { media } = props
+    const { media, state } = props
 
     return (
-        <React.Fragment>
-            <Duration />
+        <Box sx={{display: 'grid', gridTemplateRows: 'repeat(4, 1fr)'}}>
+            <Duration media={media} state={state} />
             <MediaProp
                 label="Kunstner"
-                className={style.artist}
                 value={media?.artist}
             />
             <MediaProp
                 label="Album"
-                className={style.album}
                 value={media?.album}
             />
             <MediaProp
                 label="Titel"
-                className={style.title}
                 value={media?.title}
             />
-        </React.Fragment>
+        </Box>
     )
 }
 

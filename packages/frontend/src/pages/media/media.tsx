@@ -1,5 +1,4 @@
 import * as React from 'react'
-import style from './media.module.scss'
 import {
     useChromecast,
     useSSEString,
@@ -9,7 +8,7 @@ import { Music } from './music'
 import { RadioTv } from './radio-tv'
 import { Others } from './others'
 import { Remote } from './remote'
-import clsx from 'clsx'
+import { Box } from '@mui/system'
 
 export function Controller() {
     const [ showAlbumCover, setShowAlbumCover ] = React.useState<boolean>(false)
@@ -30,7 +29,7 @@ export function Controller() {
         }
     }, [showAlbumCover])
 
-    if (avcenter.toLocaleLowerCase() === 'off' || cast === undefined) {
+    if (`${avcenter}`.toLocaleLowerCase() === 'off' || cast === undefined) {
         return (
             <Weather />
         )
@@ -39,23 +38,32 @@ export function Controller() {
     const isStreaming = avcenter.toLocaleLowerCase().includes('stream')
 
     return (
-        <div className={style.controller}>
+        <Box sx={{display: 'grid', gridTemplateColumns: 'auto min-content' }}>
             { isStreaming ? (
-                <div className={style.mediaInfo}>
-                    { (cast.media?.album_art ?? '') !== '' && (cast.capabilities?.app_icon ?? '') !== '' ? (
-                        <div className={style.appIcon}>
-                            <img src={cast.capabilities?.app_icon} alt={cast.capabilities?.app} />
-                        </div>
-                    ) : null}
-                    <div className={clsx(style.albumCover, showAlbumCover && style.raiseAppIcon)}>
-                        <img src={cast.media?.album_art || cast.capabilities?.app_icon} alt={cast.media?.album} onClick={clickAlbumCover} />
-                    </div>
-                    { cast.media?.metadata_type === 3 ? (<Music media={cast.media} />) : (<RadioTv media={cast.media} />) }
-                </div>
+                <Box sx={{
+                    width: '100%',
+                    height: '100%',
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr',
+                    gridTemplateRows: '1fr',
+                    gridTemplateAreas: `"image album"`
+                }}>
+                    { (cast.media?.album_art ?? '') !== '' && (cast.capabilities?.app_icon ?? '') !== '' 
+                    ? (
+                            <img style={{gridArea: 'image', zIndex: 50, height: '100px', opacity: '0.2'}} src={cast.capabilities?.app_icon} alt={cast.capabilities?.app} />
+                    ) 
+                    : null
+                    }
+                    <img style={{gridArea: 'image', maxHeight: 600}} src={cast.media?.album_art || cast.capabilities?.app_icon} alt={cast.media?.album} onClick={clickAlbumCover} />
+                    { cast.media?.metadata_type === 3 
+                        ? (<Music media={cast.media} state={cast.state} />) 
+                        : (<RadioTv media={cast.media} state={cast.state} />) 
+                    }
+                </Box>
             ): (
                 <Others type={avcenter} />
             )}
             <Remote />
-        </div>
+        </Box>
     )
 }

@@ -1,105 +1,129 @@
 import * as React from 'react'
-import style from './tabs.module.scss'
-import {
-    useLocation,
-    useHistory,
-} from 'react-router'
-
+import SwipeableViews from 'react-swipeable-views'
+import { Tab, Tabs } from '@mui/material'
+import { Box } from '@mui/system'
 import { 
-    MdHome,
-    MdRadio,
-    MdTv,
-    MdVideocam,
-    MdWbSunny,
-    MdSettingsRemote,
-    MdWifi,
-} from 'react-icons/md'
-
-import clsx from 'clsx'
-import { useTimeout } from './timeout'
+    House,
+    Radio,
+    Tv,
+    WbSunny,
+    Videocam,
+    Wifi,
+    SvgIconComponent,
+} from '@mui/icons-material'
+import { Controller } from '../../pages/media/media'
+import { Streams } from '../../pages/streams/streams'
+import { Weather } from '../../pages/weather/weather'
+import { Surveilance } from '../../pages/surveilance/surveilance'
+import { WifiPassPhrase } from '../../pages/wifi/wifi-pass-phrase'
+import { useTabs } from './tabs-context'
+import { Scene } from '../../pages/scene/scene'
+import { RemoteTv } from 'mdi-material-ui'
 
 type MenuEntry = {
     label: string,
-    target: string,
-    css: string,
+    icon: SvgIconComponent,
+    component: JSX.Element,
 }
 
-const menuLinks = [
+const menuLinks: MenuEntry[] = [
     {
         label: 'Main',
-        target: '/',
-        css: 'active',
-        icon: MdHome,
+        icon: House,
+        component: (<Controller />)
     },
     {
         label: 'Radio',
-        target : '/streams/radio',
-        css: '',
-        icon: MdRadio,
+        icon: Radio,
+        component: (<Streams type="radio" />)
     },
     {
         label: 'TV',
-        target: '/streams/tv',
-        css: '',
-        icon: MdTv,
+        icon: Tv,
+        component: (<Streams type="tv" />)
     },
     {
         label: 'Weather',
-        target: '/weather',
-        css: '',
-        icon: MdWbSunny,
+        icon: WbSunny,
+        component: (<Weather />)
     }, 
     {
         label: 'Scene',
-        target: '/scene',
-        css: '',
-        icon: MdSettingsRemote,
+        icon: RemoteTv,
+        component: (<Scene />)
     },
     {
         label: 'Video',
-        target: '/surveilance',
-        css: '',
-        icon: MdVideocam,
+        icon: Videocam,
+        component: (<Surveilance />)
     },
     {
         label: 'Wifi',
-        target: '/wifi',
-        css: '',
-        icon: MdWifi,
+        icon: Wifi,
+        component: (<WifiPassPhrase />)
     },
 ]
 
-export function Tabs() {
-    const location = useLocation()
-    const timeout = useTimeout()
+interface TabPanelProps {
+    children?: React.ReactNode;
+    active: boolean;
+ }
 
-    React.useEffect(() => {
-        if (location.pathname === '/') {
-            timeout.stopTimer()
-        } else {
-            timeout.startTimer()
-        }
-    }, [location])
-
-    const history = useHistory()
-
-    function buttonClick(menu: MenuEntry) {
-        history.replace(menu.target)
-    }
-    
+function TabPanel(props: TabPanelProps) {
+    const { children, active } = props;
+  
     return (
-        <div className={style.tabs}>
-            { menuLinks.map((menuEntry) => (
-                <div 
+      <Box sx={{height: '100%', marginLeft: 2, marginRight: 2}}>
+        {active && children}
+      </Box>
+    );
+}
+
+export function IotTabs() {
+    const {activeTab, setActiveTab} = useTabs()
+    
+    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+        setActiveTab(newValue)
+    }
+
+    const handleChangeIndex = (index: number) => {
+        setActiveTab(index)
+    }
+
+    return (
+        <Box sx={{display: 'grid', gridTemplateColumns: 'min-content auto', height: '100%', width: '100%'}}>
+            <Tabs
+                orientation="vertical"
+                variant="standard"
+                sx={{borderColor: 'divider'}}
+                value={activeTab}
+                onChange={handleChange}
+                textColor="inherit"
+                indicatorColor="secondary"
+            >
+            {menuLinks.map((menuEntry) => (
+                <Tab
                     key={menuEntry.label} 
-                    onClick={() => buttonClick(menuEntry)} 
-                    className={clsx((menuEntry.target === location.pathname) && style.active, style.tab)}
-                >
-                    <div className={style.center}>
-                        <menuEntry.icon />
-                    </div>
-                </div>
+                    icon={<menuEntry.icon sx={{width: '60px', height: '60px'}} />}
+                />
             ))}
-        </div>
+            </Tabs>
+            <SwipeableViews
+                axis="y"
+                index={activeTab}
+                onChangeIndex={handleChangeIndex}
+                style={{width: '100%', height: '100%'}}
+                containerStyle={{width: '100%', height: '100%'}}
+                slideStyle={{height: '100%'}}
+                enableMouseEvents
+                resistance
+            >
+                {menuLinks.map((menuEntry, index) => (
+                    <TabPanel active={activeTab === index} key={menuEntry.label}>
+                        {menuEntry.component}
+                    </TabPanel>
+                ))}
+            </SwipeableViews>
+        </Box>
     )
 }

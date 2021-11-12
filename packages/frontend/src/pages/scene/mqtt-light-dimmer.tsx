@@ -1,11 +1,11 @@
 import React from 'react'
-import { Slider } from '@mui/material'
-import style from './scene.module.scss'
+import { CardContent, Slider, Typography } from '@mui/material'
 import { useSSENumber } from '../../core/data'
-import { FaLightbulb, FaRegLightbulb } from 'react-icons/fa'
-import clsx from 'clsx'
 import { deviceSet } from './device-set'
-import { useTimeout } from '../../core/tabs/timeout'
+import { useTabs } from '../../core/tabs/tabs-context'
+import { GridCard } from '../../core/card-2-line/grid-card'
+import { Lightbulb, LightbulbOutlined } from '@mui/icons-material'
+import { Box } from '@mui/system'
 
 type Props = {
     className?: string,
@@ -42,7 +42,7 @@ export function LightDimmer(props: Props) {
 
     const endColor: number[] = [0x15, 0x15, 0x15]
     const startColor: number[] = [0xff, 0x8c, 0x00]
-    const { startTimer } = useTimeout()
+    const { startTimer: startTimer } = useTabs()
     
     function valueUpdate(_event, value) {
         setLightIntensity(value)
@@ -66,20 +66,27 @@ export function LightDimmer(props: Props) {
     }, [currentLightIntensity])
 
     if (lightIntensity === undefined) return null
+    
+    const Bulb = disabled ? LightbulbOutlined : Lightbulb
 
     return (
-        <div className={clsx(style.mqttBase, style.mqttLight, props.className)}>
-            <div className={clsx(style.light)}>
-                <div style={{ color: '#' + pickHex(startColor, endColor, lightIntensity) }}>
-                    { disabled ? (<FaRegLightbulb />) : (<FaLightbulb />) }
-                </div>
-
-                <div className={style.slider}>
+        <GridCard xs={5}>
+            <CardContent>
+                <Box sx={{
+                    display: 'grid',
+                    gridTemplateColumns: 'min-content auto',
+                    gridTemplateRows: 'auto min-content',
+                    gap: 2,
+                    gridTemplateAreas: `"bulb slider"
+                    "bulb legend"`
+                     }}>
+                    <Bulb fontSize="large" sx={{color: `#${pickHex(startColor, endColor, lightIntensity)}`, gridArea: 'bulb'}} />
                     <Slider
                         sx={{
                             '@media (pointer: coarse)': {
-                                padding: '10px 0',
+                                padding: '10px 10px',
                             },
+                            gridArea: 'slider'
                         }}
                         value={lightIntensity}
                         name={props.device}
@@ -90,11 +97,9 @@ export function LightDimmer(props: Props) {
                         min={0}
                         max={100}
                     />
-                </div>
-            </div>
-            <div className={style.center}>
-                {props.label}
-            </div>
-        </div>
+                    <Typography sx={{gridArea: 'legend', textAlign: 'center'}}>{props.label}</Typography>
+                </Box>
+            </CardContent>
+        </GridCard>
     )
 }

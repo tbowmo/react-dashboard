@@ -5,55 +5,48 @@ import {
     ForecastTupple,
     useSSENumber,
 } from '../../core/data'
-import style from './weather.module.scss'
 import { 
-    WiDaySunny,
-    WiDayCloudy,
-    WiCloudy,
-    WiShowers,
-    WiDayRain,
-    WiDayThunderstorm,
-    WiNightClear,
-    WiNightCloudy,
-    WiDayFog,
-    WiNightThunderstorm,
-    WiNightFog,
-    WiNightRain,
-    WiDaySnow,
-    WiNightSnow,
-    WiWindDeg,
-} from 'react-icons/wi'
-import {
-    MdBlock, 
-} from 'react-icons/md'
+    WeatherCloudy,
+    WeatherFog, 
+    WeatherSunny,
+    WeatherSnowy,
+    WeatherRainy,
+    WeatherNightPartlyCloudy,
+    WeatherNight,
+    WeatherLightning,
+    ArrowRightThinCircleOutline,
+} from 'mdi-material-ui'
 import moment from 'moment'
-import { isNumber } from 'util'
 import { getCompassHeading, wind } from './weather-functions'
+import { Box } from '@mui/system'
+import { CardContent, Grid, Typography } from '@mui/material'
+import { GridCard } from '../../core/card-2-line/grid-card'
+import { SvgIconComponent } from '@mui/icons-material'
 
 const iconMap = {
-    '01d': WiDaySunny,
-    '02d': WiDayCloudy,
-    '03d': WiCloudy,
-    '04d': WiCloudy,
-    '09d': WiShowers,
-    '10d': WiDayRain,
-    '11d': WiDayThunderstorm,
-    '13d': WiDaySnow,
-    '50d': WiDayFog,
-    '01n': WiNightClear,
-    '02n': WiNightCloudy,
-    '03n': WiCloudy,
-    '04n': WiCloudy,
-    '09n': WiShowers,
-    '10n': WiNightRain,
-    '11n': WiNightThunderstorm,
-    '13n': WiNightSnow,
-    '50n': WiNightFog,
+    '01d': WeatherSunny,
+    '01n': WeatherNight,
+    '02d': WeatherCloudy,
+    '02n': WeatherNightPartlyCloudy,
+    '03d': WeatherCloudy,
+    '03n': WeatherCloudy,
+    '04d': WeatherCloudy,
+    '04n': WeatherCloudy,
+    '09d': WeatherRainy,
+    '09n': WeatherRainy,
+    '10d': WeatherRainy,
+    '10n': WeatherRainy,
+    '11d': WeatherLightning,
+    '11n': WeatherLightning,
+    '13d': WeatherSnowy,
+    '13n': WeatherSnowy,
+    '50d': WeatherFog,
+    '50n': WeatherFog,
 }
 
 function round(value: number, precission: number = 1): number {
     let v = value
-    if (isNumber(value)) {
+    if (typeof value === 'number') {
         if (precission === 0) {
             v = Math.round(value)
         } else {
@@ -72,38 +65,60 @@ export function Weather() {
         return null
     }
 
-    const Icon = weather?.weather ? iconMap[weather.weather[0].icon] : MdBlock
-
+    const WeatherIcon: SvgIconComponent = iconMap[weather?.weather[0]?.icon] || null
+    const iconSize = '180px'
     return (
-        <div className={style.mainWeather}>
-            <div className={style.weatherRows}>
-                <div className={style.main}>
-                    {round(temperature || -99)}&deg;C
-                </div>
-                <div className={style.secondary}>
-                    {round(weather?.main?.temp_min ?? -99)}&deg;C - {round(weather?.main?.temp_max ?? -99)}&deg;C
-                </div>
-                <div className={style.secondary}>
-                    {weather?.weather ? weather.weather[0]?.description ?? '' : ''}&nbsp;
-                    {weather?.clouds?.all ?? 0 > 20 ? `- ${weather?.clouds?.all ?? ''}% skydække` : ''}
-                </div>
-            </div>
-            <div className={style.symbol}>
-                <Icon />
-            </div>
-            <div className={style.weatherRows}>
-                <div className={style.main}>
-                    Vind: {wind(weather?.wind?.speed || 0).label}
-                </div>
-                <div className={style.secondary}>
-                    Retning {getCompassHeading(weather?.wind?.deg ?? 0).direction} ({weather?.wind?.speed || 0}m/s - {weather?.wind?.deg ?? 0}&deg;)
-                </div> 
-            </div>
-            <div className={style.symbol}>
-                <WiWindDeg style={{ transform: `rotate(${weather?.wind?.deg ?? 0}deg)` }} />
-            </div>
+        <Box sx={{display: 'grid', gridTemplateRows: 'auto min-content'}}>
+            <Grid container>
+                <GridCard xs={9}>
+                    <CardContent>
+                        <Typography sx={{fontSize: '30pt', fontWeight: 'bold'}}>
+                            {round(temperature || -99)}&deg;C
+                        </Typography>
+                        <Typography>
+                            {round(weather?.main?.temp_min ?? -99)}&deg;C - {round(weather?.main?.temp_max ?? -99)}&deg;C
+                        </Typography>
+                        <Typography fontSize="large">
+                            {weather?.weather ? weather.weather[0]?.description ?? '' : ''}&nbsp;
+                            {weather?.clouds?.all ?? 0 > 20 ? `- ${weather?.clouds?.all ?? ''}% skydække` : ''}
+                        </Typography>
+                    </CardContent>
+                </GridCard>
+                <GridCard xs>
+                    <CardContent>
+                        <WeatherIcon 
+                            sx={{
+                                height: iconSize,
+                                width: iconSize,
+                            }}
+                        />
+                    </CardContent>
+                </GridCard>
+                <GridCard xs={9}>
+                    <CardContent>
+                    <Typography>
+                        Vind: {wind(weather?.wind?.speed || 0).label}
+                    </Typography>
+                    <Typography fontSize="large">
+                        Retning {getCompassHeading(weather?.wind?.deg ?? 0).direction} ({weather?.wind?.speed || 0}m/s - {weather?.wind?.deg ?? 0}&deg;)
+                    </Typography>
+                    </CardContent> 
+                </GridCard>
+                <GridCard xs>
+                    <CardContent>
+                        <ArrowRightThinCircleOutline 
+                            sx={{ 
+                                transform: `rotate(${weather?.wind?.deg ? (weather.wind.deg - 90) : 0}deg)`,
+                                gridArea: 'direction',
+                                height: iconSize,
+                                width: iconSize,
+                            }} 
+                        />
+                    </CardContent>
+                </GridCard>
+            </Grid>
             <Forecast />
-        </div>
+        </Box>
     )
 }
 
@@ -115,25 +130,39 @@ function Forecast() {
     }
 
     return (
-        <div className={style.forecast}>
-            { forecast.list.slice(1, 7).map((f) => (
-                <SingleForecast key={`weather-${f.dt}`} data={f} />
+        <Grid container>
+            { forecast.list.slice(1, 6).map((f) => (
+                <GridCard xs key={`weather-${f.dt}`}>
+                    <CardContent>
+                        <SingleForecast  data={f} />
+                    </CardContent>
+                </GridCard>
             ))}
-        </div>
+        </Grid>
     )
 }
 
 function SingleForecast(props: {data: ForecastTupple} ) {
     const { data } = props
-    const Icon = data?.weather ? iconMap[data.weather[0].icon] : MdBlock
+    const Icon: SvgIconComponent = iconMap[data.weather[0].icon] || null
     const timeObj = moment.unix(data.dt)
     const timeStr = timeObj.format('HH:mm')
     return (
-        <div className={style.rwDay}>
-            <div className={style.rwDate}>Kl. {timeStr}</div>
-            <Icon className={style.rwIcon} />
-            <div className={style.rwDesc}>{data?.weather ? data.weather[0]?.description || '' : ''}</div>
-            <div className={style.rwRange}>{round(data?.main?.temp_max || -99)} / {round(data?.main?.temp_min || -99)}&deg;C</div>
-        </div>
+        <Box sx={{
+            display: 'grid',
+            gridTemplateColumns: 'auto min-content',
+            gridTemplateRows: 'repeat(3 fr)',
+            gridTemplateAreas: `"time icon"
+            "weather icon"
+            "temperature icon"`,
+            }}
+        >
+            <Box sx={{gridArea: 'time'}}>Kl. {timeStr}</Box>
+            <Box sx={{gridArea: 'weather'}}>{data?.weather ? data.weather[0]?.description || '' : ''}</Box>
+            <Box sx={{gridArea: 'temperature'}}>{round(data?.main?.temp_max || -99)} / {round(data?.main?.temp_min || -99)}&deg;C</Box>
+            <Box sx={{gridArea: 'icon'}}>
+            <Icon fontSize="large"/>
+            </Box>
+        </Box>
     )
 }

@@ -1,10 +1,9 @@
 import * as React from 'react'
-import clsx from 'clsx'
-import style from './media.module.scss'
 import TextTruncate from 'react-text-truncate'
+import { MediaCard } from './media-card'
+import { Typography } from '@mui/material'
 
 type Props = {
-    className: string,
     label: string,
     lines?: number,
     value?: string,
@@ -12,7 +11,6 @@ type Props = {
 
 export function MediaProp(props: Props) {
     const {
-        className,
         label,
         lines = 1,
         value,
@@ -22,16 +20,14 @@ export function MediaProp(props: Props) {
         return null
     }
     return (
-        <div className={clsx(className, style.info)}>
-            <label className={style.label}>
-                {label}
-            </label>
-            <TextTruncate
-                line={lines}
-                element="div"
-                truncateText="…"
-                text={value}
-            />
-        </div>
+        <MediaCard label={label}>
+            <Typography fontSize="large">
+                <TextTruncate
+                    line={lines}
+                    truncateText="…"
+                    text={value}
+                />
+            </Typography>
+        </MediaCard>
     )
 }

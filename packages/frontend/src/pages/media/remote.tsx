@@ -1,20 +1,20 @@
 import * as React from 'react'
 import {
-    MdFastRewind,
-    MdFastForward,
-    MdPause,
-    MdPowerSettingsNew,
-    MdVolumeDown,
-    MdVolumeUp,
-    MdPlayArrow,
-} from 'react-icons/md'
-import { IconType } from 'react-icons/lib/cjs'
-import style from './media.module.scss'
-import clsx from 'clsx'
+    FastRewind,
+    FastForward,
+    Pause,
+    PowerSettingsNew,
+    VolumeDown,
+    VolumeUp,
+    PlayArrow,
+} from '@mui/icons-material'
 import { useChromecast } from '../../core/data'
+import { SvgIconComponent } from '@mui/icons-material'
+import { IconButton } from '@mui/material'
+import { Box } from '@mui/system'
 
 type controlKey = {
-    icon: IconType | undefined,
+    icon: SvgIconComponent | undefined,
     key: string,
     state: 'ALL' | 'PAUSED' | 'PLAYING' | 'none',
     repeat?: boolean,
@@ -22,29 +22,29 @@ type controlKey = {
 
 const functions: controlKey[] = [
     {
-        icon: MdVolumeUp,
+        icon: VolumeUp,
         key: 'volumeup',
         state: 'ALL',
         repeat: true,
     },
     {
-        icon: MdVolumeDown,
+        icon: VolumeDown,
         key : 'volumedown',
         state: 'ALL',
         repeat: true,
     },
     {
-        icon: MdFastRewind,
+        icon: FastRewind,
         key: 'prev',
         state: 'ALL',
     },
     {
-        icon: MdPause,
+        icon: Pause,
         key: 'pause',
         state: 'PLAYING',
     },
     {
-        icon: MdPlayArrow,
+        icon: PlayArrow,
         key: 'play',
         state: 'PAUSED',
     },
@@ -54,12 +54,12 @@ const functions: controlKey[] = [
         state: 'none',
     },
     {
-        icon: MdFastForward,
+        icon: FastForward,
         key: 'next',
         state: 'ALL',
     },
     {
-        icon: MdPowerSettingsNew,
+        icon: PowerSettingsNew,
         key: 'off',
         state: 'ALL',
     },
@@ -122,21 +122,18 @@ export function Remote() {
     })
 
     return (
-        <div className={style.remoteControl}>
+        <Box sx={{width: '80px', height: '100%', gridTemplateRows: `repeat(${remoteButtons.length} 1fr)`, display: 'grid'}}>
             { remoteButtons.map((link) => (
-                <div
+                <IconButton
                     key={link.key}
-                    className={clsx(style.remoteButton, (link.key === activeKey) && style.active)}
                     onTouchStart={() => buttonDown(link)}
                     onTouchEnd={() => buttonRelease()}
                     onMouseDown={() => buttonDown(link)}
                     onMouseUp={() => buttonRelease()}
                 >
-                    <div className={style.center}>
-                        { link.icon ? (<link.icon />) : null }
-                    </div>
-                </div>
+                    { link.icon ? (<link.icon fontSize="large" />) : null }
+                </IconButton>
             ))}
-        </div>
+        </Box>
     )
 }

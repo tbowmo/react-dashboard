@@ -1,55 +1,51 @@
 import * as React from 'react'
-import style from './card-2-line.module.scss'
-import clsx from 'clsx'
+import { CardContent, GridProps, Typography } from '@mui/material'
+import { GridCard } from './grid-card'
 
-export type colSize = '1' | '2' | '3' | '4' | '5' | '6'
-
-export type rowSize = '1' | '2' | '3'
-
-type Props = {
-    cols?: colSize,
-    rows?: rowSize,
+type Props = GridProps & {
     value?: string | number,
-    children?: React.ReactNode,
     label: string,
-    unit?: string,
-    precission?: number,
-    onClick?: (event: React.MouseEvent<HTMLDivElement>) => void,
-    className?,
+}
+
+export function SensorValue(props: {value: string | number | undefined}) {
+    return (<Typography 
+    sx={{
+        color: '#ff8c00',
+        fontFamily: 'Orbitron, serif',
+        fontWeight: 'bold',
+        fontSize: '30pt',
+        textAlign: 'center',
+    }}
+>
+    {props.value}
+</Typography>
+)
 }
 
 export function Card2Line(props: Props) {
     const {
-        cols='1',
-        rows='1',
         value,
         label,
-        unit,
         children,
-        precission = 0,
-        onClick,
-        className,
+        sx,
+        ...restProps
     } = props
 
-    let v = value
-    if (typeof value === 'number') {
-        if (precission === 0) {
-            v = Math.round(value)
-        } else {
-            v = Math.round(value * (10*precission)) / (10*precission)
-        }
-    }
-
-    const rowColumnClass = React.useMemo(() => {
-        return clsx(style.card, style[`cols${cols}`], style[`rows${rows}`], className)
-    }, [cols, rows, className])
-
     return (
-        <div className={rowColumnClass} onClick={onClick}>
-            <div className={style.card2line}>
-                { value !== undefined ? <div className={clsx(style.section, style.value)}><span>{v}</span></div> : children }
-                <div className={clsx(style.section, style.label)}>{label}{unit? `(${unit})` : ''}</div>
-            </div>
-        </div>
+        <GridCard {...restProps}>
+        <CardContent>
+            {value 
+                ? (
+                    <SensorValue value={value} />
+                )
+                : children
+            }
+        </CardContent>
+        <CardContent>
+            <Typography sx={{textAlign: 'center'}}>
+                {label}
+            </Typography>
+        </CardContent>
+    </GridCard>
     )
 }

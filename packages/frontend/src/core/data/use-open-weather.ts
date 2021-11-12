@@ -78,11 +78,8 @@ function forecastWeather() {
 }
 
 export function useCurrentWeather(): CurrentWeatherDto | undefined {
-    const weatherState = useSelector((state: combinedState) => state.weather.currentWeather) as CurrentWeather || {
-        pending: false,
-        data: undefined,
-        failed: false,
-    }
+    const weatherState = useSelector((state: combinedState) => state.weather.currentWeather) as CurrentWeather
+
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -110,11 +107,8 @@ export function useCurrentWeather(): CurrentWeatherDto | undefined {
 }
 
 export function useForecastWeather(): ForecastDto | undefined {
-    const forecastState = useSelector((state: combinedState) => state.weather.forecast) as ForecastWeather || {
-        pending: false,
-        data: undefined,
-        failed: false,
-    }
+    const forecastState = useSelector((state: combinedState) => state.weather.forecast) as ForecastWeather
+
     const dispatch = useDispatch()
 
     useEffect(() => {

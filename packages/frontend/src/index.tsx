@@ -1,19 +1,29 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import './index.scss'
 import { App } from './app'
 import * as serviceWorker from './serviceWorker'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import configureStore from './core/data/store'
+import {
+    CssBaseline,   
+    ThemeProvider,
+    StyledEngineProvider,
+} from '@mui/material'
+import { theme } from './theme'
 
 const store = configureStore()
 
 ReactDOM.render(
     <Router>
-        <Provider store={store}>
-            <App />
-        </Provider>
+        <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <Provider store={store}>
+                    <App />
+                </Provider>
+            </ThemeProvider>
+        </StyledEngineProvider>
     </Router>, 
     document.getElementById('root'),
 )

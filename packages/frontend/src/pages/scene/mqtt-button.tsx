@@ -1,18 +1,18 @@
 import * as React from 'react'
-import style from './scene.module.scss'
-import { IconType } from 'react-icons/lib/cjs'
-import clsx from 'clsx'
 import { deviceSet, DeviceType } from './device-set'
-import { useTimeout } from '../../core/tabs/timeout'
+import { useTabs } from '../../core/tabs/tabs-context'
+import { SvgIconComponent } from '@mui/icons-material'
+import { GridCard } from '../../core/card-2-line/grid-card'
+import { CardContent, IconButton, Typography } from '@mui/material'
 
 export type Props = {
-    className: string,
     label?: string,
     room?: string,
     type?: DeviceType,
     device: string,
     payload: string,
-    icon?: IconType,
+    icon?: SvgIconComponent,
+    active?: boolean,
 }
 
 export function MqttButton(props: Props) {
@@ -23,7 +23,6 @@ export function MqttButton(props: Props) {
         payload,
         icon: Icon,
         label,
-        className,
     } = props
     const [ keyActivated, setKey ] = React.useState<boolean>(false)
 
@@ -32,7 +31,7 @@ export function MqttButton(props: Props) {
         deviceSet(room, type, device, payload)
     }
     
-    const {startTimer} = useTimeout()
+    const {startTimer: startTimer} = useTabs()
     
     React.useEffect( () => {
         if (keyActivated) {
@@ -45,9 +44,11 @@ export function MqttButton(props: Props) {
     }, [keyActivated, startTimer])
 
     return (
-        <div className={clsx(style.mqttBase, keyActivated && style.active, className)} onClick={click}>
-            { Icon ? (<div className={style.center}><Icon /></div>) : null }
-            <div className={style.center}>{label}</div>
-        </div>
+        <GridCard>
+            <CardContent component={IconButton}  onClick={click}>
+                { Icon ? (<Icon fontSize="large" />) : null }
+                <Typography>{label}</Typography>
+            </CardContent>
+        </GridCard>
     )
 }
