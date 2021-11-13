@@ -23,39 +23,34 @@ let database = 'database.sqlite'
 let xmlDir = 'xmltv'
 let logging = true
 if (process.env.NODE_ENV === 'production') {
-    database = '/data/database.sqlite'
-    xmlDir = '/data/xmltv'
-    logging = false
-    envFile = path.resolve('.env')
+  database = '/data/database.sqlite'
+  xmlDir = '/data/xmltv'
+  logging = false
+  envFile = path.resolve('.env')
 }
 
 if (fs.existsSync(path.resolve('/data/.env'))) {
-    database = path.resolve('/data/database.sqlite')
-    xmlDir = path.resolve('/data/xmltv')
-    logging = false
-    envFile = path.resolve('/', 'data', '.env')
+  database = path.resolve('/data/database.sqlite')
+  xmlDir = path.resolve('/data/xmltv')
+  logging = false
+  envFile = path.resolve('/', 'data', '.env')
 }
 
 dotenv.config({
-    path: envFile,
+  path: envFile,
 })
 
 createConnection(
-    {
-        type: 'sqlite',
-        database: database,
-        synchronize: true,
-        logging: logging,
-        entities: [
-            Channel,
-            Programme,
-            Weather,
-            XmlFile,
-        ],
-    },
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-).then(async (connection) => {
-
+  {
+    type: 'sqlite',
+    database: database,
+    synchronize: true,
+    logging: logging,
+    entities: [Channel, Programme, Weather, XmlFile],
+  },
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+)
+  .then(async (connection) => {
     loadXmlTv(xmlDir)
 
     // create express app
@@ -65,32 +60,45 @@ createConnection(
     app.use(ServerSide)
     // register express routes from defined application routes
     Routes.forEach((route) => {
-        (app as any)[route.method](route.route, (req: Request, res: Response, next: Function) => {
-            const result = (new (route.controller as any))[route.action](req, res, next)
-            if (result instanceof Promise) {
-                result.then((result) => result !== null && result !== undefined ? res.send(result) : undefined)
-
-            } else if (result !== null && result !== undefined) {
-                res.json(result)
-            }
-        })
+      ;(app as any)[route.method](
+        route.route,
+        (req: Request, res: Response, next: Function) => {
+          const result = new (route.controller as any)()[route.action](
+            req,
+            res,
+            next,
+          )
+          if (result instanceof Promise) {
+            result.then((result) =>
+              result !== null && result !== undefined
+                ? res.send(result)
+                : undefined,
+            )
+          } else if (result !== null && result !== undefined) {
+            res.json(result)
+          }
+        },
+      )
     })
 
     app.use(express.static(path.resolve('packages', 'frontend', 'build')))
 
-    app.get('*', (_req, res) =>{
-        if (_req.url.toLowerCase().endsWith('.png')) {
-            const file = path.parse(_req.url).base
-            res.sendFile(path.resolve(xmlDir, file))
-        } else {
-            res.sendFile(path.resolve('packages', 'frontend', 'build', 'index.html'))
-        }
+    app.get('*', (_req, res) => {
+      if (_req.url.toLowerCase().endsWith('.png')) {
+        const file = path.parse(_req.url).base
+        res.sendFile(path.resolve(xmlDir, file))
+      } else {
+        res.sendFile(
+          path.resolve('packages', 'frontend', 'build', 'index.html'),
+        )
+      }
     })
 
     cron.schedule('0 0 * * *', () => {
-        loadXmlTv(xmlDir)
+      loadXmlTv(xmlDir)
     })
     // start express server
     app.listen(5000)
-// eslint-disable-next-line no-console
-}).catch((error) => console.log(error))
+    // eslint-disable-next-line no-console
+  })
+  .catch((error) => console.log(error))

@@ -1,18 +1,13 @@
-import {
-    Entity,
-    Column,
-    PrimaryColumn,
-} from 'typeorm'
+import { Entity, Column, PrimaryColumn } from 'typeorm'
 
 @Entity()
 export class XmlFile {
+  @PrimaryColumn()
+  file!: string
 
-    @PrimaryColumn()
-    file!: string
+  @Column()
+  md5sum!: string
 
-    @Column()
-    md5sum!: string
-
-    @Column()
-    importDate!: Date
+  @Column()
+  importDate!: Date
 }

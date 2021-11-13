@@ -1,19 +1,13 @@
-import {
-    Entity,
-    Column,
-    PrimaryColumn,
-} from 'typeorm'
+import { Entity, Column, PrimaryColumn } from 'typeorm'
 
 @Entity()
 export class Weather {
+  @PrimaryColumn()
+  type!: string
 
-    @PrimaryColumn()
-    type!: string
+  @Column()
+  timestamp!: number
 
-    @Column()
-    timestamp!: number
-
-    @Column()
-    json!: string
-
+  @Column()
+  json!: string
 }

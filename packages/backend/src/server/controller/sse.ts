@@ -12,14 +12,15 @@ const store = MemoryStore.get(sse)
 const mqtt = Mqtt.getInstance('mqtt://192.168.3.117')
 
 function initMqttListener() {
-    mqtt.addListener('home/#', async (topic: string, payload: string) => {
-        if (!topic.endsWith('/dt')
-            && !topic.endsWith('/set')
-            && !topic.endsWith('/control')
-        ) {
-            await store.updateStore(topic, payload)
-        }
-    })
+  mqtt.addListener('home/#', async (topic: string, payload: string) => {
+    if (
+      !topic.endsWith('/dt') &&
+      !topic.endsWith('/set') &&
+      !topic.endsWith('/control')
+    ) {
+      await store.updateStore(topic, payload)
+    }
+  })
 }
 
 // Delay mqtt listener startup, in order to stabilize database layer.

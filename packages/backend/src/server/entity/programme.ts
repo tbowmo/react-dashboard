@@ -1,32 +1,26 @@
-import {
-    Entity,
-    Column,
-    ManyToOne,
-    PrimaryGeneratedColumn,
-} from 'typeorm'
+import { Entity, Column, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
 import { Channel } from './channel'
 
 @Entity()
 export class Programme {
+  @PrimaryGeneratedColumn()
+  id!: number
 
-    @PrimaryGeneratedColumn()
-    id!: number
+  @Column()
+  title!: string
 
-    @Column()
-    title!: string
+  @Column()
+  start!: Date
 
-    @Column()
-    start!: Date
+  @Column()
+  end!: Date
 
-    @Column()
-    end!: Date
+  @Column()
+  description!: string
 
-    @Column()
-    description!: string
+  @Column()
+  category!: string
 
-    @Column()
-    category!: string
-
-    @ManyToOne((type) => Channel, (channel) => channel.programmes)
-    channel!: Channel
+  @ManyToOne((type) => Channel, (channel) => channel.programmes)
+  channel!: Channel
 }

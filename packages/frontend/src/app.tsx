@@ -7,23 +7,29 @@ import { Box } from '@mui/system'
 import { TabsProvider } from './core/tabs/tabs-context'
 
 export function App() {
-    return (
-        <SSEProvider endpoint={process.env.NODE_ENV === 'development' ? 'http://localhost:5000/api/sse' : '/api/sse'}>
-            <SSEHandler>
-                <TabsProvider>
-                    <Box
-                        sx={{
-                            display: 'grid',
-                            gridTemplateRows: 'min-content 1fr',
-                            height: '100vh',
-                            width: '100vw',
-                        }}                
-                    >
-                        <DashTop />
-                        <IotTabs />
-                    </Box>
-                </TabsProvider>
-            </SSEHandler>
-        </SSEProvider>
-    )
+  return (
+    <SSEProvider
+      endpoint={
+        process.env.NODE_ENV === 'development'
+          ? 'http://localhost:5000/api/sse'
+          : '/api/sse'
+      }
+    >
+      <SSEHandler>
+        <TabsProvider>
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateRows: 'min-content 1fr',
+              height: '100vh',
+              width: '100vw',
+            }}
+          >
+            <DashTop />
+            <IotTabs />
+          </Box>
+        </TabsProvider>
+      </SSEHandler>
+    </SSEProvider>
+  )
 }

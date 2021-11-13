@@ -1,21 +1,18 @@
 import { CurrentWeatherDto, ForecastDto } from './weather-types'
+import { useDispatch, useSelector } from 'react-redux'
 import {
-    useDispatch,
-    useSelector,
-} from 'react-redux'
-import {
-    CurrentWeather,
-    WeatherState,
-    ForecastWeather,
+  CurrentWeather,
+  WeatherState,
+  ForecastWeather,
 } from './weather/reducer'
 import { combinedState } from './store'
 import {
-    fetchCurrentWeatherPending,
-    fetchCurrentWeatherSuccess,
-    fetchForecastPending,
-    fetchForecastSuccess,
-    fetchCurrentWeatherFailed,
-    fetchForecastFailed,
+  fetchCurrentWeatherPending,
+  fetchCurrentWeatherSuccess,
+  fetchForecastPending,
+  fetchForecastSuccess,
+  fetchCurrentWeatherFailed,
+  fetchForecastFailed,
 } from './weather/actions'
 import { useEffect } from 'react'
 
@@ -23,128 +20,141 @@ import { useEffect } from 'react'
 // const apiKey = process.env.REACT_APP_OW_KEY
 // const city = process.env.REACT_APP_OW_CITYID
 type TimerType = {
-    timer?: ReturnType<typeof setInterval>,
-    active: number,
+  timer?: ReturnType<typeof setInterval>
+  active: number
 }
 
 const weatherTimer: TimerType = {
-    active: 0,
+  active: 0,
 }
 
 const forecastTimer: TimerType = {
-    active: 0,
+  active: 0,
 }
 
 function currentWeather() {
-    return (dispatch, getState) => {
-        const { weather } = getState()
-        const currentWeather = (weather as WeatherState).currentWeather
+  return (dispatch, getState) => {
+    const { weather } = getState()
+    const currentWeather = (weather as WeatherState).currentWeather
 
-        // Ensure that we do not flood OWM with requests
-        const secondsSinceLast = Math.round((new Date()).getTime() / 1000) - currentWeather.lastFetchTime
-        const secondsBeforeRefetch = 300
+    // Ensure that we do not flood OWM with requests
+    const secondsSinceLast =
+      Math.round(new Date().getTime() / 1000) - currentWeather.lastFetchTime
+    const secondsBeforeRefetch = 300
 
-        if (!currentWeather.pending && secondsSinceLast > secondsBeforeRefetch) { 
-            dispatch(fetchCurrentWeatherPending)
-            fetch('/weather/current')
-                .then((resp) => resp.json())
-                .then((data) => dispatch(fetchCurrentWeatherSuccess(data)))
-                .catch(() => {
-                    dispatch(fetchCurrentWeatherFailed)
-                })
-        }
+    if (!currentWeather.pending && secondsSinceLast > secondsBeforeRefetch) {
+      dispatch(fetchCurrentWeatherPending)
+      fetch('/weather/current')
+        .then((resp) => resp.json())
+        .then((data) => dispatch(fetchCurrentWeatherSuccess(data)))
+        .catch(() => {
+          dispatch(fetchCurrentWeatherFailed)
+        })
     }
+  }
 }
 
 function forecastWeather() {
-    return (dispatch, getState) => {
-        const { weather } = getState()
-        const forecastWeather = (weather as WeatherState).forecast
+  return (dispatch, getState) => {
+    const { weather } = getState()
+    const forecastWeather = (weather as WeatherState).forecast
 
-        // Ensure that we do not flood OWM with requests
-        const secondsSinceLast = Math.round((new Date()).getTime() / 1000) - forecastWeather.lastFetchTime
-        const secondsBeforeRefetch = 900
-        
-        if (!forecastWeather.pending && secondsSinceLast > secondsBeforeRefetch) {
-            dispatch(fetchForecastPending)
-            fetch('/weather/forecast')
-                .then((response) => response.json())
-                .then((data) => dispatch(fetchForecastSuccess(data)))
-                .catch(() => {
-                    dispatch(fetchForecastFailed)
-                })
-        }
+    // Ensure that we do not flood OWM with requests
+    const secondsSinceLast =
+      Math.round(new Date().getTime() / 1000) - forecastWeather.lastFetchTime
+    const secondsBeforeRefetch = 900
+
+    if (!forecastWeather.pending && secondsSinceLast > secondsBeforeRefetch) {
+      dispatch(fetchForecastPending)
+      fetch('/weather/forecast')
+        .then((response) => response.json())
+        .then((data) => dispatch(fetchForecastSuccess(data)))
+        .catch(() => {
+          dispatch(fetchForecastFailed)
+        })
     }
+  }
 }
 
 export function useCurrentWeather(): CurrentWeatherDto | undefined {
-    const weatherState = useSelector((state: combinedState) => state.weather.currentWeather) as CurrentWeather
+  const weatherState = useSelector(
+    (state: combinedState) => state.weather.currentWeather,
+  ) as CurrentWeather
 
-    const dispatch = useDispatch()
+  const dispatch = useDispatch()
 
-    useEffect(() => {
-        if (!weatherState.failed) {
-            if (weatherState.data === undefined && !weatherState.pending) {
-                dispatch(currentWeather())
-            }
-            if (weatherTimer.timer === undefined) {
-                weatherTimer.timer = setInterval(() => {
-                    dispatch(currentWeather())
-                }, 600000)
-            }
-            weatherTimer.active++
-        }
-        return () => {
-            weatherTimer.active--
-            if (weatherTimer.active === 0 && weatherTimer.timer !== undefined) {
-                clearInterval(weatherTimer.timer)
-                weatherTimer.timer = undefined
-            }
-        }
-    }, [dispatch, weatherState])
+  useEffect(() => {
+    if (!weatherState.failed) {
+      if (weatherState.data === undefined && !weatherState.pending) {
+        dispatch(currentWeather())
+      }
+      if (weatherTimer.timer === undefined) {
+        weatherTimer.timer = setInterval(() => {
+          dispatch(currentWeather())
+        }, 600000)
+      }
+      weatherTimer.active++
+    }
+    return () => {
+      weatherTimer.active--
+      if (weatherTimer.active === 0 && weatherTimer.timer !== undefined) {
+        clearInterval(weatherTimer.timer)
+        weatherTimer.timer = undefined
+      }
+    }
+  }, [dispatch, weatherState])
 
-    return weatherState.data
+  return weatherState.data
 }
 
 export function useForecastWeather(): ForecastDto | undefined {
-    const forecastState = useSelector((state: combinedState) => state.weather.forecast) as ForecastWeather
+  const forecastState = useSelector(
+    (state: combinedState) => state.weather.forecast,
+  ) as ForecastWeather
 
-    const dispatch = useDispatch()
+  const dispatch = useDispatch()
 
-    useEffect(() => {
-        if (!forecastState.failed) {
-            if (forecastState.data === undefined ) {
-                dispatch(forecastWeather())
-            }
-            if (forecastTimer.timer === undefined) {
-                forecastTimer.timer = setInterval(() => {
-                    dispatch(forecastWeather())
-                }, 1800000)
-            }
-            forecastTimer.active++
-        }
-        return () => {
-            forecastTimer.active--
-            if (forecastTimer.active === 0 && forecastTimer.timer !== undefined) {
-                clearInterval(forecastTimer.timer)
-                forecastTimer.timer = undefined
-            }
-        }
-    }, [dispatch, forecastState])
+  useEffect(() => {
+    if (!forecastState.failed) {
+      if (forecastState.data === undefined) {
+        dispatch(forecastWeather())
+      }
+      if (forecastTimer.timer === undefined) {
+        forecastTimer.timer = setInterval(() => {
+          dispatch(forecastWeather())
+        }, 1800000)
+      }
+      forecastTimer.active++
+    }
+    return () => {
+      forecastTimer.active--
+      if (forecastTimer.active === 0 && forecastTimer.timer !== undefined) {
+        clearInterval(forecastTimer.timer)
+        forecastTimer.timer = undefined
+      }
+    }
+  }, [dispatch, forecastState])
 
-    return forecastState.data
+  return forecastState.data
 }
 
-export function useWeatherFailure(): {forecastFailed: boolean, currentWeatherFailed: boolean } {
-    const { failed: forecastFailed } = useSelector((state: combinedState) => state.weather.forecast) as ForecastWeather || {
-        failed: false,
-    }
-    const { failed: currentWeatherFailed } = useSelector((state: combinedState) => state.weather.currentWeather) as CurrentWeather || {
-        failed: false,
-    }
+export function useWeatherFailure(): {
+  forecastFailed: boolean
+  currentWeatherFailed: boolean
+} {
+  const { failed: forecastFailed } = (useSelector(
+    (state: combinedState) => state.weather.forecast,
+  ) as ForecastWeather) || {
+    failed: false,
+  }
+  const { failed: currentWeatherFailed } = (useSelector(
+    (state: combinedState) => state.weather.currentWeather,
+  ) as CurrentWeather) || {
+    failed: false,
+  }
 
-    return {
-        forecastFailed,
-        currentWeatherFailed,
-    }
+  return {
+    forecastFailed,
+    currentWeatherFailed,
+  }
 }

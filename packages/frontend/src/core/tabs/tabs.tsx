@@ -2,14 +2,14 @@ import * as React from 'react'
 import SwipeableViews from 'react-swipeable-views'
 import { Tab, Tabs } from '@mui/material'
 import { Box } from '@mui/system'
-import { 
-    House,
-    Radio,
-    Tv,
-    WbSunny,
-    Videocam,
-    Wifi,
-    SvgIconComponent,
+import {
+  House,
+  Radio,
+  Tv,
+  WbSunny,
+  Videocam,
+  Wifi,
+  SvgIconComponent,
 } from '@mui/icons-material'
 import { Controller } from '../../pages/media/media'
 import { Streams } from '../../pages/streams/streams'
@@ -21,109 +21,116 @@ import { Scene } from '../../pages/scene/scene'
 import { RemoteTv } from 'mdi-material-ui'
 
 type MenuEntry = {
-    label: string,
-    icon: SvgIconComponent,
-    component: JSX.Element,
+  label: string
+  icon: SvgIconComponent
+  component: JSX.Element
 }
 
 const menuLinks: MenuEntry[] = [
-    {
-        label: 'Main',
-        icon: House,
-        component: (<Controller />)
-    },
-    {
-        label: 'Radio',
-        icon: Radio,
-        component: (<Streams type="radio" />)
-    },
-    {
-        label: 'TV',
-        icon: Tv,
-        component: (<Streams type="tv" />)
-    },
-    {
-        label: 'Weather',
-        icon: WbSunny,
-        component: (<Weather />)
-    }, 
-    {
-        label: 'Scene',
-        icon: RemoteTv,
-        component: (<Scene />)
-    },
-    {
-        label: 'Video',
-        icon: Videocam,
-        component: (<Surveilance />)
-    },
-    {
-        label: 'Wifi',
-        icon: Wifi,
-        component: (<WifiPassPhrase />)
-    },
+  {
+    label: 'Main',
+    icon: House,
+    component: <Controller />,
+  },
+  {
+    label: 'Radio',
+    icon: Radio,
+    component: <Streams type="radio" />,
+  },
+  {
+    label: 'TV',
+    icon: Tv,
+    component: <Streams type="tv" />,
+  },
+  {
+    label: 'Weather',
+    icon: WbSunny,
+    component: <Weather />,
+  },
+  {
+    label: 'Scene',
+    icon: RemoteTv,
+    component: <Scene />,
+  },
+  {
+    label: 'Video',
+    icon: Videocam,
+    component: <Surveilance />,
+  },
+  {
+    label: 'Wifi',
+    icon: Wifi,
+    component: <WifiPassPhrase />,
+  },
 ]
 
 interface TabPanelProps {
-    children?: React.ReactNode;
-    active: boolean;
- }
+  children?: React.ReactNode
+  active: boolean
+}
 
 function TabPanel(props: TabPanelProps) {
-    const { children, active } = props;
-  
-    return (
-      <Box sx={{height: '100%', marginLeft: 2, marginRight: 2}}>
-        {active && children}
-      </Box>
-    );
+  const { children, active } = props
+
+  return (
+    <Box sx={{ height: '100%', marginLeft: 2, marginRight: 2 }}>
+      {active && children}
+    </Box>
+  )
 }
 
 export function IotTabs() {
-    const {activeTab, setActiveTab} = useTabs()
-    
-    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-        setActiveTab(newValue)
-    }
+  const { activeTab, setActiveTab } = useTabs()
 
-    const handleChangeIndex = (index: number) => {
-        setActiveTab(index)
-    }
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setActiveTab(newValue)
+  }
 
-    return (
-        <Box sx={{display: 'grid', gridTemplateColumns: 'min-content auto', height: '100%', width: '100%'}}>
-            <Tabs
-                orientation="vertical"
-                variant="standard"
-                sx={{borderColor: 'divider'}}
-                value={activeTab}
-                onChange={handleChange}
-                textColor="inherit"
-                indicatorColor="secondary"
-            >
-            {menuLinks.map((menuEntry) => (
-                <Tab
-                    key={menuEntry.label} 
-                    icon={<menuEntry.icon sx={{width: '60px', height: '60px'}} />}
-                />
-            ))}
-            </Tabs>
-            <SwipeableViews
-                axis="y"
-                index={activeTab}
-                onChangeIndex={handleChangeIndex}
-                style={{width: '100%', height: '100%'}}
-                containerStyle={{width: '100%', height: '100%'}}
-                slideStyle={{height: '100%'}}
-                enableMouseEvents
-                resistance
-            >
-                {menuLinks.map((menuEntry, index) => (
-                    <TabPanel active={activeTab === index} key={menuEntry.label}>
-                        {menuEntry.component}
-                    </TabPanel>
-                ))}
-            </SwipeableViews>
-        </Box>
-    )
+  const handleChangeIndex = (index: number) => {
+    setActiveTab(index)
+  }
+
+  return (
+    <Box
+      sx={{
+        display: 'grid',
+        gridTemplateColumns: 'min-content auto',
+        height: '100%',
+        width: '100%',
+      }}
+    >
+      <Tabs
+        orientation="vertical"
+        variant="standard"
+        sx={{ borderColor: 'divider' }}
+        value={activeTab}
+        onChange={handleChange}
+        textColor="inherit"
+        indicatorColor="secondary"
+      >
+        {menuLinks.map((menuEntry) => (
+          <Tab
+            key={menuEntry.label}
+            icon={<menuEntry.icon sx={{ width: '60px', height: '60px' }} />}
+          />
+        ))}
+      </Tabs>
+      <SwipeableViews
+        axis="y"
+        index={activeTab}
+        onChangeIndex={handleChangeIndex}
+        style={{ width: '100%', height: '100%' }}
+        containerStyle={{ width: '100%', height: '100%' }}
+        slideStyle={{ height: '100%' }}
+        enableMouseEvents
+        resistance
+      >
+        {menuLinks.map((menuEntry, index) => (
+          <TabPanel active={activeTab === index} key={menuEntry.label}>
+            {menuEntry.component}
+          </TabPanel>
+        ))}
+      </SwipeableViews>
+    </Box>
+  )
 }
