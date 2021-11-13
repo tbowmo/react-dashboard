@@ -2,6 +2,7 @@ import * as express from 'express'
 import * as SSE from 'express-sse'
 import { Mqtt } from '../../mqtt/mqtt'
 import { MemoryStore } from '../../mqtt/memory-store'
+
 const app = express()
 
 const sse = new SSE()

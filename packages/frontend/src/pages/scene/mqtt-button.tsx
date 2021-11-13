@@ -31,23 +31,24 @@ export function MqttButton(props: Props) {
     deviceSet(room, type, device, payload)
   }
 
-  const { startTimer: startTimer } = useTabs()
+  const { startTimer } = useTabs()
 
   React.useEffect(() => {
+    let timer: NodeJS.Timeout
     if (keyActivated) {
-      const timer = setTimeout(() => {
+      timer = setTimeout(() => {
         setKey(false)
         startTimer(200)
       }, 200)
-      return () => {
-        clearTimeout(timer)
-      }
+    }
+    return () => {
+      clearTimeout(timer)
     }
   }, [keyActivated, startTimer])
 
   return (
     <GridCard>
-      <CardContent component={IconButton} onClick={click}>
+      <CardContent component={IconButton} onClick={() => click()}>
         {Icon ? <Icon fontSize="large" /> : null}
         <Typography>{label}</Typography>
       </CardContent>

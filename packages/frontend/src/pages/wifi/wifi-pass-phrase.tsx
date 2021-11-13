@@ -1,7 +1,6 @@
 import { Grid, Typography } from '@mui/material'
 import * as React from 'react'
-
-var QRCode = require('qrcode.react')
+import QRCode from 'qrcode.react'
 
 export function WifiPassPhrase() {
   const type = 'WPA'

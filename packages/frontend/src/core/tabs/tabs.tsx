@@ -1,7 +1,6 @@
 import * as React from 'react'
 import SwipeableViews from 'react-swipeable-views'
-import { Tab, Tabs } from '@mui/material'
-import { Box } from '@mui/system'
+import { Tab, Tabs, Box } from '@mui/material'
 import {
   House,
   Radio,

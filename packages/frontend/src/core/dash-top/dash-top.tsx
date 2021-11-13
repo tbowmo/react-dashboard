@@ -62,11 +62,14 @@ export function DashTop() {
   }
 
   React.useEffect(() => {
+    let timeout: NodeJS.Timeout
     if (totalIndex !== 0) {
-      const timeout = setTimeout(() => {
+      timeout = setTimeout(() => {
         setTotalIndex(0)
       }, 5000)
-      return () => {
+    }
+    return () => {
+      if (timeout) {
         clearTimeout(timeout)
       }
     }
@@ -80,11 +83,14 @@ export function DashTop() {
   }
 
   React.useEffect(() => {
+    let timeout: NodeJS.Timeout
     if (dpIndex !== 0) {
-      const timeout = setTimeout(() => {
+      timeout = setTimeout(() => {
         setDpIndex(0)
       }, 5000)
-      return () => {
+    }
+    return () => {
+      if (timeout) {
         clearTimeout(timeout)
       }
     }

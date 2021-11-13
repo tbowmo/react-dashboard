@@ -5,7 +5,7 @@ import { Music } from './music'
 import { RadioTv } from './radio-tv'
 import { Others } from './others'
 import { Remote } from './remote'
-import { Box } from '@mui/system'
+import { Box } from '@mui/material'
 
 export function Controller() {
   const [showAlbumCover, setShowAlbumCover] = React.useState<boolean>(false)
@@ -18,11 +18,12 @@ export function Controller() {
   }
 
   React.useEffect(() => {
+    let timeOut: NodeJS.Timeout
     if (showAlbumCover) {
-      const timeOut = setTimeout(() => setShowAlbumCover(false), 5000)
-      return () => {
-        clearTimeout(timeOut)
-      }
+      timeOut = setTimeout(() => setShowAlbumCover(false), 5000)
+    }
+    return () => {
+      clearTimeout(timeOut)
     }
   }, [showAlbumCover])
 
@@ -62,7 +63,8 @@ export function Controller() {
             style={{ gridArea: 'image', maxHeight: 600 }}
             src={cast.media?.album_art || cast.capabilities?.app_icon}
             alt={cast.media?.album}
-            onClick={clickAlbumCover}
+            onClick={() => clickAlbumCover()}
+            aria-hidden="true"
           />
           {cast.media?.metadata_type === 3 ? (
             <Music media={cast.media} state={cast.state} />
@@ -71,7 +73,7 @@ export function Controller() {
           )}
         </Box>
       ) : (
-        <Others type={avcenter} />
+        <Others deviceType={avcenter} />
       )}
       <Remote />
     </Box>

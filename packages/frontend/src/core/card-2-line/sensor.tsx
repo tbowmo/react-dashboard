@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { useSSENumber } from '../data'
 import { Grid, GridProps, Typography } from '@mui/material'
-import { Card2Line, SensorValue } from '../card-2-line/card-2-line'
+import { Card2Line, SensorValue } from './card-2-line'
 
 type Props = Omit<GridProps, 'children'> & {
   room: string
@@ -15,43 +15,48 @@ type Props = Omit<GridProps, 'children'> & {
   scale?: string[]
 }
 
-function round(value: number, precission: number = 1) {
+function round(value: number, precission = 1): number {
   if (precission === 0) {
     return Math.round(value)
-  } else {
-    return Math.round(value * (10 * precission)) / (10 * precission)
   }
+
+  return Math.round(value * (10 * precission)) / (10 * precission)
 }
 
 function useScaledValue(
   sensorValue: number | undefined,
   unit: string | string[] | undefined,
-  precission: number = 1,
+  precission = 1,
 ): { value: number; unit?: string } | undefined {
-  return React.useMemo(() => {
+  return React.useMemo((): { value: number; unit?: string } | undefined => {
     if (!sensorValue) {
-      return
+      return undefined
     }
-    if (unit !== undefined && Array.isArray(unit) && sensorValue) {
-      let value = sensorValue
-      let scaleIndex = 0
-      while (value > 999 && scaleIndex < unit.length) {
-        value = value / 1000
-        scaleIndex++
+    let returnValue: { value: number; unit?: string }
+    if (unit !== undefined)
+      if (Array.isArray(unit)) {
+        let value = sensorValue
+        let scaleIndex = 0
+        while (value > 999 && scaleIndex < unit.length) {
+          value /= 1000
+          scaleIndex += 1
+        }
+        returnValue = {
+          unit: unit[scaleIndex],
+          value: round(value, precission),
+        }
+      } else {
+        returnValue = {
+          unit,
+          value: round(sensorValue, precission),
+        }
       }
-      return {
-        unit: unit[scaleIndex],
-        value: round(value, precission),
-      }
-    } else if (unit !== undefined && typeof unit === 'string') {
-      return {
-        unit,
+    else {
+      returnValue = {
         value: round(sensorValue, precission),
       }
     }
-    return {
-      value: round(sensorValue, precission),
-    }
+    return returnValue
   }, [unit, sensorValue, precission])
 }
 

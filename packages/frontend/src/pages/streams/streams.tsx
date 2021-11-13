@@ -2,9 +2,8 @@ import * as React from 'react'
 import { useStreams, StreamDto } from '../../core/data'
 import moment from 'moment'
 import { useTabs } from '../../core/tabs/tabs-context'
-import { Grid, CardContent, Typography, Avatar } from '@mui/material'
+import { Grid, CardContent, Typography, Avatar, Box } from '@mui/material'
 import { GridCard } from '../../core/card-2-line/grid-card'
-import { Box } from '@mui/system'
 
 type Props = {
   type: 'radio' | 'tv'
@@ -18,7 +17,7 @@ export function Streams(props: Props) {
 
   function SelectStream(stream: StreamDto) {
     setActive(stream.link)
-    console.log('Selecting stream')
+
     const xhttp = new XMLHttpRequest()
     xhttp.open('POST', '/media/stuen/play', true)
     xhttp.setRequestHeader('Content-type', 'application/json')
@@ -28,12 +27,15 @@ export function Streams(props: Props) {
   const { startTimer } = useTabs()
 
   React.useEffect(() => {
+    let timer: NodeJS.Timeout | null = null
     if (active !== '') {
-      const timer = setTimeout(() => {
+      timer = setTimeout(() => {
         setActive('')
         startTimer(200)
       }, 200)
-      return () => {
+    }
+    return () => {
+      if (timer !== null) {
         clearTimeout(timer)
       }
     }
@@ -67,11 +69,11 @@ export function Streams(props: Props) {
                 {streamEntry.programmes[0].start !==
                 streamEntry.programmes[0].end ? (
                   <React.Fragment>
-                    <label>Start</label>
+                    <Typography>Start</Typography>
                     <div>
                       {moment(streamEntry.programmes[0].start).format('HH:mm')}
                     </div>
-                    <label>Slut</label>
+                    <Typography>Slut</Typography>
                     <div>
                       {moment(streamEntry.programmes[0].end).format('HH:mm')}
                     </div>

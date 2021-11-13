@@ -9,6 +9,7 @@
     "@emotion/styled": "^11.3.0",
     "@mui/icons-material": "^5.0.5",
     "@mui/material": "^5.0.4",
+    "@mui/system": "^5.1.0",
     "clsx": "^1.1.1",
     "history": "^5.0.1",
     "mdi-material-ui": "^7.1.0",
@@ -35,9 +36,6 @@
     "eject": "react-scripts eject",
     "lint": "eslint --ext=jsx,ts,tsx src",
     "test:types": "tsc --project ./tsconfig.json --noEmit"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
   },
   "browserslist": {
     "production": [

@@ -1,4 +1,3 @@
-import style from './scene.module.scss'
 import * as React from 'react'
 import {
   Album,
@@ -14,7 +13,6 @@ import { LightDimmer } from './mqtt-light-dimmer'
 import { MqttButton } from './mqtt-button'
 import { MqttToggle } from './mqtt-toggle'
 import { useSSEString, useDevices } from '../../core/data'
-import clsx from 'clsx'
 import { Box, Grid } from '@mui/material'
 
 type Action = {
@@ -82,7 +80,7 @@ export function Scene() {
               key={device}
               label="Auto lys"
               device={device}
-              onPayload={true}
+              onPayload
               offPayload={false}
             />
           ))}

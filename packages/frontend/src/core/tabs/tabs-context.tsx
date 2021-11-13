@@ -13,8 +13,8 @@ type TabsContent = {
 
 const TabsContext = React.createContext<TabsContent>({
   activeTab: 0,
-  setActiveTab: (index: number) => {},
-  startTimer: (timeout?: number) => {},
+  setActiveTab: () => {},
+  startTimer: () => {},
   stopTimer: () => {},
 })
 
@@ -23,6 +23,7 @@ type Props = {
 }
 
 export function TabsProvider(props: Props) {
+  const { children } = props
   const [activeTab, setActiveTab] = React.useState<number>(DEFAULTTAB)
   const timer = React.useRef<TimerType>(null)
 
@@ -34,7 +35,7 @@ export function TabsProvider(props: Props) {
   }, [])
 
   const startTimer = React.useCallback(
-    (timeout: number = Number(process.env.REACT_APP_ACTION_TIMEOUT)) => {
+    (timeout = Number(process.env.REACT_APP_ACTION_TIMEOUT)) => {
       if (timer.current !== null) {
         stopTimer()
       }
@@ -63,9 +64,7 @@ export function TabsProvider(props: Props) {
     [activeTab, startTimer, stopTimer, setTab],
   )
 
-  return (
-    <TabsContext.Provider value={value}>{props.children}</TabsContext.Provider>
-  )
+  return <TabsContext.Provider value={value}>{children}</TabsContext.Provider>
 }
 
 export function useTabs(): TabsContent {

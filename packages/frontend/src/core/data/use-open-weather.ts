@@ -33,16 +33,15 @@ const forecastTimer: TimerType = {
 }
 
 function currentWeather() {
-  return (dispatch, getState) => {
-    const { weather } = getState()
-    const currentWeather = (weather as WeatherState).currentWeather
+  return (dispatch, getState: () => WeatherState) => {
+    const { currentWeather: current } = getState()
 
     // Ensure that we do not flood OWM with requests
     const secondsSinceLast =
-      Math.round(new Date().getTime() / 1000) - currentWeather.lastFetchTime
+      Math.round(new Date().getTime() / 1000) - (current?.lastFetchTime ?? 0)
     const secondsBeforeRefetch = 300
 
-    if (!currentWeather.pending && secondsSinceLast > secondsBeforeRefetch) {
+    if (!current?.pending && secondsSinceLast > secondsBeforeRefetch) {
       dispatch(fetchCurrentWeatherPending)
       fetch('/weather/current')
         .then((resp) => resp.json())
@@ -55,16 +54,15 @@ function currentWeather() {
 }
 
 function forecastWeather() {
-  return (dispatch, getState) => {
-    const { weather } = getState()
-    const forecastWeather = (weather as WeatherState).forecast
+  return (dispatch, getState: () => WeatherState) => {
+    const { forecast } = getState()
 
     // Ensure that we do not flood OWM with requests
     const secondsSinceLast =
-      Math.round(new Date().getTime() / 1000) - forecastWeather.lastFetchTime
+      Math.round(new Date().getTime() / 1000) - (forecast?.lastFetchTime ?? 0)
     const secondsBeforeRefetch = 900
 
-    if (!forecastWeather.pending && secondsSinceLast > secondsBeforeRefetch) {
+    if (!forecast?.pending && secondsSinceLast > secondsBeforeRefetch) {
       dispatch(fetchForecastPending)
       fetch('/weather/forecast')
         .then((response) => response.json())
@@ -93,10 +91,10 @@ export function useCurrentWeather(): CurrentWeatherDto | undefined {
           dispatch(currentWeather())
         }, 600000)
       }
-      weatherTimer.active++
+      weatherTimer.active += 1
     }
     return () => {
-      weatherTimer.active--
+      weatherTimer.active -= 1
       if (weatherTimer.active === 0 && weatherTimer.timer !== undefined) {
         clearInterval(weatherTimer.timer)
         weatherTimer.timer = undefined
@@ -124,10 +122,10 @@ export function useForecastWeather(): ForecastDto | undefined {
           dispatch(forecastWeather())
         }, 1800000)
       }
-      forecastTimer.active++
+      forecastTimer.active += 1
     }
     return () => {
-      forecastTimer.active--
+      forecastTimer.active -= 1
       if (forecastTimer.active === 0 && forecastTimer.timer !== undefined) {
         clearInterval(forecastTimer.timer)
         forecastTimer.timer = undefined

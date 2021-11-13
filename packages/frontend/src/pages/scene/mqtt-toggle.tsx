@@ -1,14 +1,11 @@
 import * as React from 'react'
-import style from './scene.module.scss'
 import { useSSEBoolean } from '../../core/data'
-import { ToggleOff, ToggleOn } from '@mui/icons-material'
+import { ToggleOff, ToggleOn, SvgIconComponent } from '@mui/icons-material'
 import { deviceSet, DeviceType } from './device-set'
 import { GridCard } from '../../core/card-2-line/grid-card'
-import { CardContent, Box, Typography } from '@mui/material'
-import { SvgIconComponent } from '@mui/icons-material'
+import { CardContent, Typography } from '@mui/material'
 
 type Props = {
-  className?: string
   label: string
   room?: string
   type?: DeviceType
@@ -26,28 +23,31 @@ export function MqttToggle(props: Props) {
     room = 'stuen',
     type = 'switch',
     device,
+    label,
+    offPayload,
+    onPayload,
   } = props
   const [active, setActive] = React.useState(false)
 
   const currentState = useSSEBoolean(room, type, device)
 
   function onClick() {
-    const value = active ? props.offPayload : props.onPayload
+    const value = active ? offPayload : onPayload
     deviceSet(room, type, device, value.toString())
   }
 
   React.useEffect(() => {
     if (currentState !== undefined) {
-      setActive(currentState === props.onPayload)
+      setActive(currentState === onPayload)
     }
-  }, [currentState, props])
+  }, [currentState, onPayload])
 
   const StateIcon = active ? IconOn : IconOff
   return (
-    <GridCard onClick={onClick} xs>
+    <GridCard onClick={() => onClick} xs>
       <CardContent>
         <StateIcon fontSize="large" />
-        <Typography>{props.label}</Typography>
+        <Typography>{label}</Typography>
       </CardContent>
     </GridCard>
   )

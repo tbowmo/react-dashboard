@@ -4,12 +4,13 @@ import { MediaProp } from './media-prop'
 import { Box } from '@mui/material'
 
 type Props = {
-  type: string
+  deviceType: string
 }
 
 export function Others(props: Props) {
+  const { deviceType } = props
   const Icon = React.useMemo(() => {
-    switch (props.type.toLowerCase()) {
+    switch (deviceType.toLowerCase()) {
       case 'tv':
         return Tv
       case 'wii':
@@ -18,7 +19,7 @@ export function Others(props: Props) {
       default:
         return Album
     }
-  }, [props.type])
+  }, [deviceType])
 
   return (
     <Box

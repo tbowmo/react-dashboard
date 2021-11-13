@@ -4,18 +4,17 @@ import { keyframes } from '@mui/system'
 import { MediaCard } from './media-card'
 import { Chromecast } from '@dashboard/types'
 
-function secondsToHms(d) {
+function secondsToHms(seconds: number) {
   const lz = (n: number): string => (n > 9 ? `${n}` : `0${n}`)
 
-  d = Number(d)
-  const h = Math.floor(d / 3600)
-  const m = Math.floor((d % 3600) / 60)
-  const s = Math.floor((d % 3600) % 60)
+  const h = Math.floor(seconds / 3600)
+  const m = Math.floor((seconds % 3600) / 60)
+  const s = Math.floor((seconds % 3600) % 60)
 
-  return (h > 0 ? `${h}:` : '') + `${lz(m)}:${lz(s)}`
+  return `${h > 0 ? h : ''} ${lz(m)}:${lz(s)}`
 }
 
-let timer: ReturnType<typeof setInterval> | undefined = undefined
+let timer: ReturnType<typeof setInterval> | undefined
 
 const blink = keyframes`
     0%{opacity: 0;}
@@ -29,11 +28,13 @@ export function Duration(props: {
   media: Chromecast.Media
   state: Chromecast.Capabilities['state']
 }) {
-  const { media, state } = props
+  const {
+    media: { current_time, duration },
+    state,
+  } = props
 
   const [time, setTime] = React.useState<number>(0)
   const [remaining, setRemaining] = React.useState<boolean>(false)
-  const current_time = media.current_time
 
   React.useEffect(() => {
     fetch(`/media/stuen/update`).then(() => {})
@@ -53,7 +54,7 @@ export function Duration(props: {
         timer = undefined
       }
     }
-  }, [media, setTime, time])
+  }, [state, setTime, time])
 
   React.useEffect(() => {
     setTime(current_time || 0)
@@ -62,14 +63,14 @@ export function Duration(props: {
   const { totalTime, currentTime, fontSize, remainingTime } =
     React.useMemo(() => {
       return {
-        totalTime: secondsToHms(media.duration),
+        totalTime: secondsToHms(duration),
         currentTime: secondsToHms(time),
-        remainingTime: secondsToHms(media.duration || 0 - time),
-        fontSize: media.duration || 0 > 3600 ? '32pt' : '40pt',
+        remainingTime: secondsToHms(duration || 0 - time),
+        fontSize: duration || 0 > 3600 ? '32pt' : '40pt',
       }
-    }, [media, time])
+    }, [duration, time])
 
-  if ((media.duration || 0) < 1) {
+  if ((duration || 0) < 1) {
     return null
   }
 
@@ -78,7 +79,7 @@ export function Duration(props: {
   }
 
   return (
-    <MediaCard onClick={toggleRemaining} label="Tid">
+    <MediaCard onClick={() => toggleRemaining()} label="Tid">
       <Typography
         align="center"
         gutterBottom={false}

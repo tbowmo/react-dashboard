@@ -8,6 +8,7 @@ type Props = GridProps & {
 }
 
 export function SensorValue(props: { value: string | number | undefined }) {
+  const { value } = props
   return (
     <Typography
       sx={{
@@ -18,7 +19,7 @@ export function SensorValue(props: { value: string | number | undefined }) {
         textAlign: 'center',
       }}
     >
-      {props.value}
+      {value}
     </Typography>
   )
 }

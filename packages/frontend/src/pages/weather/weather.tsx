@@ -18,8 +18,7 @@ import {
 } from 'mdi-material-ui'
 import moment from 'moment'
 import { getCompassHeading, wind } from './weather-functions'
-import { Box } from '@mui/system'
-import { CardContent, Grid, Typography } from '@mui/material'
+import { CardContent, Grid, Typography, Box } from '@mui/material'
 import { GridCard } from '../../core/card-2-line/grid-card'
 import { SvgIconComponent } from '@mui/icons-material'
 
@@ -44,7 +43,7 @@ const iconMap = {
   '50n': WeatherFog,
 }
 
-function round(value: number, precission: number = 1): number {
+function round(value: number, precission = 1): number {
   let v = value
   if (typeof value === 'number') {
     if (precission === 0) {
@@ -54,6 +53,57 @@ function round(value: number, precission: number = 1): number {
     }
   }
   return v
+}
+
+function SingleForecast(props: { data: ForecastTupple }) {
+  const { data } = props
+  const Icon: SvgIconComponent = iconMap[data.weather[0].icon] || null
+  const timeObj = moment.unix(data.dt)
+  const timeStr = timeObj.format('HH:mm')
+  return (
+    <Box
+      sx={{
+        display: 'grid',
+        gridTemplateColumns: 'auto min-content',
+        gridTemplateRows: 'repeat(3 fr)',
+        gridTemplateAreas: `"time icon"
+            "weather icon"
+            "temperature icon"`,
+      }}
+    >
+      <Box sx={{ gridArea: 'time' }}>Kl. {timeStr}</Box>
+      <Box sx={{ gridArea: 'weather' }}>
+        {data?.weather ? data.weather[0]?.description || '' : ''}
+      </Box>
+      <Box sx={{ gridArea: 'temperature' }}>
+        {round(data?.main?.temp_max || -99)} /{' '}
+        {round(data?.main?.temp_min || -99)}&deg;C
+      </Box>
+      <Box sx={{ gridArea: 'icon' }}>
+        <Icon fontSize="large" />
+      </Box>
+    </Box>
+  )
+}
+
+function Forecast() {
+  const forecast = useForecastWeather()
+
+  if (forecast === undefined || forecast.list === undefined) {
+    return null
+  }
+
+  return (
+    <Grid container>
+      {forecast.list.slice(1, 6).map((f) => (
+        <GridCard xs key={`weather-${f.dt}`}>
+          <CardContent>
+            <SingleForecast data={f} />
+          </CardContent>
+        </GridCard>
+      ))}
+    </Grid>
+  )
 }
 
 export function Weather() {
@@ -126,57 +176,6 @@ export function Weather() {
         </GridCard>
       </Grid>
       <Forecast />
-    </Box>
-  )
-}
-
-function Forecast() {
-  const forecast = useForecastWeather()
-
-  if (forecast === undefined || forecast.list === undefined) {
-    return null
-  }
-
-  return (
-    <Grid container>
-      {forecast.list.slice(1, 6).map((f) => (
-        <GridCard xs key={`weather-${f.dt}`}>
-          <CardContent>
-            <SingleForecast data={f} />
-          </CardContent>
-        </GridCard>
-      ))}
-    </Grid>
-  )
-}
-
-function SingleForecast(props: { data: ForecastTupple }) {
-  const { data } = props
-  const Icon: SvgIconComponent = iconMap[data.weather[0].icon] || null
-  const timeObj = moment.unix(data.dt)
-  const timeStr = timeObj.format('HH:mm')
-  return (
-    <Box
-      sx={{
-        display: 'grid',
-        gridTemplateColumns: 'auto min-content',
-        gridTemplateRows: 'repeat(3 fr)',
-        gridTemplateAreas: `"time icon"
-            "weather icon"
-            "temperature icon"`,
-      }}
-    >
-      <Box sx={{ gridArea: 'time' }}>Kl. {timeStr}</Box>
-      <Box sx={{ gridArea: 'weather' }}>
-        {data?.weather ? data.weather[0]?.description || '' : ''}
-      </Box>
-      <Box sx={{ gridArea: 'temperature' }}>
-        {round(data?.main?.temp_max || -99)} /{' '}
-        {round(data?.main?.temp_min || -99)}&deg;C
-      </Box>
-      <Box sx={{ gridArea: 'icon' }}>
-        <Icon fontSize="large" />
-      </Box>
     </Box>
   )
 }

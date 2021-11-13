@@ -7,11 +7,10 @@ import {
   VolumeDown,
   VolumeUp,
   PlayArrow,
+  SvgIconComponent,
 } from '@mui/icons-material'
 import { useChromecast } from '../../core/data'
-import { SvgIconComponent } from '@mui/icons-material'
-import { IconButton } from '@mui/material'
-import { Box } from '@mui/system'
+import { IconButton, Box } from '@mui/material'
 
 type controlKey = {
   icon: SvgIconComponent | undefined
@@ -108,14 +107,13 @@ export function Remote() {
     }
   }, [activeKey, setActiveKey])
 
-  const remoteButtons = functions.filter((button) => {
+  const remoteButtons = functions.filter((button): boolean => {
     if (button.state === 'ALL') return true
     const state = capabilities?.state || 'none'
     if (['PLAYING', 'PAUSED'].includes(state)) {
       return button.state === state
-    } else {
-      return button.state === 'none'
     }
+    return button.state === 'none'
   })
 
   return (

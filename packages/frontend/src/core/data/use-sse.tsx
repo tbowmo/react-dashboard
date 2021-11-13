@@ -7,11 +7,13 @@ import { initialData, incomming } from './sse/actions'
 import { combinedState } from './store'
 
 type Props = {
-  children?: any
+  children?: React.ReactNode
 }
 
 export function SSEHandler(props: Props) {
+  const { children } = props
   const dispatch = useDispatch()
+
   const initial = useSSE(
     'message',
     {},
@@ -19,11 +21,12 @@ export function SSEHandler(props: Props) {
       stateReducer(_state, changes) {
         return changes.data
       },
-      parser(input: any) {
+      parser(input: string) {
         return JSON.parse(input)
       },
     },
   )
+
   React.useEffect(() => {
     if (initial) {
       dispatch(initialData(initial))
@@ -37,7 +40,7 @@ export function SSEHandler(props: Props) {
       stateReducer(_state, changes) {
         return changes.data
       },
-      parser(input) {
+      parser(input: string) {
         return JSON.parse(input)
       },
     },
@@ -49,7 +52,7 @@ export function SSEHandler(props: Props) {
     }
   }, [updates, dispatch])
 
-  return props.children
+  return <React.Fragment>{children}</React.Fragment>
 }
 
 export function useSSEString(
@@ -59,11 +62,9 @@ export function useSSEString(
 ): string | undefined {
   const data = useSelector((state: combinedState) => state.sse) as SSEState
   if (!room || !deviceType || !device) {
-    return
+    return undefined
   }
-  if (data[room] && data[room]?.[deviceType]) {
-    return data[room]?.[deviceType]?.[device]
-  }
+  return data[room]?.[deviceType]?.[device]
 }
 
 export function useSSENumber(
@@ -81,20 +82,24 @@ export function useSSEBoolean(
   device: string | undefined,
 ): boolean | undefined {
   const value = useSSEString(room, deviceType, device)
-  let bool: any
+
   try {
-    bool = JSON.parse(value || '0')
-  } catch {}
-  return bool === 1 || bool === '1' || bool || false
+    const bool = JSON.parse(value || '0')
+    return bool === 1 || bool === '1' || bool || false
+  } catch {
+    // Empty on purpose
+  }
+
+  return undefined
 }
 
-export function useChromecast(
-  room: string = 'stuen',
-): Chromecast.Chrome | undefined {
+export function useChromecast(room = 'stuen'): Chromecast.Chrome | undefined {
   const data = useSelector((state: combinedState) => state.sse) as SSEState
   if (data[room]) {
     return (data[room] as Room)?.media
   }
+
+  return undefined
 }
 
 export function useDevices(room: string, type: string): string[] {
