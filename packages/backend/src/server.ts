@@ -15,7 +15,7 @@ import * as cron from 'node-cron'
 import { loadXmlTv } from './cronjobs/load-xml-tv'
 import { XmlFile } from './server/entity/xmlfile'
 
-const cors = require('cors')
+import cors = require('cors')
 
 let envFile = path.resolve('..', '..', '.env')
 
@@ -43,14 +43,14 @@ dotenv.config({
 createConnection(
   {
     type: 'sqlite',
-    database: database,
+    database,
     synchronize: true,
-    logging: logging,
+    logging,
     entities: [Channel, Programme, Weather, XmlFile],
   },
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
 )
-  .then(async (connection) => {
+  .then(async () => {
     loadXmlTv(xmlDir)
 
     // create express app
@@ -58,27 +58,21 @@ createConnection(
     app.use(bodyParser.json())
     app.use(cors())
     app.use(ServerSide)
+
     // register express routes from defined application routes
-    Routes.forEach((route) => {
-      ;(app as any)[route.method](
-        route.route,
-        (req: Request, res: Response, next: Function) => {
-          const result = new (route.controller as any)()[route.action](
-            req,
-            res,
-            next,
+    Routes().forEach(({ route, controller, method, action }) => {
+      app[method](route, (req: Request, res: Response, next) => {
+        const task = controller[action](req, res, next)
+        if (task instanceof Promise) {
+          task.then((result) =>
+            result !== null && result !== undefined
+              ? res.send(result)
+              : undefined,
           )
-          if (result instanceof Promise) {
-            result.then((result) =>
-              result !== null && result !== undefined
-                ? res.send(result)
-                : undefined,
-            )
-          } else if (result !== null && result !== undefined) {
-            res.json(result)
-          }
-        },
-      )
+        } else if (task !== null && task !== undefined) {
+          res.json(task)
+        }
+      })
     })
 
     app.use(express.static(path.resolve('packages', 'frontend', 'build')))
@@ -99,6 +93,6 @@ createConnection(
     })
     // start express server
     app.listen(5000)
-    // eslint-disable-next-line no-console
   })
+  // eslint-disable-next-line no-console
   .catch((error) => console.log(error))

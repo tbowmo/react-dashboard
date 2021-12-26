@@ -1,5 +1,5 @@
 import * as MQTT from 'mqtt'
-const match = require('mqtt-match')
+import match = require('mqtt-match')
 
 export type Callback = (topic: string, payload: string) => void
 
@@ -10,13 +10,15 @@ type CallbackHandlers = {
 
 export class Mqtt {
   private static instance: Mqtt
+
   private client: MQTT.MqttClient
+
   private callbacks: CallbackHandlers[] = []
 
   public static getInstance(host?: string) {
     if (!Mqtt.instance) {
       if (host === undefined) {
-        throw 'Host is not defined in initial call!'
+        throw new Error('Host is not defined in initial call!')
       }
       Mqtt.instance = new Mqtt(host)
     }
@@ -56,7 +58,7 @@ export class Mqtt {
     })
   }
 
-  public publish(topic: string, message: string | Object) {
+  public publish(topic: string, message: string | unknown) {
     if (typeof message === 'string') {
       this.client.publish(topic, message)
     } else {

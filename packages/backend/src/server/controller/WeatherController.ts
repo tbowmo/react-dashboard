@@ -56,8 +56,7 @@ export class WeatherController {
     return cachedValue?.json
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async currentWeather(request: Request, response: Response) {
+  async currentWeather(_request: Request, response: Response) {
     const weather = await this.getWeather('weather', 600)
     if (!weather) {
       response.status(404).send('Cannot get current weather')
@@ -66,8 +65,7 @@ export class WeatherController {
     return weather
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async forecast(request: Request, response: Response) {
+  async forecast(_request: Request, response: Response) {
     const weather = await this.getWeather('forecast', 600)
     if (!weather) {
       response.status(404).send('Cannot get forecast')

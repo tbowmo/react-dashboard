@@ -6,56 +6,61 @@ type Route = {
   method: 'get' | 'post' | 'delete'
   route: string
   action: string
-  controller: Object
+  controller: WeatherController | ChannelController | RemoteController
 }
 
-export const Routes: Route[] = [
-  {
-    method: 'get',
-    route: '/weather/forecast',
-    controller: WeatherController,
-    action: 'forecast',
-  },
-  {
-    method: 'get',
-    route: '/weather/current',
-    controller: WeatherController,
-    action: 'currentWeather',
-  },
-  {
-    method: 'get',
-    route: '/channels/list/:type',
-    controller: ChannelController,
-    action: 'channelList',
-  },
-  {
-    method: 'get',
-    route: '/channels/current/:xmlid',
-    controller: ChannelController,
-    action: 'currentProgramme',
-  },
-  {
-    method: 'get',
-    route: '/remote/:room/:command',
-    controller: RemoteController,
-    action: 'remote',
-  },
-  {
-    method: 'get',
-    route: '/deviceSet/:room/:type/:device/:value',
-    controller: RemoteController,
-    action: 'deviceSet',
-  },
-  {
-    method: 'post',
-    route: '/media/:room/play',
-    controller: RemoteController,
-    action: 'mediaPlay',
-  },
-  {
-    method: 'get',
-    route: '/media/:room/update',
-    controller: RemoteController,
-    action: 'updateMedia',
-  },
-]
+export function Routes(): Route[] {
+  const weatherController = new WeatherController()
+  const channelController = new ChannelController()
+  const remoteController = new RemoteController()
+  return [
+    {
+      method: 'get',
+      route: '/weather/forecast',
+      controller: weatherController,
+      action: 'forecast',
+    },
+    {
+      method: 'get',
+      route: '/weather/current',
+      controller: weatherController,
+      action: 'currentWeather',
+    },
+    {
+      method: 'get',
+      route: '/channels/list/:type',
+      controller: channelController,
+      action: 'channelList',
+    },
+    {
+      method: 'get',
+      route: '/channels/current/:xmlid',
+      controller: channelController,
+      action: 'currentProgramme',
+    },
+    {
+      method: 'get',
+      route: '/remote/:room/:command',
+      controller: remoteController,
+      action: 'remote',
+    },
+    {
+      method: 'get',
+      route: '/deviceSet/:room/:type/:device/:value',
+      controller: remoteController,
+      action: 'deviceSet',
+    },
+    {
+      method: 'post',
+      route: '/media/:room/play',
+      controller: remoteController,
+      action: 'mediaPlay',
+    },
+    {
+      method: 'get',
+      route: '/media/:room/update',
+      controller: remoteController,
+      action: 'updateMedia',
+    },
+  ]
+}

@@ -5,12 +5,13 @@ import { Programme } from '../entity/programme'
 
 export class ChannelController {
   private channelRepository = getRepository(Channel)
+
   private programmeRepository = getRepository(Programme)
 
-  async channelList(request: Request) {
+  async channelList(request: Request): Promise<Channel[]> {
     const type = request.params.type === 'tv' ? 'video%' : 'audio%'
 
-    return await this.channelRepository
+    return this.channelRepository
       .createQueryBuilder()
       .leftJoinAndSelect('Channel.programmes', 'programme')
       .where('type like :type', { type })

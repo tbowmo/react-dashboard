@@ -4,7 +4,9 @@ import { MemoryStore } from '../../mqtt/memory-store'
 
 export class RemoteController {
   private mqtt: Mqtt = Mqtt.getInstance()
+
   private readonly scenes = ['dvd', 'audio', 'video', 'wii', 'off', 'ps2']
+
   private store = MemoryStore.get()
 
   async remote(request: Request) {
@@ -20,7 +22,7 @@ export class RemoteController {
   async mediaPlay(request: Request) {
     const { room } = request.params
     const payload = request.body
-    if (payload.hasOwnProperty('link')) {
+    if (payload.link) {
       this.mqtt.publish(`home/${room}/media/control/play`, payload)
       return 204
     }
@@ -37,9 +39,8 @@ export class RemoteController {
     ) {
       this.mqtt.publish(`home/${room}/${type}/${device}/set`, value)
       return 204
-    } else {
-      return 400
     }
+    return 400
   }
 
   async updateMedia(request: Request) {
