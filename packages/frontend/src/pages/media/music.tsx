@@ -1,12 +1,12 @@
 import * as React from 'react'
-import { Chromecast } from '@dashboard/types'
+import { Media, Capabilities } from '@dashboard/types'
 import { Duration } from './duration'
 import { MediaProp } from './media-prop'
 import { Box } from '@mui/material'
 
 type Props = {
-  media: Chromecast.Media
-  state: Chromecast.Capabilities['state']
+  media: Media
+  state: Capabilities['state']
 }
 
 export function Music(props: Props) {

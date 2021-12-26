@@ -1,8 +1,8 @@
 import * as React from 'react'
-import moment from 'moment'
 import { Sensor } from '../card-2-line/sensor'
 import { Grid } from '@mui/material'
-import { Card2Line } from '../card-2-line/card-2-line'
+
+import { Clock } from './clock'
 
 type TotalEntry = {
   label: string
@@ -49,15 +49,8 @@ const humidDewPoint: HumidDewP[] = [
   },
 ]
 export function DashTop() {
-  const [date, setDate] = React.useState(moment())
   const [totalIndex, setTotalIndex] = React.useState<number>(0)
   const [dpIndex, setDpIndex] = React.useState<number>(0)
-  React.useEffect(() => {
-    const timerID = setInterval(() => setDate(moment()), 1000)
-    return () => {
-      clearInterval(timerID)
-    }
-  })
 
   const elClick = () => {
     setTotalIndex(totalIndex + 1)
@@ -147,11 +140,7 @@ export function DashTop() {
         unit1="Ører/kWh"
         unit2={scale}
       />
-      <Card2Line
-        xs
-        value={date.format('HH:mm:ss')}
-        label={date.format('dddd Do MMMM - YYYY')}
-      />
+      <Clock />
     </Grid>
   )
 }

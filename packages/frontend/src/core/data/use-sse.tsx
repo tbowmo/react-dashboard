@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Chromecast, Room } from '@dashboard/types'
+import { ChromeCast, Room } from '@dashboard/types'
 import { SSEState } from './sse/reducer'
 import { useSSE } from 'react-hooks-sse'
 import { initialData, incomming } from './sse/actions'
@@ -93,12 +93,11 @@ export function useSSEBoolean(
   return undefined
 }
 
-export function useChromecast(room = 'stuen'): Chromecast.Chrome | undefined {
+export function useChromecast(room = 'stuen'): ChromeCast | undefined {
   const data = useSelector((state: combinedState) => state.sse) as SSEState
   if (data[room]) {
     return (data[room] as Room)?.media
   }
-
   return undefined
 }
 

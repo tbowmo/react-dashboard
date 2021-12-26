@@ -11,6 +11,7 @@ export function Controller() {
   const [showAlbumCover, setShowAlbumCover] = React.useState<boolean>(false)
 
   const cast = useChromecast('stuen')
+
   const avcenter = useSSEString('stuen', 'avctrl', 'scene') || ''
 
   function clickAlbumCover() {

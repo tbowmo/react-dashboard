@@ -1,41 +1,39 @@
-export namespace Chromecast {
-  type supportedFeatures = {
-    skip_fwd: boolean
-    skip_bck: boolean
-    pause: boolean
-    volume: boolean
-    mute: boolean
-  }
+type supportedFeatures = {
+  skip_fwd: boolean
+  skip_bck: boolean
+  pause: boolean
+  volume: boolean
+  mute: boolean
+}
 
-  export type Media = {
-    title: string
-    artist: string
-    album: string
-    album_art: string
-    metadata_type: number
-    content_id: string
-    duration: number
-    current_time: number
-    start_time: number
-    type: number
-  }
+export type Media = {
+  title: string
+  artist: string
+  album: string
+  album_art: string
+  metadata_type: number
+  content_id: string
+  duration: number
+  current_time: number
+  start_time: number
+  type: number
+}
 
-  export type Capabilities = {
-    app: string
-    state: string
-    volume: number
-    muted: boolean
-    app_icon: string
-    supported_features: supportedFeatures
-  }
+export type Capabilities = {
+  app: string
+  state: string
+  volume: number
+  muted: boolean
+  app_icon: string
+  supported_features: supportedFeatures
+}
 
-  export type Chrome = {
-    app: Capabilities['app']
-    capabilities: Capabilities
-    device: string
-    media: Media
-    state: Capabilities['state']
-  }
+export type ChromeCast = {
+  app: Capabilities['app']
+  capabilities: Capabilities
+  device: string
+  media: Media
+  state: Capabilities['state']
 }
 
 export type RoomSensor = {
@@ -50,7 +48,7 @@ export type Room = {
   avctrl?: {
     scene: string
   }
-  media: Chromecast.Chrome
+  media: ChromeCast
   light?: {
     [keys in string]?: number
   }

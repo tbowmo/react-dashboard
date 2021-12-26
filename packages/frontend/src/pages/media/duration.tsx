@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Typography } from '@mui/material'
 import { keyframes } from '@mui/system'
 import { MediaCard } from './media-card'
-import { Chromecast } from '@dashboard/types'
+import { Media, Capabilities } from '@dashboard/types'
 
 function secondsToHms(seconds: number) {
   const lz = (n: number): string => (n > 9 ? `${n}` : `0${n}`)
@@ -25,8 +25,8 @@ const blink = keyframes`
 `
 
 export function Duration(props: {
-  media: Chromecast.Media
-  state: Chromecast.Capabilities['state']
+  media: Media
+  state: Capabilities['state']
 }) {
   const {
     media: { current_time, duration },
