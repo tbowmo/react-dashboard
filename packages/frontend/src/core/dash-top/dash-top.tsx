@@ -12,6 +12,11 @@ type TotalEntry = {
 
 const totals: TotalEntry[] = [
   {
+    label: 'El time',
+    sensor: 'hour_Wh',
+    div: 1,
+  },
+  {
     label: 'El dag',
     sensor: 'day_Wh',
     div: 1,
@@ -134,11 +139,12 @@ export function DashTop() {
         }}
         room="global"
         sensorType="utility"
-        sensorName1="current_W"
+        sensorName1="spot_price_dkk"
+        divisor1={10}
         sensorName2={total.sensor}
         label={total.label}
-        precission={1}
-        unit1="watt"
+        precission={2}
+        unit1="Ører/kWh"
         unit2={scale}
       />
       <Card2Line

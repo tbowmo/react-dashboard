@@ -13,6 +13,8 @@ type Props = Omit<GridProps, 'children'> & {
   unit2?: string | string[]
   precission?: number
   scale?: string[]
+  divisor1?: number
+  divisor2?: number
 }
 
 function round(value: number, precission = 1): number {
@@ -70,13 +72,23 @@ export function Sensor(props: Props) {
     precission,
     unit1,
     unit2,
+    divisor1 = 1,
+    divisor2 = 1,
     ...restProps
   } = props
   const sensorValue1 = useSSENumber(room, sensorType, sensorName1)
   const sensorValue2 = useSSENumber(room, sensorType, sensorName2)
 
-  const value1 = useScaledValue(sensorValue1, unit1, precission)
-  const value2 = useScaledValue(sensorValue2, unit2, precission)
+  const value1 = useScaledValue(
+    sensorValue1 ? sensorValue1 / divisor1 : -99,
+    unit1,
+    precission,
+  )
+  const value2 = useScaledValue(
+    sensorValue2 ? sensorValue2 / divisor2 : -99,
+    unit2,
+    precission,
+  )
 
   return (
     <Card2Line label={label} {...restProps}>
@@ -114,13 +126,3 @@ export function Sensor(props: Props) {
     </Card2Line>
   )
 }
-
-/*
-            value={value}
-            label={label}
-            unit={unit}
-            precission={precission}
-            rows={rows}
-            cols={cols}
-            onClick={onClick}
-*/

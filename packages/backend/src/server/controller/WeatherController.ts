@@ -7,7 +7,9 @@ type RequestType = 'weather' | 'forecast'
 
 export class WeatherController {
   readonly apiUrl = 'https://api.openweathermap.org/data/2.5'
+
   readonly city = process.env.REACT_APP_OW_CITYID
+
   readonly apiKey = process.env.REACT_APP_OW_KEY
 
   private readonly cacheRepository = getRepository(Weather)
@@ -42,7 +44,7 @@ export class WeatherController {
     requestType: RequestType,
     timeout: number,
   ): Promise<string | undefined> {
-    let cachedValue = await this.getCachedValue(requestType)
+    const cachedValue = await this.getCachedValue(requestType)
     if (!cachedValue || cachedValue.timestamp < Date.now() / 1000 - timeout) {
       try {
         const response = await axios.get(this.buildOWUrl(requestType))
@@ -59,7 +61,7 @@ export class WeatherController {
     const weather = await this.getWeather('weather', 600)
     if (!weather) {
       response.status(404).send('Cannot get current weather')
-      return
+      return undefined
     }
     return weather
   }
@@ -69,7 +71,7 @@ export class WeatherController {
     const weather = await this.getWeather('forecast', 600)
     if (!weather) {
       response.status(404).send('Cannot get forecast')
-      return
+      return undefined
     }
     return weather
   }

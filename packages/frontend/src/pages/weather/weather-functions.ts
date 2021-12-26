@@ -1,3 +1,14 @@
+import {
+  WeatherCloudy,
+  WeatherFog,
+  WeatherSunny,
+  WeatherSnowy,
+  WeatherRainy,
+  WeatherNightPartlyCloudy,
+  WeatherNight,
+  WeatherLightning,
+} from 'mdi-material-ui'
+
 type Compass = {
   direction: string
   short: string
@@ -273,4 +284,37 @@ export function wind(speed: number): WindSpeed {
       windspeed: -99,
     }
   )
+}
+
+export const iconMap = {
+  '01d': WeatherSunny,
+  '01n': WeatherNight,
+  '02d': WeatherCloudy,
+  '02n': WeatherNightPartlyCloudy,
+  '03d': WeatherCloudy,
+  '03n': WeatherCloudy,
+  '04d': WeatherCloudy,
+  '04n': WeatherCloudy,
+  '09d': WeatherRainy,
+  '09n': WeatherRainy,
+  '10d': WeatherRainy,
+  '10n': WeatherRainy,
+  '11d': WeatherLightning,
+  '11n': WeatherLightning,
+  '13d': WeatherSnowy,
+  '13n': WeatherSnowy,
+  '50d': WeatherFog,
+  '50n': WeatherFog,
+}
+
+export function round(value: number, precission = 1): number {
+  let v = value
+  if (typeof value === 'number') {
+    if (precission === 0) {
+      v = Math.round(value)
+    } else {
+      v = Math.round(value * (10 * precission)) / (10 * precission)
+    }
+  }
+  return v
 }

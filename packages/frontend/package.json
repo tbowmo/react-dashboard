@@ -10,6 +10,7 @@
     "@mui/icons-material": "^5.0.5",
     "@mui/material": "^5.0.4",
     "@mui/system": "^5.1.0",
+    "axios": "0.24.0",
     "clsx": "^1.1.1",
     "history": "^5.0.1",
     "mdi-material-ui": "^7.1.0",

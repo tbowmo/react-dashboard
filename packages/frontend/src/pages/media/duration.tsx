@@ -10,8 +10,8 @@ function secondsToHms(seconds: number) {
   const h = Math.floor(seconds / 3600)
   const m = Math.floor((seconds % 3600) / 60)
   const s = Math.floor((seconds % 3600) % 60)
-
-  return `${h > 0 ? h : ''} ${lz(m)}:${lz(s)}`
+  const hour = h > 0 ? `{$h}:` : ''
+  return `${hour}${lz(m)}:${lz(s)}`
 }
 
 let timer: ReturnType<typeof setInterval> | undefined
@@ -65,7 +65,7 @@ export function Duration(props: {
       return {
         totalTime: secondsToHms(duration),
         currentTime: secondsToHms(time),
-        remainingTime: secondsToHms(duration || 0 - time),
+        remainingTime: secondsToHms((duration || 0) - time),
         fontSize: duration || 0 > 3600 ? '32pt' : '40pt',
       }
     }, [duration, time])
@@ -87,6 +87,7 @@ export function Duration(props: {
           animation:
             state === 'PAUSED' ? `${blink} 2s linear infinite` : undefined,
           fontSize,
+          fontFamily: 'Orbitron, serif',
         }}
       >
         {state === 'PAUSED'

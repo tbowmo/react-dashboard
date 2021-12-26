@@ -1,6 +1,9 @@
 import { responsiveFontSizes, createTheme } from '@mui/material'
 
 const newTheme = createTheme({
+  typography: {
+    fontFamily: 'Orbitron, serif',
+  },
   palette: {
     mode: 'dark',
     primary: {

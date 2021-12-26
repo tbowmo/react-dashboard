@@ -133,7 +133,9 @@ export function Remote() {
           onMouseDown={() => buttonDown(link)}
           onMouseUp={() => buttonRelease()}
         >
-          {link.icon ? <link.icon fontSize="large" /> : null}
+          {link.icon ? (
+            <link.icon sx={{ width: '60px', height: '60px' }} />
+          ) : null}
         </IconButton>
       ))}
     </Box>

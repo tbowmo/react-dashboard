@@ -15,10 +15,8 @@ import {
   fetchForecastFailed,
 } from './weather/actions'
 import { useEffect } from 'react'
+import axios from 'axios'
 
-// const apiUrl = 'https://api.openweathermap.org/data/2.5'
-// const apiKey = process.env.REACT_APP_OW_KEY
-// const city = process.env.REACT_APP_OW_CITYID
 type TimerType = {
   timer?: ReturnType<typeof setInterval>
   active: number
@@ -43,9 +41,9 @@ function currentWeather() {
 
     if (!current?.pending && secondsSinceLast > secondsBeforeRefetch) {
       dispatch(fetchCurrentWeatherPending)
-      fetch('/weather/current')
-        .then((resp) => resp.json())
-        .then((data) => dispatch(fetchCurrentWeatherSuccess(data)))
+      axios
+        .get('/weather/current')
+        .then((response) => dispatch(fetchCurrentWeatherSuccess(response.data)))
         .catch(() => {
           dispatch(fetchCurrentWeatherFailed)
         })
@@ -64,9 +62,8 @@ function forecastWeather() {
 
     if (!forecast?.pending && secondsSinceLast > secondsBeforeRefetch) {
       dispatch(fetchForecastPending)
-      fetch('/weather/forecast')
-        .then((response) => response.json())
-        .then((data) => dispatch(fetchForecastSuccess(data)))
+      axios('/weather/forecast')
+        .then((response) => dispatch(fetchForecastSuccess(response.data)))
         .catch(() => {
           dispatch(fetchForecastFailed)
         })
@@ -134,25 +131,4 @@ export function useForecastWeather(): ForecastDto | undefined {
   }, [dispatch, forecastState])
 
   return forecastState.data
-}
-
-export function useWeatherFailure(): {
-  forecastFailed: boolean
-  currentWeatherFailed: boolean
-} {
-  const { failed: forecastFailed } = (useSelector(
-    (state: combinedState) => state.weather.forecast,
-  ) as ForecastWeather) || {
-    failed: false,
-  }
-  const { failed: currentWeatherFailed } = (useSelector(
-    (state: combinedState) => state.weather.currentWeather,
-  ) as CurrentWeather) || {
-    failed: false,
-  }
-
-  return {
-    forecastFailed,
-    currentWeatherFailed,
-  }
 }

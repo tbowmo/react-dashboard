@@ -1,5 +1,4 @@
 import * as React from 'react'
-import TextTruncate from 'react-text-truncate'
 import { MediaCard } from './media-card'
 import { Typography } from '@mui/material'
 
@@ -10,6 +9,7 @@ type Props = {
 }
 
 export function MediaProp(props: Props) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { label, lines = 1, value } = props
 
   if (!value) {
@@ -17,8 +17,14 @@ export function MediaProp(props: Props) {
   }
   return (
     <MediaCard label={label}>
-      <Typography fontSize="large">
-        <TextTruncate line={lines} truncateText="…" text={value} />
+      <Typography
+        sx={{
+          fontSize: '22pt',
+          whiteSpace: 'nowrap',
+          textOverflow: 'ellipsis',
+        }}
+      >
+        {value}
       </Typography>
     </MediaCard>
   )
