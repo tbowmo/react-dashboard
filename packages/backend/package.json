@@ -46,7 +46,7 @@
       "xmltv": "^0.3.0"
    },
    "peerDependencies": {
-      "@dashboard/types": "*"
+      "@dashboard/types": "1.0.0"
    },
    "scripts": {
       "start": "ts-node src/server.ts",

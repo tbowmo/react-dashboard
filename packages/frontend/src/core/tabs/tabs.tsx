@@ -3,8 +3,8 @@ import SwipeableViews from 'react-swipeable-views'
 import { Tab, Tabs, Box } from '@mui/material'
 import {
   House,
+  ShowChart,
   Radio,
-  Tv,
   WbSunny,
   Videocam,
   Wifi,
@@ -18,6 +18,7 @@ import { WifiPassPhrase } from '../../pages/wifi/wifi-pass-phrase'
 import { useTabs } from './tabs-context'
 import { Scene } from '../../pages/scene/scene'
 import { RemoteTv } from 'mdi-material-ui'
+import { Utility } from '../../pages/utility/utility'
 
 type MenuEntry = {
   label: string
@@ -32,14 +33,14 @@ const menuLinks: MenuEntry[] = [
     component: <Controller />,
   },
   {
-    label: 'Radio',
-    icon: Radio,
-    component: <Streams type="radio" />,
+    label: 'Utility',
+    icon: ShowChart,
+    component: <Utility />,
   },
   {
     label: 'TV',
-    icon: Tv,
-    component: <Streams type="tv" />,
+    icon: Radio,
+    component: <Streams />,
   },
   {
     label: 'Weather',

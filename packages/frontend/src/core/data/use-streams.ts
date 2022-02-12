@@ -1,5 +1,4 @@
-import { useApi } from './use-api'
-import axios from 'axios'
+import { api, useApi } from './use-api'
 
 type Programme = {
   id: number
@@ -21,7 +20,7 @@ export type StreamDto = {
 
 export function useStreams(type: 'radio' | 'tv'): StreamDto[] | undefined {
   const result = useApi<StreamDto[]>(() => {
-    return axios.get(`/channels/list/${type}`)
+    return api(`/channels/list/${type}`)
   }, [type])
 
   return result.result

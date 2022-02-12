@@ -10,7 +10,7 @@ function secondsToHms(seconds: number) {
   const h = Math.floor(seconds / 3600)
   const m = Math.floor((seconds % 3600) / 60)
   const s = Math.floor((seconds % 3600) % 60)
-  const hour = h > 0 ? `{$h}:` : ''
+  const hour = h > 0 ? `${h}:` : ''
   return `${hour}${lz(m)}:${lz(s)}`
 }
 
@@ -25,7 +25,7 @@ const blink = keyframes`
 `
 
 export function Duration(props: {
-  media: Media
+  media: Pick<Media, 'current_time' | 'duration'>
   state: Capabilities['state']
 }) {
   const {

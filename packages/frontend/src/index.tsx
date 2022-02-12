@@ -4,11 +4,9 @@ import { App } from './app'
 import * as serviceWorker from './serviceWorker'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { Provider } from 'react-redux'
-import configureStore from './core/data/store'
+import store from './core/data/store'
 import { CssBaseline, ThemeProvider, StyledEngineProvider } from '@mui/material'
 import { theme } from './theme'
-
-const store = configureStore()
 
 ReactDOM.render(
   <Router>

@@ -1,22 +1,32 @@
 import * as React from 'react'
-import { useStreams, StreamDto } from '../../core/data'
-import moment from 'moment'
 import { useTabs } from '../../core/tabs/tabs-context'
 import { Grid, CardContent, Typography, Avatar, Box } from '@mui/material'
 import { GridCard } from '../../core/card-2-line/grid-card'
+import { format } from 'date-fns'
+import { useDrMedia, Media } from '../../core/data'
 
-type Props = {
-  type: 'radio' | 'tv'
+function Time(props: { label: string; time: Date }) {
+  const { label, time } = props
+  return (
+    <Box
+      sx={{
+        display: 'grid',
+        gridTemplateColumns: '60px 1fr',
+      }}
+    >
+      <Typography>{label}</Typography>
+      <Typography>{format(time, 'HH:mm')}</Typography>
+    </Box>
+  )
 }
 
-export function Streams(props: Props) {
-  const { type } = props
-
+export function Streams() {
   const [active, setActive] = React.useState<string>('')
-  const streams = useStreams(type)
 
-  function SelectStream(stream: StreamDto) {
-    setActive(stream.link)
+  const media = useDrMedia()
+
+  function SelectStream(stream: Media) {
+    setActive(stream.id)
 
     const xhttp = new XMLHttpRequest()
     xhttp.open('POST', '/media/stuen/play', true)
@@ -43,11 +53,11 @@ export function Streams(props: Props) {
 
   return (
     <Grid container sx={{ width: '100%' }}>
-      {streams?.map((streamEntry) => (
+      {media?.map((streamEntry) => (
         <GridCard
           item
           xs={3}
-          key={streamEntry.xmlid}
+          key={streamEntry.id}
           onClick={() => SelectStream(streamEntry)}
         >
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -55,30 +65,22 @@ export function Streams(props: Props) {
               sx={{
                 width: '100%',
                 display: 'grid',
-                gridTemplateColumns: 'min-content auto',
+                gridTemplateColumns: 'min-content 1fr',
                 gridTemplateRows: 'min-content auto',
                 gridTemplateAreas: `"icon time"
-                            "programme programme"`,
+                            "icon programme"`,
+                gridGap: '10px',
               }}
             >
               <Avatar
                 sx={{ gridArea: 'icon', height: '80px', width: '80px' }}
-                src={streamEntry.icon}
+                src={streamEntry.avatar}
               />
               <Box sx={{ gridArea: 'time' }}>
-                {streamEntry.programmes[0].start !==
-                streamEntry.programmes[0].end ? (
-                  <React.Fragment>
-                    <Typography>Start</Typography>
-                    <div>
-                      {moment(streamEntry.programmes[0].start).format('HH:mm')}
-                    </div>
-                    <Typography>Slut</Typography>
-                    <div>
-                      {moment(streamEntry.programmes[0].end).format('HH:mm')}
-                    </div>
-                  </React.Fragment>
-                ) : null}
+                <React.Fragment>
+                  <Time label="Start" time={streamEntry.startTime} />
+                  <Time label="Slut" time={streamEntry.endTime} />
+                </React.Fragment>
               </Box>
               <Typography
                 sx={{
@@ -88,7 +90,7 @@ export function Streams(props: Props) {
                   gridArea: 'programme',
                 }}
               >
-                {streamEntry.programmes[0].title}
+                {streamEntry.title}
               </Typography>
             </CardContent>
           </Box>

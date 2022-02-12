@@ -132,12 +132,11 @@ export function DashTop() {
         }}
         room="global"
         sensorType="utility"
-        sensorName1="spot_price_dkk"
-        divisor1={10}
+        sensorName1="kwh_dkk"
         sensorName2={total.sensor}
         label={total.label}
         precission={2}
-        unit1="Ører/kWh"
+        unit1="kr/kWh"
         unit2={scale}
       />
       <Clock />

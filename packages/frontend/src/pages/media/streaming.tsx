@@ -3,28 +3,30 @@ import { Media, Capabilities } from '@dashboard/types'
 import { Duration } from './duration'
 import { MediaProp } from './media-prop'
 import { Box } from '@mui/material'
-import { useDrMedia } from '../../core/data'
 
 type Props = {
   media: Media
   capabilities: Capabilities
 }
 
-export function RadioTv(props: Props) {
+export function Streaming(props: Props) {
   const { media, capabilities } = props
-  const drMedia = useDrMedia()
-  const selectedChannel = React.useMemo(
-    () => drMedia?.find((item) => item.link === media.content_id),
-    [drMedia, media],
-  )
-  const timers = React.useMemo(
-    (): { current_time: number; duration: number } => ({
-      current_time:
-        (Date.now() - (selectedChannel?.startTime.getTime() || 0)) / 1000,
-      duration: selectedChannel?.duration || 0,
-    }),
-    [selectedChannel],
-  )
+
+  const [showAlbumCover, setShowAlbumCover] = React.useState<boolean>(false)
+
+  function clickAlbumCover() {
+    setShowAlbumCover(true)
+  }
+
+  React.useEffect(() => {
+    let timeOut: NodeJS.Timeout
+    if (showAlbumCover) {
+      timeOut = setTimeout(() => setShowAlbumCover(false), 5000)
+    }
+    return () => {
+      clearTimeout(timeOut)
+    }
+  }, [showAlbumCover])
 
   return (
     <Box
@@ -52,14 +54,16 @@ export function RadioTv(props: Props) {
       ) : null}
       <img
         style={{ gridArea: 'image', maxHeight: 600 }}
-        src={selectedChannel?.avatar || capabilities?.app_icon}
+        src={media?.album_art || capabilities?.app_icon}
         alt={media?.album}
+        onClick={() => clickAlbumCover()}
         aria-hidden="true"
       />
       <Box sx={{ display: 'grid', gridTemplateRows: 'repeat(4, 1fr)' }}>
-        <Duration media={timers} state={capabilities.state} />
-        <MediaProp label="Kanal" value={selectedChannel?.id} />
-        <MediaProp label="Program" value={selectedChannel?.title} />
+        <Duration media={media} state={capabilities.state} />
+        <MediaProp label="Kunstner" value={media?.artist} />
+        <MediaProp label="Album" value={media?.album} />
+        <MediaProp label="Titel" value={media?.title} />
       </Box>
     </Box>
   )

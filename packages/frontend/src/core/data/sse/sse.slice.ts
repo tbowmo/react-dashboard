@@ -1,7 +1,7 @@
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Home } from '@dashboard/types'
-import { SSEActions } from './action-types'
 
-export type SSEState = Home
+type SSEState = Home
 
 const initialState: SSEState = {
   garden: {
@@ -15,14 +15,21 @@ const initialState: SSEState = {
   rooms: {},
 }
 
-export function sseReducer(state: SSEState = initialState, action: SSEActions) {
-  switch (action.type) {
-    case 'incomming': {
+type IncommingTopic = {
+  topic: string
+  payload: string
+}
+
+const SSE = createSlice({
+  name: 'sse',
+  initialState,
+  reducers: {
+    incommingData(state, { payload }: PayloadAction<IncommingTopic>) {
       const [, room, type, device] =
-        action.payload.topic.match(/home\/(\w+)\/(\w+)\/(\w+)/) || []
-      let value = action.payload.payload
+        payload.topic.match(/home\/(\w+)\/(\w+)\/(\w+)/) || []
+      let value = payload.payload
       try {
-        value = JSON.parse(action.payload.payload)
+        value = JSON.parse(payload.payload)
         // eslint-disable-next-line no-empty
       } catch {}
       let roomState = state[room]
@@ -44,10 +51,16 @@ export function sseReducer(state: SSEState = initialState, action: SSEActions) {
         ...state,
         [room]: roomState,
       }
-    }
-    case 'initial':
-      return action.payload
-    default:
-      return state
-  }
-}
+    },
+    initialData(state, { payload }: PayloadAction<Home>) {
+      return {
+        ...state,
+        ...payload,
+      }
+    },
+  },
+})
+
+export const { incommingData, initialData } = SSE.actions
+
+export default SSE.reducer

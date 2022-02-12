@@ -1,27 +1,27 @@
-import { createStore, applyMiddleware, combineReducers } from 'redux'
-import thunk from 'redux-thunk'
-import { weatherReducer, WeatherState } from './weather/reducer'
-import { composeWithDevTools } from 'redux-devtools-extension'
-import { SSEState, sseReducer } from './sse/reducer'
+import { configureStore, Action } from '@reduxjs/toolkit'
+import { useDispatch } from 'react-redux'
+import { ThunkAction } from 'redux-thunk'
 
-export const reducers = combineReducers({
-  weather: weatherReducer,
-  sse: sseReducer,
+// eslint-disable-next-line import/no-cycle
+import rootReducer from './root-reducer'
+
+const store = configureStore({
+  reducer: rootReducer,
+  devTools: process.env.NODE_ENV === 'development',
 })
 
-export type combinedState = {
-  sse: SSEState
-  weather: WeatherState
+if (process.env.NODE_ENV === 'development' && module.hot) {
+  module.hot.accept('./root-reducer', () => {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires, global-require
+    const newRootReducer = require('./root-reducer').default
+    store.replaceReducer(newRootReducer)
+  })
 }
 
-export default function configureStore(initialState?) {
-  if (process.env.NODE_ENV === 'development') {
-    return createStore(
-      reducers,
-      initialState,
-      composeWithDevTools(applyMiddleware(thunk)),
-    )
-  }
+export type AppDispatch = typeof store.dispatch
 
-  return createStore(reducers, initialState, applyMiddleware(thunk))
-}
+export const useAppDispatch = () => useDispatch<AppDispatch>()
+
+export type AppThunk = ThunkAction<void, RootState, unknown, Action<string>>
+export type RootState = ReturnType<typeof rootReducer>
+export default store
