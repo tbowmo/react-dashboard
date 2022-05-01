@@ -26,10 +26,8 @@ export const fetchDrMedia = createAsyncThunk<
   'drmedia/channels',
   async (): Promise<DRMedia[]> => {
     const data = api<DRMedia[]>(
-      'https://www.dr.dk/mu-psapi/medium/0/nownextliveepg',
+      'https://api.dr.dk/radio/v2/schedules/all/now-next',
     ).then((blob) => {
-      // eslint-disable-next-line no-console
-      console.log(blob)
       return blob
     })
     return data

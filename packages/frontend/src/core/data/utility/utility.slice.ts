@@ -43,42 +43,42 @@ type DataHub<T> = {
 type TransportTarrif = {
   TransparentInvoicing: string
   ChargeTypeCode: string
-  Price22: number
-  Price23: number
-  Price20: number
-  Price21: number
-  Price24: number
   Note: string
   ValidFrom: string
   ChargeOwner: string
   Description: string
   ResolutionDuration: string
   ValidTo: string
-  Price18: number
-  Price13: number
-  Price12: number
-  Price11: number
-  Price10: number
-  Price17: number
-  Price16: number
-  Price15: number
-  Price14: number
-  Price19: number
   'GLN-Number': string
   _id: number
   _full_text: string
   TaxIndicator: string
-  Price9: number
-  Price8: number
   ChargeType: string
-  Price3: number
-  Price2: number
-  Price1: number
   VATClass: string
-  Price7: number
-  Price6: number
-  Price5: number
+  Price1: number
+  Price2: number
+  Price3: number
   Price4: number
+  Price5: number
+  Price6: number
+  Price7: number
+  Price8: number
+  Price9: number
+  Price10: number
+  Price11: number
+  Price12: number
+  Price13: number
+  Price14: number
+  Price15: number
+  Price16: number
+  Price17: number
+  Price18: number
+  Price19: number
+  Price20: number
+  Price21: number
+  Price22: number
+  Price23: number
+  Price24: number
 }
 
 export const fetchTarrifs = createAsyncThunk(
@@ -86,11 +86,11 @@ export const fetchTarrifs = createAsyncThunk(
   async (): Promise<Tarrifs['data']> => {
     const [todayDate] = new Date().toISOString().split('T')
     const conditions = [
-      '"ChargeOwner"=\'N1 A/S\'',
       `"ValidTo">'${todayDate}'`,
       `"ValidFrom"<='${todayDate}'`,
       '"ChargeTypeCode" like \'CD%\'', // Nettarif C
       '"ChargeType"=\'D03\'', // Tarif
+      '"GLN-Number"=\'5790001089030\'',
     ]
 
     const sql = `SELECT * from "datahubpricelist" where ${conditions.join(

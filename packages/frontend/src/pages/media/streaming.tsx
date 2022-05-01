@@ -53,7 +53,7 @@ export function Streaming(props: Props) {
         />
       ) : null}
       <img
-        style={{ gridArea: 'image', maxHeight: 600 }}
+        style={{ gridArea: 'image', maxHeight: 600, maxWidth: 600 }}
         src={media?.album_art || capabilities?.app_icon}
         alt={media?.album}
         onClick={() => clickAlbumCover()}

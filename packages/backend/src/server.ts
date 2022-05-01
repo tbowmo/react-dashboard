@@ -9,11 +9,6 @@ import { Weather } from './server/entity/weather'
 import * as dotenv from 'dotenv'
 import * as fs from 'fs'
 import ServerSide from './server/controller/sse'
-import { Channel } from './server/entity/channel'
-import { Programme } from './server/entity/programme'
-import * as cron from 'node-cron'
-import { loadXmlTv } from './cronjobs/load-xml-tv'
-import { XmlFile } from './server/entity/xmlfile'
 
 import cors = require('cors')
 
@@ -46,13 +41,11 @@ createConnection(
     database,
     synchronize: true,
     logging,
-    entities: [Channel, Programme, Weather, XmlFile],
+    entities: [Weather],
   },
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
 )
   .then(async () => {
-    loadXmlTv(xmlDir)
-
     // create express app
     const app = express()
     app.use(bodyParser.json())
@@ -88,9 +81,6 @@ createConnection(
       }
     })
 
-    cron.schedule('0 0 * * *', () => {
-      loadXmlTv(xmlDir)
-    })
     // start express server
     app.listen(5000)
   })

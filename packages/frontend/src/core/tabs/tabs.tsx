@@ -73,7 +73,7 @@ function TabPanel(props: TabPanelProps) {
   const { children, active } = props
 
   return (
-    <Box sx={{ height: '100%', marginLeft: 2, marginRight: 2 }}>
+    <Box sx={{ height: '100%', marginLeft: 1, marginRight: 0 }}>
       {active && children}
     </Box>
   )

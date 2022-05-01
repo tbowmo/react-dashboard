@@ -38,7 +38,6 @@ export function useUtilityPrices(hoursAhead: number) {
     return filteredPrices.map((item) => {
       const hour = parseISO(item.HourDK).getHours()
       const tarrif = tarrifs[hour]
-      console.log({ tarrif, item, tarrifs })
       const price = (item.SpotPriceDKK || item.SpotPriceEUR * 7.5) / 1000
       return {
         hour: item.HourDK,
