@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { CardContent, GridProps, Typography } from '@mui/material'
-import { GridCard } from './grid-card'
+import { Typography } from '@mui/material'
+import { GridCard, GridCardProps } from './grid-card'
 
-type Props = GridProps & {
+type Props = GridCardProps & {
   value?: string | number
   label: string
 }
@@ -29,12 +29,8 @@ export function Card2Line(props: Props) {
 
   return (
     <GridCard {...restProps}>
-      <CardContent>
-        {value ? <SensorValue value={value} /> : children}
-      </CardContent>
-      <CardContent>
-        <Typography sx={{ textAlign: 'center' }}>{label}</Typography>
-      </CardContent>
+      {value ? <SensorValue value={value} /> : children}
+      <Typography sx={{ textAlign: 'center' }}>{label}</Typography>
     </GridCard>
   )
 }

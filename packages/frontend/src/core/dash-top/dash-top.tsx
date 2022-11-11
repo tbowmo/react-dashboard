@@ -111,10 +111,8 @@ export function DashTop() {
         onClick={() => {
           dpClick()
         }}
-        xs
       />
       <Sensor
-        xs
         room="stuen"
         sensorName1="temperature"
         sensorName2={humidDp.sensor}
@@ -126,7 +124,6 @@ export function DashTop() {
         }}
       />
       <Sensor
-        xs
         onClick={() => {
           elClick()
         }}

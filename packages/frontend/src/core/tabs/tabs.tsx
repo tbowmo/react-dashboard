@@ -33,19 +33,9 @@ const menuLinks: MenuEntry[] = [
     component: <Controller />,
   },
   {
-    label: 'Utility',
-    icon: ShowChart,
-    component: <Utility />,
-  },
-  {
     label: 'TV',
     icon: Radio,
     component: <Streams />,
-  },
-  {
-    label: 'Weather',
-    icon: WbSunny,
-    component: <Weather />,
   },
   {
     label: 'Scene',
@@ -53,9 +43,19 @@ const menuLinks: MenuEntry[] = [
     component: <Scene />,
   },
   {
+    label: 'Weather',
+    icon: WbSunny,
+    component: <Weather />,
+  },
+  {
     label: 'Video',
     icon: Videocam,
     component: <Surveilance />,
+  },
+  {
+    label: 'Utility',
+    icon: ShowChart,
+    component: <Utility />,
   },
   {
     label: 'Wifi',

@@ -1,9 +1,10 @@
 import * as React from 'react'
 import { useSSENumber } from '../data'
-import { Grid, GridProps, Typography } from '@mui/material'
+import { Typography, Box } from '@mui/material'
 import { Card2Line, SensorValue } from './card-2-line'
+import { GridCardProps } from './grid-card'
 
-type Props = Omit<GridProps, 'children'> & {
+type Props = Omit<GridCardProps, 'children'> & {
   room: string
   sensorName1: string
   sensorName2?: string
@@ -62,6 +63,45 @@ function useScaledValue(
   }, [unit, sensorValue, precission])
 }
 
+function SingleValue(props: {
+  unit: string | string[] | undefined
+  divisor?: number
+  precission?: number
+  sensorName?: string
+  sensorType?: string
+  room?: string
+}) {
+  const {
+    unit,
+    divisor = 1,
+    precission,
+    sensorName,
+    sensorType = 'sensors',
+    room,
+  } = props
+
+  const sensorValue = useSSENumber(room, sensorType, sensorName)
+  const value = useScaledValue(
+    sensorValue ? sensorValue / divisor : -99,
+    unit,
+    precission,
+  )
+
+  return (
+    <Box>
+      <SensorValue value={value?.value || -99} />
+      <Typography
+        sx={{
+          textAlign: 'center',
+          fontSize: '10pt',
+        }}
+      >
+        {value?.unit || unit}
+      </Typography>
+    </Box>
+  )
+}
+
 export function Sensor(props: Props) {
   const {
     sensorName1,
@@ -76,53 +116,32 @@ export function Sensor(props: Props) {
     divisor2 = 1,
     ...restProps
   } = props
-  const sensorValue1 = useSSENumber(room, sensorType, sensorName1)
-  const sensorValue2 = useSSENumber(room, sensorType, sensorName2)
-
-  const value1 = useScaledValue(
-    sensorValue1 ? sensorValue1 / divisor1 : -99,
-    unit1,
-    precission,
-  )
-  const value2 = useScaledValue(
-    sensorValue2 ? sensorValue2 / divisor2 : -99,
-    unit2,
-    precission,
-  )
 
   return (
     <Card2Line label={label} {...restProps}>
-      <Grid container direction="row" alignContent="center">
-        <Grid item xs={5}>
-          <SensorValue value={value1?.value || -99} />
-          <Typography
-            sx={{
-              textAlign: 'center',
-              fontSize: '10pt',
-            }}
-          >
-            {value1?.unit || unit1}
-          </Typography>
-        </Grid>
-        {value2 ? (
+      <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1 }}>
+        <SingleValue
+          sensorName={sensorName1}
+          room={room}
+          sensorType={sensorType}
+          unit={unit1}
+          divisor={divisor1}
+          precission={precission}
+        />
+        {sensorName2 ? (
           <React.Fragment>
-            <Grid item xs={2}>
-              <SensorValue value="/" />
-            </Grid>
-            <Grid item xs={5}>
-              <SensorValue value={value2.value || -99} />
-              <Typography
-                sx={{
-                  textAlign: 'center',
-                  fontSize: '10pt',
-                }}
-              >
-                {value2?.unit || unit2}
-              </Typography>
-            </Grid>
+            <SensorValue value="/" />
+            <SingleValue
+              sensorName={sensorName2}
+              room={room}
+              sensorType={sensorType}
+              unit={unit2}
+              divisor={divisor2}
+              precission={precission}
+            />
           </React.Fragment>
         ) : null}
-      </Grid>
+      </Box>
     </Card2Line>
   )
 }

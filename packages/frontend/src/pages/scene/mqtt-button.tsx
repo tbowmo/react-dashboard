@@ -2,8 +2,7 @@ import * as React from 'react'
 import { deviceSet, DeviceType } from './device-set'
 import { useTabs } from '../../core/tabs/tabs-context'
 import { SvgIconComponent } from '@mui/icons-material'
-import { GridCard } from '../../core/card-2-line/grid-card'
-import { CardContent, IconButton, Typography } from '@mui/material'
+import { MqttAction } from './mqtt-action'
 
 export type Props = {
   label?: string
@@ -21,8 +20,9 @@ export function MqttButton(props: Props) {
     type = 'avctrl',
     device,
     payload,
-    icon: Icon,
+    icon,
     label,
+    active,
   } = props
   const [keyActivated, setKey] = React.useState<boolean>(false)
 
@@ -47,11 +47,11 @@ export function MqttButton(props: Props) {
   }, [keyActivated, startTimer])
 
   return (
-    <GridCard>
-      <CardContent component={IconButton} onClick={() => click()}>
-        {Icon ? <Icon fontSize="large" /> : null}
-        <Typography>{label}</Typography>
-      </CardContent>
-    </GridCard>
+    <MqttAction
+      onClick={() => click()}
+      icon={icon}
+      label={label}
+      iconColor={active ? '#ff8c00' : '#151515'}
+    />
   )
 }

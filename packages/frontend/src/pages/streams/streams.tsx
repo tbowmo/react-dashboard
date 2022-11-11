@@ -28,7 +28,16 @@ export function Streams() {
     <Box sx={{ display: 'flex', width: '100%', flexWrap: 'wrap' }}>
       {media?.map((streamEntry) => (
         <Box sx={{ flexBasis: '33%', padding: 1 }} key={streamEntry.id}>
-          <Card key={streamEntry.id} onClick={() => SelectStream(streamEntry)}>
+          <Card
+            key={streamEntry.id}
+            onClick={() => SelectStream(streamEntry)}
+            sx={{
+              borderRadius: 5,
+              boxShadow: 2,
+              backgroundImage:
+                'linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05))',
+            }}
+          >
             <CardHeader
               sx={{ paddingBottom: 0 }}
               avatar={

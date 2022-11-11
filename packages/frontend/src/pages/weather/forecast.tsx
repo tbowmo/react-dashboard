@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { useForecastWeather, ForecastTupple } from '../../core/data'
 import moment from 'moment'
-import { CardContent, Grid, Box, Typography } from '@mui/material'
+import { Grid, Box, Typography } from '@mui/material'
 import { GridCard } from '../../core/card-2-line/grid-card'
 import { SvgIconComponent } from '@mui/icons-material'
 import { iconMap, round } from './weather-functions'
@@ -64,10 +64,8 @@ export function Forecast() {
   return (
     <Grid container>
       {forecast.list.slice(1, 6).map((f) => (
-        <GridCard xs key={`weather-${f.dt}`}>
-          <CardContent>
-            <SingleForecast data={f} />
-          </CardContent>
+        <GridCard key={`weather-${f.dt}`}>
+          <SingleForecast data={f} />
         </GridCard>
       ))}
     </Grid>

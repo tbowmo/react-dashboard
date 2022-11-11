@@ -1,10 +1,10 @@
 import React from 'react'
-import { CardContent, Slider, Typography, Box } from '@mui/material'
+import { Slider, Box, Modal, Typography } from '@mui/material'
 import { useSSENumber } from '../../core/data'
 import { deviceSet } from './device-set'
 import { useTabs } from '../../core/tabs/tabs-context'
-import { GridCard } from '../../core/card-2-line/grid-card'
 import { Lightbulb, LightbulbOutlined } from '@mui/icons-material'
+import { MqttAction } from './mqtt-action'
 
 type Props = {
   room?: string
@@ -35,7 +35,7 @@ export function LightDimmer(props: Props) {
   const { room = 'stuen', device, label } = props
   const [lightIntensity, setLightIntensity] = React.useState(100)
   const [disabled, setDisabled] = React.useState(false)
-
+  const [modalOpen, setModalOpen] = React.useState(false)
   const endColor: number[] = [0x15, 0x15, 0x15]
   const startColor: number[] = [0xff, 0x8c, 0x00]
   const { startTimer } = useTabs()
@@ -61,36 +61,78 @@ export function LightDimmer(props: Props) {
     }
   }, [currentLightIntensity])
 
+  const timerRef = React.useRef<ReturnType<typeof setTimeout>>()
+
   if (lightIntensity === undefined) return null
 
   const Bulb = disabled ? LightbulbOutlined : Lightbulb
 
+  function touchStart(
+    event: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>,
+  ) {
+    startTimer()
+    event.preventDefault()
+    timerRef.current = setTimeout(() => {
+      setModalOpen(true)
+    }, 500)
+  }
+
+  function touchEnd(
+    event: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>,
+  ) {
+    event.preventDefault()
+    if (!modalOpen) {
+      if (currentLightIntensity > 0) {
+        deviceSet(room, 'light', device, 'off')
+      } else {
+        deviceSet(room, 'light', device, 'on')
+      }
+    }
+    if (timerRef.current) {
+      clearTimeout(timerRef.current)
+    }
+  }
+
   return (
-    <GridCard xs={5}>
-      <CardContent>
+    <React.Fragment>
+      <MqttAction
+        onTouchStart={(event) => touchStart(event)}
+        onMouseDown={(event) => touchStart(event)}
+        onTouchEnd={(event) => touchEnd(event)}
+        onMouseUp={(event) => touchEnd(event)}
+        icon={Bulb}
+        iconColor={`#${pickHex(startColor, endColor, lightIntensity)}`}
+        label={label}
+      />
+      <Modal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
         <Box
           sx={{
-            display: 'grid',
-            gridTemplateColumns: 'min-content auto',
-            gridTemplateRows: 'auto min-content',
+            position: 'absolute' as const,
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 400,
+            bgcolor: 'background.paper',
+            border: '2px solid #000',
+            boxShadow: 24,
+            p: 4,
+            display: 'flex',
+            flexDirection: 'column',
             gap: 2,
-            gridTemplateAreas: `"bulb slider"
-                    "bulb legend"`,
           }}
         >
-          <Bulb
-            fontSize="large"
-            sx={{
-              color: `#${pickHex(startColor, endColor, lightIntensity)}`,
-              gridArea: 'bulb',
-            }}
-          />
+          <Typography sx={{ margin: 'auto' }}>{label}</Typography>
           <Slider
             sx={{
               '@media (pointer: coarse)': {
                 padding: '10px 10px',
               },
-              gridArea: 'slider',
+              margin: 'auto',
             }}
             value={lightIntensity}
             name={device}
@@ -101,11 +143,8 @@ export function LightDimmer(props: Props) {
             min={0}
             max={100}
           />
-          <Typography sx={{ gridArea: 'legend', textAlign: 'center' }}>
-            {label}
-          </Typography>
         </Box>
-      </CardContent>
-    </GridCard>
+      </Modal>
+    </React.Fragment>
   )
 }

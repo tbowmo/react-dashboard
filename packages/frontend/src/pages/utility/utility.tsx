@@ -31,14 +31,14 @@ export function Utility() {
   )
   return (
     <Grid container>
-      <GridCard xs={10}>
+      <GridCard columns={10}>
         <LineChart width={900} height={600} data={formattedPrices}>
           <Line type="stepBefore" dataKey="totalPrice" stroke="#8884d8" />
           <XAxis dataKey="hour" />
           <YAxis />
         </LineChart>
       </GridCard>
-      <GridCard xs>
+      <GridCard>
         <TableContainer component={Paper}>
           <Table size="small">
             <TableHead>

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { GridCard } from '../../core/card-2-line/grid-card'
-import { CardContent, Typography } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 
 type Props = {
   label: string
@@ -13,14 +13,14 @@ export function MediaCard(props: Props) {
 
   return (
     <GridCard onClick={onClick}>
-      <CardContent
+      <Box
         sx={{ display: 'grid', gridTemplateRows: 'max-content auto', gap: 1 }}
       >
         <Typography fontStyle="italic" sx={{ textDecoration: 'underline' }}>
           {label}
         </Typography>
         {children}
-      </CardContent>
+      </Box>
     </GridCard>
   )
 }

@@ -2,8 +2,7 @@ import * as React from 'react'
 import { useSSEBoolean } from '../../core/data'
 import { ToggleOff, ToggleOn, SvgIconComponent } from '@mui/icons-material'
 import { deviceSet, DeviceType } from './device-set'
-import { GridCard } from '../../core/card-2-line/grid-card'
-import { CardContent, Typography } from '@mui/material'
+import { MqttAction } from './mqtt-action'
 
 type Props = {
   label: string
@@ -44,11 +43,11 @@ export function MqttToggle(props: Props) {
 
   const StateIcon = active ? IconOn : IconOff
   return (
-    <GridCard onClick={() => onClick} xs>
-      <CardContent>
-        <StateIcon fontSize="large" />
-        <Typography>{label}</Typography>
-      </CardContent>
-    </GridCard>
+    <MqttAction
+      onClick={() => onClick()}
+      icon={StateIcon}
+      label={label}
+      iconColor={active ? '#ff8c00' : '#151515'}
+    />
   )
 }

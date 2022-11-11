@@ -14,7 +14,6 @@ export function Clock() {
 
   return (
     <Card2Line
-      xs
       value={date.format('HH:mm:ss')}
       label={date.format('dddd Do MMMM - YYYY')}
     />

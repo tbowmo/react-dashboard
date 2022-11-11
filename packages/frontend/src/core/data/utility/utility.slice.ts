@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { api } from '../use-api'
-import { addHours } from 'date-fns'
+import { isAfter, isBefore, parseISO } from 'date-fns'
 
 type SpotPrice = {
   SpotPriceEUR: number
@@ -32,13 +32,7 @@ const initialState: UtilityState = {
   },
 }
 
-const baseUrl = 'https://api.energidataservice.dk/datastore_search_sql?sql='
-
-type DataHub<T> = {
-  result: {
-    records: T
-  }
-}
+const baseUrl = 'https://api.energidataservice.dk/dataset/'
 
 type TransportTarrif = {
   TransparentInvoicing: string
@@ -81,64 +75,61 @@ type TransportTarrif = {
   Price24: number
 }
 
+type DataHub<T> = {
+  records: T
+}
+
 export const fetchTarrifs = createAsyncThunk(
   'utility/tarrifs',
   async (): Promise<Tarrifs['data']> => {
-    const [todayDate] = new Date().toISOString().split('T')
-    const conditions = [
-      `"ValidTo">'${todayDate}'`,
-      `"ValidFrom"<='${todayDate}'`,
-      '"ChargeTypeCode" like \'CD%\'', // Nettarif C
-      '"ChargeType"=\'D03\'', // Tarif
-      '"GLN-Number"=\'5790001089030\'',
-    ]
+    const filter = JSON.stringify({
+      ChargeTypeCode: 'CD,CD R', // Nettarif C
+      ChargeType: 'D03', // Tarif
+      GLN_Number: '5790001089030',
+    })
 
-    const sql = `SELECT * from "datahubpricelist" where ${conditions.join(
-      ' and ',
-    )}`
-    const data = api<DataHub<TransportTarrif[]>>(`${baseUrl}${sql}`).then(
-      (response) => {
-        return response.result.records
-          .map((item) => {
-            const prices: number[] = []
-            for (let i = 1; i <= 24; i += 1) {
-              prices.push(item[`Price${i}`] as number)
-            }
-            return prices
+    const data = api<DataHub<TransportTarrif[]>>(
+      `${baseUrl}DatahubPricelist?filter=${filter}`,
+    ).then((response) => {
+      return response.records
+        .filter(
+          (item) =>
+            isBefore(parseISO(item.ValidFrom), Date.now()) &&
+            isAfter(parseISO(item.ValidTo), Date.now()),
+        )
+        .map((item) => {
+          const prices: number[] = []
+          for (let i = 1; i <= 24; i += 1) {
+            prices.push(item[`Price${i}`] as number)
+          }
+          return prices
+        })
+        .reduce((sum: { [i in number]: number }, a: number[]) => {
+          const c: { [i in number]: number } = {}
+          a.forEach((b, i) => {
+            c[i] = (sum[i] || 0) + b
           })
-          .reduce((sum: { [i in number]: number }, a: number[]) => {
-            const c: { [i in number]: number } = {}
-            a.forEach((b, i) => {
-              c[i] = (sum[i] || 0) + b
-            })
-            return c
-          }, {})
-      },
-    )
+          return c
+        }, {})
+    })
     return data
   },
 )
 
 export const fetchPrices = createAsyncThunk('utility/prices', async () => {
-  const dateTime = addHours(new Date(), -1).toISOString()
+  const filter = JSON.stringify({ PriceArea: 'DK1' })
 
-  const conditions = ['"PriceArea"=\'DK1\'', `"HourDK">'${dateTime}'`]
-
-  const sql = `SELECT * from "elspotprices" where ${conditions.join(
-    ' and ',
-  )} order by "HourDK" asc`
-
-  const data = api<DataHub<SpotPrice[]>>(`${baseUrl}${sql}`).then(
-    (response) => {
-      return response.result.records.map((item) => {
-        return {
-          ...item,
-          SpotPriceEUR: item.SpotPriceEUR,
-          SpotPriceDKK: item.SpotPriceDKK ? item.SpotPriceDKK : undefined,
-        }
-      })
-    },
-  )
+  const data = api<DataHub<SpotPrice[]>>(
+    `${baseUrl}ElspotPrices?start=Now&filter=${filter}&sort=HourDK`,
+  ).then((response) => {
+    return response.records.map((item) => {
+      return {
+        ...item,
+        SpotPriceEUR: item.SpotPriceEUR,
+        SpotPriceDKK: item.SpotPriceDKK ? item.SpotPriceDKK : undefined,
+      }
+    })
+  })
   return data
 })
 

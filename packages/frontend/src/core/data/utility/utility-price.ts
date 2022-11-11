@@ -43,7 +43,7 @@ export function useUtilityPrices(hoursAhead: number) {
         hour: item.HourDK,
         price,
         tarrif,
-        totalPrice: price + tarrif,
+        totalPrice: (price + tarrif + 0.76) * 1.25,
       }
     })
   }, [filteredPrices, tarrifs])
