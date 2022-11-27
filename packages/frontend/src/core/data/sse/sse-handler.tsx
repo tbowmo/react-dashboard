@@ -12,7 +12,7 @@ export function SSEHandler(props: Props) {
   const dispatch = useAppDispatch()
 
   const initial = useSSE(
-    'message',
+    'initial',
     {},
     {
       stateReducer(_state, changes) {

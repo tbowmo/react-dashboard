@@ -1,19 +1,13 @@
-import * as express from 'express'
-import * as SSE from 'express-sse'
+import { Express } from 'express'
 import { Mqtt } from '../../mqtt/mqtt'
 import { MemoryStore } from '../../mqtt/memory-store'
+import { createSession, createChannel } from 'better-sse'
 
-const app = express()
+const channel = createChannel()
+const store = MemoryStore.get(channel)
 
-const sse = new SSE()
-app.get('/api/sse', sse.init)
-
-const store = MemoryStore.get(sse)
-
-const mqtt = Mqtt.getInstance('mqtt://192.168.3.117')
-
-function initMqttListener() {
-  mqtt.addListener('home/#', async (topic: string, payload: string) => {
+function initMqttListener(mqtt: Mqtt) {
+  mqtt?.addListener('home/#', async (topic: string, payload: string) => {
     if (
       !topic.endsWith('/dt') &&
       !topic.endsWith('/set') &&
@@ -24,7 +18,12 @@ function initMqttListener() {
   })
 }
 
-// Delay mqtt listener startup, in order to stabilize database layer.
-setTimeout(initMqttListener, 2000)
-
-export default app
+export function registerSse(app: Express, mqtt: Mqtt) {
+  // Delay mqtt listener startup, in order to stabilize database layer.
+  setTimeout(() => initMqttListener(mqtt), 2000)
+  return app.get('/api/sse', async (req, res) => {
+    const session = await createSession(req, res)
+    channel.register(session)
+    session.push(store.getStore(), 'initial')
+  })
+}

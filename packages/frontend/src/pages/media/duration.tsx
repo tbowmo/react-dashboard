@@ -37,7 +37,7 @@ export function Duration(props: {
   const [remaining, setRemaining] = React.useState<boolean>(false)
 
   React.useEffect(() => {
-    fetch(`/media/stuen/update`).then(() => {})
+    fetch('/media/stuen/update').then(() => {})
   }, [])
 
   React.useEffect(() => {

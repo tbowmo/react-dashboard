@@ -1,20 +1,19 @@
-import { Home, Media, Room } from '@dashboard/types'
-import * as SSE from 'express-sse'
+import { Home } from '@dashboard/types'
+import { Channel } from 'better-sse'
+import { isEqual } from 'lodash'
 
 export class MemoryStore {
   private store: Home = {}
 
   private static myself: MemoryStore
 
-  private lastMediaUpdate = Date.now()
+  private readonly sse: Channel
 
-  private readonly sse: SSE
-
-  private constructor(sse: SSE) {
+  private constructor(sse: Channel) {
     this.sse = sse
   }
 
-  public static get(sse?: SSE) {
+  public static get(sse?: Channel) {
     if (sse && !MemoryStore.myself) {
       MemoryStore.myself = new MemoryStore(sse)
     }
@@ -38,25 +37,29 @@ export class MemoryStore {
     }
   }
 
-  private static async enrichPayload(value: string): Promise<Media | string> {
+  private static enrichPayload(
+    value: string,
+  ): Record<string, unknown> | string {
     try {
       return JSON.parse(value)
       // eslint-disable-next-line no-empty
-    } catch {
+    } catch (e) {
       return value
     }
   }
 
-  private static isRoom(room): room is Room {
-    return (<Room>room).media !== undefined
-  }
-
   public async updateStore(topic: string, value: string): Promise<void> {
-    let changed = false
     const { room, type, sensor } = MemoryStore.decodeTopic(topic)
 
-    const v = await MemoryStore.enrichPayload(value)
-    changed = !(this.store?.[room]?.[type]?.[sensor] === v)
+    const v = MemoryStore.enrichPayload(value)
+    const currentValue = this.store?.[room]?.[type]?.[sensor]
+    const equal = isEqual(currentValue, v)
+
+    if (equal) {
+      // eslint-disable-next-line no-console
+      console.log({ room, type, sensor, v })
+      return
+    }
 
     this.store = {
       ...this.store,
@@ -69,16 +72,13 @@ export class MemoryStore {
       },
     }
 
-    if (changed) {
-      this.sse.send(
-        {
-          payload: v,
-          topic,
-        },
-        'updates',
-      )
-      this.sse.updateInit(this.store, 'initial')
-    }
+    this.sse.broadcast(
+      {
+        payload: v,
+        topic,
+      },
+      'updates',
+    )
   }
 
   public getStore(): Home {

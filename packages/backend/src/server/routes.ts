@@ -1,5 +1,6 @@
 import { WeatherController } from './controller/WeatherController'
 import { RemoteController } from './controller/remote'
+import { Mqtt } from '../mqtt/mqtt'
 
 type Route = {
   method: 'get' | 'post' | 'delete'
@@ -8,9 +9,9 @@ type Route = {
   controller: WeatherController | RemoteController
 }
 
-export function Routes(): Route[] {
+export function Routes(mqtt: Mqtt): Route[] {
   const weatherController = new WeatherController()
-  const remoteController = new RemoteController()
+  const remoteController = new RemoteController(mqtt)
   return [
     {
       method: 'get',

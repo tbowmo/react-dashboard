@@ -1,9 +1,16 @@
 import { Request, Response } from 'express'
 import axios from 'axios'
-import { Weather } from '../entity/weather'
-import { getRepository } from 'typeorm'
 
 type RequestType = 'weather' | 'forecast'
+type Cache = {
+  timestamp: number
+  json: string
+}
+
+const cache: Record<RequestType, Cache | undefined> = {
+  forecast: undefined,
+  weather: undefined,
+}
 
 export class WeatherController {
   readonly apiUrl = 'https://api.openweathermap.org/data/2.5'
@@ -12,52 +19,38 @@ export class WeatherController {
 
   readonly apiKey = process.env.REACT_APP_OW_KEY
 
-  private readonly cacheRepository = getRepository(Weather)
-
   private buildOWUrl(type: RequestType): string {
     return `${this.apiUrl}/${type}?id=${this.city}&appid=${this.apiKey}&lang=da&units=metric`
   }
 
-  private async getCachedValue(
-    requestType: RequestType,
-  ): Promise<Weather | undefined> {
-    const cache = await this.cacheRepository
-      .createQueryBuilder('cache')
-      .where('cache.type = :weatherType', { weatherType: requestType })
-      .orderBy('cache.timestamp', 'DESC')
-      .getOne()
-    return cache
-  }
-
-  private async setCachedValue(
-    requestType: RequestType,
-    json: string,
-  ): Promise<void> {
-    await this.cacheRepository.save({
-      type: requestType,
-      json,
-      timestamp: Date.now() / 1000,
-    })
-  }
-
-  async getWeather(
+  /**
+   * Caching (in memory) data from weather open weather map.
+   */
+  async getWeatherCaching(
     requestType: RequestType,
     timeout: number,
   ): Promise<string | undefined> {
-    const cachedValue = await this.getCachedValue(requestType)
+    const cachedValue = cache[requestType]
     if (!cachedValue || cachedValue.timestamp < Date.now() / 1000 - timeout) {
       try {
+        // eslint-disable-next-line no-console
+        console.log(`Fetching weather data for ${requestType}`)
         const response = await axios.get(this.buildOWUrl(requestType))
-        await this.setCachedValue(requestType, JSON.stringify(response.data))
+        cache[requestType] = {
+          timestamp: Date.now() / 1000,
+          json: JSON.stringify(response.data),
+        }
         return response.data
         // eslint-disable-next-line no-empty
       } catch (e) {}
     }
+    // eslint-disable-next-line no-console
+    console.log(`cached value for ${requestType}`)
     return cachedValue?.json
   }
 
   async currentWeather(_request: Request, response: Response) {
-    const weather = await this.getWeather('weather', 600)
+    const weather = await this.getWeatherCaching('weather', 600)
     if (!weather) {
       response.status(404).send('Cannot get current weather')
       return undefined
@@ -66,7 +59,7 @@ export class WeatherController {
   }
 
   async forecast(_request: Request, response: Response) {
-    const weather = await this.getWeather('forecast', 600)
+    const weather = await this.getWeatherCaching('forecast', 600)
     if (!weather) {
       response.status(404).send('Cannot get forecast')
       return undefined

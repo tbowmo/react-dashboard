@@ -307,7 +307,11 @@ export const iconMap = {
   '50n': WeatherFog,
 }
 
-export function round(value: number, precission = 1): number {
+export function round(
+  value: number | undefined,
+  fallback = -99,
+  precission = 1,
+): number {
   let v = value
   if (typeof value === 'number') {
     if (precission === 0) {
@@ -316,5 +320,5 @@ export function round(value: number, precission = 1): number {
       v = Math.round(value * (10 * precission)) / (10 * precission)
     }
   }
-  return v
+  return v ?? fallback
 }

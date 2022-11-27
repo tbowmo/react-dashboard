@@ -13,27 +13,31 @@
   },
   "devDependencies": {
     "@types/mocha": "5.2.7",
-    "@typescript-eslint/eslint-plugin": "^4.24.0",
-    "@typescript-eslint/parser": "^4.24.0",
-    "@wojtekmaj/enzyme-adapter-react-17": "^0.6.6",
-    "chai": "^4.2.0",
-    "chai-enzyme": "^1.0.0-beta.1",
-    "cheerio": "^1.0.0-rc.3",
+    "@typescript-eslint/eslint-plugin": "^5.44.0",
+    "@typescript-eslint/parser": "^5.44.0",
+    "@wojtekmaj/enzyme-adapter-react-17": "^0.8.0",
+    "chai": "^4.3.7",
+    "cheerio": "1.0.0-rc.12",
     "dotenv-load": "^2.0.0",
     "enzyme": "^3.11.0",
-    "eslint": "^7.27.0",
-    "eslint-config-airbnb": "18.2.1",
-    "eslint-config-airbnb-typescript": "^12.3.1",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-import": "^2.23.3",
-    "eslint-plugin-jest": "^24.3.6",
-    "eslint-plugin-jsx-a11y": "^6.4.1",
-    "eslint-plugin-prettier": "^3.4.0",
+    "eslint": "^8.28.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jest": "^27.1.6",
+    "eslint-plugin-jsx-a11y": "^6.6.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.31.11",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "husky": "^8.0.2",
+    "lint-staged": "^13.0.4",
     "mocha": "^7.1.0",
     "mocha-junit-reporter": "1.23.0",
     "mocha-multi-reporters": "^1.1.7",
     "nyc": "^15.0.0",
-    "prettier": "^2.4.1"
+    "prettier": "^2.4.1",
+    "typescript": "^4.9.3"
   },
   "private": true,
   "workspaces": [
@@ -45,6 +49,11 @@
     "build": "dotenv-load lerna run build",
     "format": "prettier --write packages/**/*.ts{,x}",
     "coverage": "nyc --clean --cache false mocha --opts test/mocha-global.opts --forbid-only",
-    "lint": "tsc --noEmit && eslint src/**/*.ts{,x}"
+    "lint": "eslint packages/**/src/**/*.ts{,x}"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": "eslint --max-warnings 0",
+    "*.php": "composer -d backend run lint:staged",
+    "*.{yml,yaml,json}": "prettier -c"
   }
 }

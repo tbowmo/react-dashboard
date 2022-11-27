@@ -1,4 +1,4 @@
-FROM node:12-alpine as node
+FROM node:16-alpine as node
 RUN apk add tzdata gettext bash tini jq --no-cache && ln -sf /usr/share/zoneinfo/Europe/Copenhagen /etc/localtime
 ENV TZ=Europe/Copenhagen
 
@@ -33,7 +33,7 @@ RUN set -ex; \
 FROM node as runtime
 EXPOSE 5000
 ENTRYPOINT ["/sbin/tini", "--"]
-CMD ["node", "./packages/backend/dist/server.js"]
+CMD ["node", "./packages/backend/lib/server.js"]
 WORKDIR /usr/src/app
 COPY --from=production /usr/src/app /usr/src/app
 

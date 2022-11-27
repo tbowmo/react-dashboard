@@ -24,11 +24,11 @@ export function Weather() {
       <Grid container>
         <GridCard columns={9}>
           <Typography sx={{ fontSize: '30pt', fontWeight: 'bold' }}>
-            {round(temperature || -99)}&deg;C
+            {round(temperature)}&deg;C
           </Typography>
           <Typography>
-            {round(weather?.main?.temp_min ?? -99)}&deg;C -{' '}
-            {round(weather?.main?.temp_max ?? -99)}&deg;C
+            {round(weather?.main?.temp_min)}&deg;C -{' '}
+            {round(weather?.main?.temp_max)}&deg;C
           </Typography>
           <Typography fontSize="large">
             {weather?.weather ? weather.weather[0]?.description ?? '' : ''}
@@ -50,7 +50,7 @@ export function Weather() {
           <Typography>Vind: {wind(weather?.wind?.speed || 0).label}</Typography>
           <Typography fontSize="large">
             Retning {getCompassHeading(weather?.wind?.deg ?? 0).direction} (
-            {weather?.wind?.speed || 0}m/s - {weather?.wind?.deg ?? 0}&deg;)
+            {weather?.wind?.speed ?? 0}m/s - {weather?.wind?.deg ?? 0}&deg;)
           </Typography>
         </GridCard>
         <GridCard>

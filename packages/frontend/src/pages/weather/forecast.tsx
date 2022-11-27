@@ -40,8 +40,7 @@ function SingleForecast(props: { data: ForecastTupple }) {
           overflow: 'hidden',
         }}
       >
-        {round(data?.main?.temp_min || -99)} /{' '}
-        {round(data?.main?.temp_max || -99)}&deg;C
+        {round(data?.main?.temp_min)} / {round(data?.main?.temp_max)}&deg;C
       </Typography>
       <Box sx={{ gridArea: 'icon' }}>
         <Icon

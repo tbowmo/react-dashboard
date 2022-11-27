@@ -3,9 +3,13 @@ import { Mqtt } from '../../mqtt/mqtt'
 import { MemoryStore } from '../../mqtt/memory-store'
 
 export class RemoteController {
-  private mqtt: Mqtt = Mqtt.getInstance()
+  private readonly mqtt: Mqtt
 
   private readonly scenes = ['dvd', 'audio', 'video', 'wii', 'off', 'ps2']
+
+  public constructor(mqtt: Mqtt) {
+    this.mqtt = mqtt
+  }
 
   private store = MemoryStore.get()
 

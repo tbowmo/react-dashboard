@@ -26,7 +26,8 @@ const SSE = createSlice({
   reducers: {
     incommingData(state, { payload }: PayloadAction<IncommingTopic>) {
       const [, room, type, device] =
-        payload.topic.match(/home\/(\w+)\/(\w+)\/(\w+)/) || []
+        payload.topic.match(/home\/([\w-]+)\/([\w-]+)\/([\w-]+)/) || []
+
       let value = payload.payload
       try {
         value = JSON.parse(payload.payload)
@@ -47,6 +48,7 @@ const SSE = createSlice({
           [device]: value,
         },
       }
+
       return {
         ...state,
         [room]: roomState,

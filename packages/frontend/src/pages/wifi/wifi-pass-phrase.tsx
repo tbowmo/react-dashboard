@@ -1,11 +1,13 @@
 import { Grid, Typography } from '@mui/material'
 import * as React from 'react'
 import QRCode from 'qrcode.react'
+import { useSSEString } from '../../core/data'
 
 export function WifiPassPhrase() {
   const type = 'WPA'
-  const ssid = 'bowmo-guests'
-  const passphrase = ''
+  const ssid = 'bowmo-guest'
+  const passphrase = useSSEString('global', 'wifi', 'bowmo_guest') || ''
+
   const hidden = 'true'
   const data = `WIFI:T:${type};S:${ssid};P:${passphrase};H:${hidden};;`
   return (
