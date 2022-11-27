@@ -1,37 +1,31 @@
 import * as React from 'react'
-import clsx from 'clsx'
-import style from './media.module.scss'
-import TextTruncate from 'react-text-truncate'
+import { MediaCard } from './media-card'
+import { Typography } from '@mui/material'
 
 type Props = {
-    className: string,
-    label: string,
-    lines?: number,
-    value?: string,
+  label: string
+  lines?: number
+  value?: string
 }
 
 export function MediaProp(props: Props) {
-    const {
-        className,
-        label,
-        lines = 1,
-        value,
-    } = props
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { label, lines = 1, value } = props
 
-    if (!value) {
-        return null
-    }
-    return (
-        <div className={clsx(className, style.info)}>
-            <label className={style.label}>
-                {label}
-            </label>
-            <TextTruncate
-                line={lines}
-                element="div"
-                truncateText="…"
-                text={value}
-            />
-        </div>
-    )
+  if (!value) {
+    return null
+  }
+  return (
+    <MediaCard label={label}>
+      <Typography
+        sx={{
+          fontSize: '22pt',
+          whiteSpace: 'nowrap',
+          textOverflow: 'ellipsis',
+        }}
+      >
+        {value}
+      </Typography>
+    </MediaCard>
+  )
 }

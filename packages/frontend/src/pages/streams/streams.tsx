@@ -1,78 +1,89 @@
 import * as React from 'react'
-import style from './streams.module.scss'
-import TextTruncate from 'react-text-truncate'
+import { useTabs } from '../../core/tabs/tabs-context'
 import {
-    useStreams,
-    StreamDto,
-} from '../../core/data'
-import { resetTimer } from '../../core/tabs/tabs'
-import moment from 'moment'
-import clsx from 'clsx'
+  CardContent,
+  Typography,
+  Avatar,
+  Box,
+  CardHeader,
+  Card,
+} from '@mui/material'
+import { format } from 'date-fns'
+import { useDrMedia, Media } from '../../core/data'
 
-type Props = {
-    type: 'radio' | 'tv',
-}
+export function Streams() {
+  const media = useDrMedia()
 
+  const { startTimer } = useTabs()
 
-export function Streams(props: Props) {
-    const {
-        type,
-    } = props
+  function SelectStream(stream: Media) {
+    const xhttp = new XMLHttpRequest()
+    xhttp.open('POST', '/media/stuen/play', true)
+    xhttp.setRequestHeader('Content-type', 'application/json')
+    xhttp.send(JSON.stringify(stream))
+    startTimer(200)
+  }
 
-    const [ active, setActive ] = React.useState('')
-    const streams = useStreams(type)
-
-    function SelectStream(stream: StreamDto) {
-        setActive(stream.link)
-        console.log('Selecting stream')
-        const xhttp = new XMLHttpRequest()
-        xhttp.open('POST', '/media/stuen/play', true)
-        xhttp.setRequestHeader('Content-type', 'application/json')
-        xhttp.send(JSON.stringify(stream))
-    }
-
-    React.useEffect( () => {
-        if (active !== '') {
-            const timer = setTimeout(() => {
-                setActive('')
-                resetTimer(200)
-            }, 200)
-            return () => {clearTimeout(timer)}
-        }
-    }, [active])
-
-    return (
-        <div className={style.streams}>
-            {streams?.map((streamEntry) => (
-                <div
-                    className={clsx(style.singleStream, (streamEntry.link === active) && style.active)}
-                    key={streamEntry.xmlid}
-                    onClick={() => SelectStream(streamEntry)}
+  return (
+    <Box sx={{ display: 'flex', width: '100%', flexWrap: 'wrap' }}>
+      {media?.map((streamEntry) => (
+        <Box sx={{ flexBasis: '33%', padding: 1 }} key={streamEntry.id}>
+          <Card
+            key={streamEntry.id}
+            onClick={() => SelectStream(streamEntry)}
+            sx={{
+              borderRadius: 5,
+              boxShadow: 2,
+              backgroundImage:
+                'linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05))',
+            }}
+          >
+            <CardHeader
+              sx={{ paddingBottom: 0 }}
+              avatar={
+                <Avatar>
+                  <streamEntry.channelIcon />
+                </Avatar>
+              }
+              title={streamEntry.channelName}
+            />
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <CardContent
+                sx={{
+                  width: '100%',
+                  display: 'grid',
+                  gridTemplateColumns: 'min-content 1fr',
+                  gridTemplateRows: 'min-content auto',
+                  gridTemplateAreas: `"icon time"
+                            "icon programme"`,
+                  gridGap: '10px',
+                }}
+              >
+                <Avatar
+                  sx={{ gridArea: 'icon', height: '80px', width: '80px' }}
+                  src={streamEntry.avatar}
+                />
+                <Box sx={{ gridArea: 'time' }}>
+                  {`${format(streamEntry.startTime, 'HH:mm')} - ${format(
+                    streamEntry.endTime,
+                    'HH:mm',
+                  )}`}
+                </Box>
+                <Typography
+                  sx={{
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'elipsis',
+                    gridArea: 'programme',
+                  }}
                 >
-                    <div className={style.iconTime}>
-                        <div className={clsx(style.center, style.channel)}>
-                            { streamEntry.icon === '' ? streamEntry.xmlid : <img src={streamEntry.icon} alt={streamEntry.xmlid} /> }
-                        </div>
-                        <div className={style.time}>
-                            { streamEntry.programmes[0].start !== streamEntry.programmes[0].end ? (
-                                <React.Fragment>
-                                    <label className={style.startText}>Start</label>
-                                    <div className={style.startTime}>{moment(streamEntry.programmes[0].start).format('HH:mm')}</div>
-                                    <label className={style.endText}>Slut</label>
-                                    <div className={style.endtime}>{moment(streamEntry.programmes[0].end).format('HH:mm')}</div>
-                                </React.Fragment>
-                            ) : null }
-                        </div>
-                    </div>
-                    <TextTruncate
-                        line={1}
-                        element="div"
-                        truncateText="…"
-                        text={streamEntry.programmes[0].title}
-                        className={clsx(style.center, style.show)}
-                    />
-                </div>
-            ))}
-        </div>
-    )
+                  {streamEntry.title}
+                </Typography>
+              </CardContent>
+            </Box>
+          </Card>
+        </Box>
+      ))}
+    </Box>
+  )
 }

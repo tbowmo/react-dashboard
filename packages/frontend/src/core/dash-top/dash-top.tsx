@@ -1,136 +1,142 @@
 import * as React from 'react'
-import { Card2Line } from '../card-2-line/card-2-line'
-import moment from 'moment'
-import { Sensor } from '../sensor/sensor'
-import './dash-top.scss'
+import { Sensor } from '../card-2-line/sensor'
+import { Grid } from '@mui/material'
+
+import { Clock } from './clock'
 
 type TotalEntry = {
-    label: string,
-    sensor: string,
-    div: number,
+  label: string
+  sensor: string
+  div: number
 }
 
 const totals: TotalEntry[] = [
-    {
-        label: 'El dag',
-        sensor: 'day_Wh',
-        div: 1,
-    },
-    {
-        label: 'El uge',
-        sensor: 'week_Wh',
-        div: 1000,
-    },
-    {
-        label: 'El måned',
-        sensor: 'month_Wh',
-        div: 1000,
-    },
+  {
+    label: 'El time',
+    sensor: 'hour_Wh',
+    div: 1,
+  },
+  {
+    label: 'El dag',
+    sensor: 'day_Wh',
+    div: 1,
+  },
+  {
+    label: 'El uge',
+    sensor: 'week_Wh',
+    div: 1000,
+  },
+  {
+    label: 'El måned',
+    sensor: 'month_Wh',
+    div: 1000,
+  },
 ]
 
 type HumidDewP = {
-    sensor: string,
-    unit: string,
+  sensor: string
+  unit: string
 }
 
 const humidDewPoint: HumidDewP[] = [
-    {
-        sensor: 'humidity',
-        unit: 'RH%'
-    },
-    {
-        sensor: 'dewpoint',
-        unit: 'dp °C'
-    }
+  {
+    sensor: 'humidity',
+    unit: 'RH%',
+  },
+  {
+    sensor: 'dewpoint',
+    unit: 'dp °C',
+  },
 ]
 export function DashTop() {
-    const [date, setDate] = React.useState(moment())
-    const [totalIndex, setTotalIndex] = React.useState<number>(0)
-    const [dpIndex, setDpIndex] = React.useState<number>(0)
-    React.useEffect(() => {
-        const timerID = setInterval(() => setDate(moment()), 1000)
-        return () => {
-            clearInterval(timerID)
-        }
-    })
+  const [totalIndex, setTotalIndex] = React.useState<number>(0)
+  const [dpIndex, setDpIndex] = React.useState<number>(0)
 
-    const elClick = () => { 
-        setTotalIndex(totalIndex + 1)
-        if (totalIndex >= totals.length-1) {
-            setTotalIndex(0)
-        }
+  const elClick = () => {
+    setTotalIndex(totalIndex + 1)
+    if (totalIndex >= totals.length - 1) {
+      setTotalIndex(0)
     }
+  }
 
-    React.useEffect(() => {
-        if (totalIndex !== 0) {
-            const timeout = setTimeout(() => {
-                setTotalIndex(0)
-            }, 5000)
-            return () => {clearTimeout(timeout)}
-        }
-    }, [totalIndex])
-
-    const dpClick = () => { 
-        setDpIndex(dpIndex + 1)
-        if (dpIndex >= humidDewPoint.length-1) {
-            setDpIndex(0)
-        }
+  React.useEffect(() => {
+    let timeout: NodeJS.Timeout
+    if (totalIndex !== 0) {
+      timeout = setTimeout(() => {
+        setTotalIndex(0)
+      }, 5000)
     }
+    return () => {
+      if (timeout) {
+        clearTimeout(timeout)
+      }
+    }
+  }, [totalIndex])
 
-    React.useEffect(() => {
-        if (dpIndex !== 0) {
-            const timeout = setTimeout(() => {
-                setDpIndex(0)
-            }, 5000)
-            return () => {clearTimeout(timeout)}
-        }
-    }, [dpIndex])
+  const dpClick = () => {
+    setDpIndex(dpIndex + 1)
+    if (dpIndex >= humidDewPoint.length - 1) {
+      setDpIndex(0)
+    }
+  }
 
-    const total = totals[totalIndex]
-    const humidDp = humidDewPoint[dpIndex]
-    const scale=['Wh', 'kWh', 'MWh']
+  React.useEffect(() => {
+    let timeout: NodeJS.Timeout
+    if (dpIndex !== 0) {
+      timeout = setTimeout(() => {
+        setDpIndex(0)
+      }, 5000)
+    }
+    return () => {
+      if (timeout) {
+        clearTimeout(timeout)
+      }
+    }
+  }, [dpIndex])
 
-    return (
-        <div className="topdashboard">
-            <Sensor room="garden" sensorType="climacell" sensorName="temperature" cols="1" label="Udendørs" unit="&deg;C" />
-            <Sensor 
-                onClick={() => {dpClick()}}
-                room="garden"
-                sensorType="climacell"
-                sensorName={humidDp.sensor}
-                cols="1"
-                label="Udendørs"
-                unit={humidDp.unit}
-            />
-            <Sensor room='stuen' sensorName='temperature' cols="1" label="Stuen" unit="&deg;C" />
-            <Sensor 
-                onClick={() => {dpClick()}}
-                room="stuen"
-                sensorName={humidDp.sensor}
-                cols="1"
-                label="Stuen"
-                unit={humidDp.unit}
-            />
-            <Sensor 
-                onClick={() => {elClick()}}
-                room='global'
-                sensorType="utility"
-                sensorName={total.sensor}
-                cols="1"
-                label={total.label}
-                precission={1}
-                unit={scale}
-            />
-            <Sensor
-                cols="1"
-                room="global"
-                sensorType="utility"
-                sensorName="current_W"
-                label="EL aktuelt"
-                precission={0}
-                unit="watt"
-            />
-            <Card2Line cols="2" value={date.format('HH:mm:ss')} label={date.format('dddd Do MMMM - YYYY')} />
-        </div>
-    )
+  const total = totals[totalIndex]
+  const humidDp = humidDewPoint[dpIndex]
+  const scale = ['Wh', 'kWh', 'MWh']
+
+  return (
+    <Grid container sx={{ width: '100%' }}>
+      <Sensor
+        room="garden"
+        sensorType="climacell"
+        sensorName1="temperature"
+        sensorName2={humidDp.sensor}
+        label="Udendørs"
+        unit1="&deg;C"
+        unit2={humidDp.unit}
+        onClick={() => {
+          dpClick()
+        }}
+      />
+      <Sensor
+        room="stuen"
+        sensorName1="temperature"
+        sensorName2={humidDp.sensor}
+        label="Stuen"
+        unit1="&deg;C"
+        unit2={humidDp.unit}
+        onClick={() => {
+          dpClick()
+        }}
+      />
+      <Sensor
+        onClick={() => {
+          elClick()
+        }}
+        room="global"
+        sensorType="utility"
+        sensorName1="kwh_dkk"
+        sensorName2={total.sensor}
+        label={total.label}
+        precission={2}
+        unit1="kr/kWh"
+        unit2={scale}
+      />
+      <Clock />
+    </Grid>
+  )
 }

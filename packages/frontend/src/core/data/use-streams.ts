@@ -1,20 +1,27 @@
-import { StreamDto } from './streams/stream-type'
-import {
-    useSelector,
-    useDispatch,
-} from 'react-redux'
-import { combinedState } from './store'
-import { useEffect } from 'react'
-import { fetchStreamSuccess } from './streams/actions'
+import { api, useApi } from './use-api'
+
+type Programme = {
+  id: number
+  title: string
+  start: Date
+  end: Date
+  description: string
+  category: string
+}
+
+export type StreamDto = {
+  name: string
+  xmlid: string
+  link: string
+  type: string
+  icon: string
+  programmes: Programme[]
+}
 
 export function useStreams(type: 'radio' | 'tv'): StreamDto[] | undefined {
-    const streamState = useSelector((state: combinedState) => state.streams)
-    const dispatch = useDispatch()
-    useEffect(() => {
-        const url = `/channels/list/${type}`
-        fetch(url)
-            .then((resp) => resp.json())
-            .then((data) => dispatch(fetchStreamSuccess(type, data)))
-    }, [dispatch, type])
-    return streamState.streams[type]
+  const result = useApi<StreamDto[]>(() => {
+    return api(`/channels/list/${type}`)
+  }, [type])
+
+  return result.result
 }

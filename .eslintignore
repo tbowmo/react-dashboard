@@ -1,2 +1,9 @@
-src/serviceWorker.ts
-src/**/__tests__/**
+packages/frontend/src/serviceWorker.ts
+packages/**/__tests__/**
+packages/**/serviceWorker.ts
+**/dist/**
+**/build/**
+**/node_modules/**
+**/*.test.{js,jsx,ts,tsx}
+**/*.spec.{js,jsx,ts,tsx}
+**/config-overrides.js

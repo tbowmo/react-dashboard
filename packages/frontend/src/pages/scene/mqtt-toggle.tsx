@@ -1,55 +1,53 @@
 import * as React from 'react'
-import style from './scene.module.scss'
-import { IconType } from 'react-icons/lib/cjs'
 import { useSSEBoolean } from '../../core/data'
-import clsx from 'clsx'
-import {
-    FaToggleOff,
-    FaToggleOn,
-} from 'react-icons/fa'
+import { ToggleOff, ToggleOn, SvgIconComponent } from '@mui/icons-material'
 import { deviceSet, DeviceType } from './device-set'
+import { MqttAction } from './mqtt-action'
 
 type Props = {
-    className?: string,
-    label: string,
-    room?: string,
-    type?: DeviceType,
-    device: string,
-    onPayload: boolean | string | number,
-    offPayload: boolean | string | number,
-    iconOn?: IconType,
-    iconOff?: IconType,
+  label: string
+  room?: string
+  type?: DeviceType
+  device: string
+  onPayload: boolean | string | number
+  offPayload: boolean | string | number
+  iconOn?: SvgIconComponent
+  iconOff?: SvgIconComponent
 }
 
 export function MqttToggle(props: Props) {
-    const {
-        iconOn: IconOn = FaToggleOn,
-        iconOff: IconOff = FaToggleOff,
-        room = 'stuen',
-        type = 'switch',
-        device,
-    } = props
-    const [ active, setActive ] = React.useState(false)
+  const {
+    iconOn: IconOn = ToggleOn,
+    iconOff: IconOff = ToggleOff,
+    room = 'stuen',
+    type = 'switch',
+    device,
+    label,
+    offPayload,
+    onPayload,
+  } = props
+  const [active, setActive] = React.useState(false)
 
-    const currentState = useSSEBoolean(room, type, device)
+  const currentState = useSSEBoolean(room, type, device)
 
-    function onClick() {
-        const value = active ? props.offPayload : props.onPayload
-        deviceSet(room, type, device, value.toString())
+  function onClick() {
+    const value = active ? offPayload : onPayload
+    deviceSet(room, type, device, value.toString())
+  }
+
+  React.useEffect(() => {
+    if (currentState !== undefined) {
+      setActive(currentState === onPayload)
     }
+  }, [currentState, onPayload])
 
-    React.useEffect(() => {
-        if (currentState !== undefined) {
-            setActive(currentState === props.onPayload)
-        }
-    }, [currentState, props])
-
-    return (
-        <div className={clsx(style.mqttBase, props.className)} onClick={onClick}>
-            <div className={clsx(style.center, active && style.active)}>
-                { active ? (<IconOn />) : (<IconOff />) }
-            </div>
-            <div className={style.center}>{props.label}</div>
-        </div>
-    )
+  const StateIcon = active ? IconOn : IconOff
+  return (
+    <MqttAction
+      onClick={() => onClick()}
+      icon={StateIcon}
+      label={label}
+      iconColor={active ? '#ff8c00' : '#151515'}
+    />
+  )
 }

@@ -1,22 +1,26 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
-import './index.scss'
+import ReactDOM from 'react-dom/client'
 import { App } from './app'
 import * as serviceWorker from './serviceWorker'
-import { Router } from 'react-router-dom'
-import history from './history'
+import { BrowserRouter as Router } from 'react-router-dom'
 import { Provider } from 'react-redux'
-import configureStore from './core/data/store'
+import store from './core/data/store'
+import { CssBaseline, ThemeProvider, StyledEngineProvider } from '@mui/material'
+import { theme } from './theme'
 
-const store = configureStore()
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
-ReactDOM.render(
-    <Router history={history}>
+root.render(
+  <Router>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
         <Provider store={store}>
-            <App />
+          <App />
         </Provider>
-    </Router>, 
-    document.getElementById('root'),
+      </ThemeProvider>
+    </StyledEngineProvider>
+  </Router>,
 )
 
 // If you want your app to work offline and load faster, you can change

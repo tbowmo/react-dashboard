@@ -1,100 +1,120 @@
-import style from './scene.module.scss'
 import * as React from 'react'
-import { IconType } from 'react-icons/lib/cjs'
 import {
-    MdAlbum,
-    MdGames,
-    MdMusicNote,
-    MdVideoLabel,
-    MdPowerSettingsNew,
-} from 'react-icons/md'
-import {
-    FaDoorOpen,
-    FaDoorClosed,
-} from 'react-icons/fa'
+  Album,
+  Games,
+  MusicNote,
+  VideoLabel,
+  PowerSettingsNew,
+  SvgIconComponent,
+} from '@mui/icons-material'
 import { LightDimmer } from './mqtt-light-dimmer'
 import { MqttButton } from './mqtt-button'
 import { MqttToggle } from './mqtt-toggle'
-import { useSSEString, useDevices } from '../../core/data'
-import clsx from 'clsx'
+import { useSSEString } from '../../core/data'
+import { Box } from '@mui/material'
 
 type Action = {
-    label: string,
-    action: string,
-    icon: IconType,
+  label: string
+  action: string
+  icon: SvgIconComponent
 }
 
 const actionList: Action[] = [
-    {
-        label: 'DVD',
-        action: 'dvd',
-        icon: MdAlbum,
-    },
-    {
-        label: 'WII',
-        action: 'wii',
-        icon: MdGames,
-    },
-    {
-        label: 'Musik',
-        action: 'audio',
-        icon: MdMusicNote,
-    },
-    {
-        label: 'Video',
-        action: 'video',
-        icon: MdVideoLabel,
-    },
-    {
-        label: 'OFF',
-        action: 'off',
-        icon: MdPowerSettingsNew,
-    },
+  {
+    label: 'OFF',
+    action: 'off',
+    icon: PowerSettingsNew,
+  },
+  {
+    label: 'Musik',
+    action: 'audio',
+    icon: MusicNote,
+  },
+  {
+    label: 'Video',
+    action: 'video',
+    icon: VideoLabel,
+  },
+
+  {
+    label: 'DVD',
+    action: 'dvd',
+    icon: Album,
+  },
+  {
+    label: 'WII',
+    action: 'wii',
+    icon: Games,
+  },
 ]
 
+type DeviceProps = {
+  legend: string
+  icon?: SvgIconComponent
+}
+
+const dimmableLights: { [device in string]: DeviceProps } = {
+  all: { legend: 'Alt lys' },
+  tv: { legend: 'TV' },
+  spisebord: { legend: 'Spisebord' },
+  corner: { legend: 'Chalottes hjørne' },
+  sofabord: { legend: 'Sofabord' },
+  sofagruppe: { legend: 'Sofagruppe' },
+}
+
+const dumbSwitches: { [device in string]: DeviceProps } = {
+  followchrome: {
+    legend: 'Følg chromecast',
+  },
+}
+
 export function Scene() {
-    const activeScene = (useSSEString('stuen', 'avctrl', 'scene') || '').toLowerCase()
-    const lights = (useDevices('stuen', 'light') || []).sort()
-    const switches = (useDevices('stuen', 'switch') || []).sort()
-    return (
-        <div className={style.scene}>
-            <div className={style.remote}>
-                { actionList.map((action) => (
-                    <MqttButton
-                        className={clsx(((activeScene.includes(action.action.toLowerCase())) && style.activeDevice) )}
-                        key={action.label}
-                        label={action.label}
-                        type="avctrl"
-                        device="scene"
-                        payload={action.action}
-                        icon={action.icon}
-                    />
-                ))}
-            </div>
-            <div className={style.lights}>
-                {lights.map((device) => (
-                    <LightDimmer key={device} label={device} device={device} />
-                ))}
-                {switches.map((device) => (
-                    <MqttToggle
-                        key={device}
-                        label="Auto lys"
-                        device={device}
-                        onPayload={true}
-                        offPayload={false}
-                    />
-                ))}
-                <MqttToggle
-                    label="Hønsehus"
-                    device="door"
-                    room="garden"
-                    type="chicken"
-                    onPayload={1}
-                    offPayload={0}
-                    iconOn={FaDoorOpen}
-                    iconOff={FaDoorClosed}
-                />
-            </div>
-        </div>
-    )
+  const activeScene = (
+    useSSEString('stuen', 'avctrl', 'scene') || ''
+  ).toLowerCase()
+
+  return (
+    <Box
+      sx={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(4, 1fr)',
+        gridTemplateRows: 'repeat(3, auto)',
+        height: '100%',
+      }}
+    >
+      {actionList.map((action) => (
+        <MqttButton
+          active={activeScene.includes(action.action.toLowerCase())}
+          key={action.label}
+          label={action.label}
+          type="avctrl"
+          device="scene"
+          payload={action.action}
+          icon={action.icon}
+        />
+      ))}
+      {Object.entries(dimmableLights).map(([device, deviceProps]) => (
+        <LightDimmer key={device} label={deviceProps.legend} device={device} />
+      ))}
+      {Object.entries(dumbSwitches).map(([device, deviceProps]) => (
+        <MqttToggle
+          key={device}
+          label={deviceProps.legend}
+          device={device}
+          onPayload
+          offPayload={false}
+        />
+      ))}
+      {/* <MqttToggle
+        label="Hønsehus"
+        device="door"
+        room="garden"
+        type="chicken"
+        onPayload={1}
+        offPayload={0}
+        iconOn={MeetingRoom}
+        iconOff={DoorBack}
+      /> */}
+    </Box>
+  )
 }
