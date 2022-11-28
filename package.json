@@ -5,14 +5,12 @@
   "author": "Thomas Bowman Mørch <thomas+github@bowmo.dk>",
   "license": "MIT",
   "dependencies": {
-    "@lerna/version": "3.20.2",
     "dotenv": "8.2.0",
     "fs-extra": "8.1.0",
-    "isomorphic-fetch": "^2.2.1",
-    "lerna": "3.20.2"
+    "isomorphic-fetch": "^2.2.1"
   },
   "devDependencies": {
-    "@types/mocha": "5.2.7",
+    "@types/mocha": "10.0.0",
     "@typescript-eslint/eslint-plugin": "^5.44.0",
     "@typescript-eslint/parser": "^5.44.0",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.8.0",
@@ -32,12 +30,14 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "husky": "^8.0.2",
     "lint-staged": "^13.0.4",
-    "mocha": "^7.1.0",
-    "mocha-junit-reporter": "1.23.0",
-    "mocha-multi-reporters": "^1.1.7",
+    "mocha": "^10.1.0",
+    "mocha-junit-reporter": "2.2.0",
+    "mocha-multi-reporters": "^1.5.1",
     "nyc": "^15.0.0",
-    "prettier": "^2.4.1",
-    "typescript": "^4.9.3"
+    "prettier": "^2.8.0",
+    "typescript": "^4.9.3",
+    "@lerna/version": "6.0.3",
+    "lerna": "6.0.3"
   },
   "private": true,
   "workspaces": [
