@@ -21,5 +21,5 @@ root.render(
         </ThemeProvider>
       </StyledEngineProvider>
     </Router>
-  </React.StrictMode>
+  </React.StrictMode>,
 )

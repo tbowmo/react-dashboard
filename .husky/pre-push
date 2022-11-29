@@ -3,6 +3,3 @@
 
 yarn lint
 
-## Run backend checks
-composer -d backend run test:all
-

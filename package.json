@@ -47,12 +47,11 @@
     "build": "dotenv-load lerna run build",
     "format": "prettier --write packages/**/*.ts{,x}",
     "coverage": "nyc --clean --cache false mocha --opts test/mocha-global.opts --forbid-only",
-    "lint": "eslint packages/**/src/**/*.ts{,x}",
+    "lint": "eslint packages/*/src/**/*.ts{,x}",
     "postinstall": "husky install"
   },
   "lint-staged": {
-    "*.{ts,tsx}": "eslint --max-warnings 0",
-    "*.php": "composer -d backend run lint:staged",
+    "*.{ts,tsx}": "eslint --max-warnings 0 packages/*/src/**/*.ts{,x}",
     "*.{yml,yaml,json}": "prettier -c"
   },
   "packageManager": "yarn@3.3.0"
