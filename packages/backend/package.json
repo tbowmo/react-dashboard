@@ -23,6 +23,7 @@
     "webpack": "^4.41.5"
   },
   "dependencies": {
+    "@dashboard/types": "^0.1.0",
     "@types/date-fns": "^2.6.0",
     "@types/xml-js": "^1.0.0",
     "@types/xml2js": "^0.4.11",
@@ -40,9 +41,6 @@
     "mqtt-match": "3.0.0",
     "node-cron": "^3.0.2",
     "reflect-metadata": "^0.1.13"
-  },
-  "peerDependencies": {
-    "@dashboard/types": "1.0.0"
   },
   "scripts": {
     "start": "ts-node src/server.ts",
