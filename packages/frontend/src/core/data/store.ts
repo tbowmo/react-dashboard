@@ -7,15 +7,15 @@ import rootReducer from './root-reducer'
 
 const store = configureStore({
   reducer: rootReducer,
-  devTools: process.env.NODE_ENV === 'development',
+  devTools: import.meta.env.DEV,
 })
 
-if (process.env.NODE_ENV === 'development' && module.hot) {
-  module.hot.accept('./root-reducer', () => {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires, global-require
-    const newRootReducer = require('./root-reducer').default
-    store.replaceReducer(newRootReducer)
-  })
+if (import.meta.env.DEV) {
+  // module.hot.accept('./root-reducer', () => {
+  //   // eslint-disable-next-line @typescript-eslint/no-var-requires, global-require
+  //   const newRootReducer = require('./root-reducer').default
+  //   store.replaceReducer(newRootReducer)
+  // })
 }
 
 export type AppDispatch = typeof store.dispatch

@@ -42,7 +42,7 @@ export function Streams() {
               sx={{ paddingBottom: 0 }}
               avatar={
                 <Avatar>
-                  <streamEntry.channelIcon />
+                  <img src={streamEntry.channelIcon} />
                 </Avatar>
               }
               title={streamEntry.channelName}

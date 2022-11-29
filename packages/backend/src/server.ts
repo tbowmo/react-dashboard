@@ -46,10 +46,10 @@ Routes(mqtt).forEach(({ route, controller, method, action }) => {
   })
 })
 
-app.use(express.static(path.resolve('packages', 'frontend', 'build')))
+app.use(express.static(path.resolve('packages', 'frontend', 'dist')))
 
 app.get('*', (_req, res) => {
-  res.sendFile(path.resolve('packages', 'frontend', 'build', 'index.html'))
+  res.sendFile(path.resolve('packages', 'frontend', 'dist', 'index.html'))
 })
 
 // start express server

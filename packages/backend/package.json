@@ -1,7 +1,9 @@
 {
    "name": "@dashboard/backend",
    "version": "0.0.1",
-   "description": "Awesome project developed with TypeORM.",
+   "description": "Backend for tablet sized dashboard",
+   "license": "MIT",
+   "private": true,
    "devDependencies": {
       "@types/body-parser": "^1.17.1",
       "@types/chai": "^4.2.10",

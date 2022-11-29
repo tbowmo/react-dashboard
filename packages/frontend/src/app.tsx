@@ -10,9 +10,7 @@ export function App() {
   return (
     <SSEProvider
       endpoint={
-        process.env.NODE_ENV === 'development'
-          ? 'http://localhost:5000/api/sse'
-          : '/api/sse'
+        import.meta.env.DEV ? 'http://localhost:5000/api/sse' : '/api/sse'
       }
     >
       <SSEHandler>

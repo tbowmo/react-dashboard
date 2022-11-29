@@ -35,7 +35,7 @@ export function TabsProvider(props: Props) {
   }, [])
 
   const startTimer = React.useCallback(
-    (timeout = Number(process.env.REACT_APP_ACTION_TIMEOUT)) => {
+    (timeout = Number(import.meta.env.VITE_ACTION_TIMEOUT)) => {
       if (timer.current !== null) {
         stopTimer()
       }
