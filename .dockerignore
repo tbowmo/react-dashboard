@@ -1,5 +1,7 @@
-node_modules/
-build/
-dist/
-.git/
-.vscode/
+**/build
+**/dist
+.git
+.vscode
+**/node_modules
+screenshot
+test

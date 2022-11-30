@@ -44,6 +44,8 @@
     "packages/*"
   ],
   "scripts": {
+    "install": "lerna run install",
+    "start": "dotenv-load lerna run start",
     "build": "dotenv-load lerna run build",
     "format": "prettier --write packages/**/*.ts{,x}",
     "coverage": "nyc --clean --cache false mocha --opts test/mocha-global.opts --forbid-only",
@@ -54,5 +56,5 @@
     "*.{ts,tsx}": "eslint --max-warnings 0 packages/*/src/**/*.ts{,x}",
     "*.{yml,yaml,json}": "prettier -c"
   },
-  "packageManager": "yarn@3.3.0"
+  "packageManager": "yarn@1.22.19"
 }
