@@ -24,7 +24,9 @@ dotenv.config({
   path: envFile,
 })
 
-const mqtt = Mqtt.getInstance('mqtt://192.168.3.117')
+const mqtt = Mqtt.getInstance(
+  process.env.BACKEND_MQTT_HOST || 'mqtt://localhost',
+)
 
 // create express app
 const app = express()

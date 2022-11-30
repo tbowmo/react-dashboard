@@ -15,9 +15,9 @@ const cache: Record<RequestType, Cache | undefined> = {
 export class WeatherController {
   readonly apiUrl = 'https://api.openweathermap.org/data/2.5'
 
-  readonly city = process.env.REACT_APP_OW_CITYID
+  readonly city = process.env.BACKEND_OW_CITYID
 
-  readonly apiKey = process.env.REACT_APP_OW_KEY
+  readonly apiKey = process.env.BACKEND_OW_KEY
 
   private buildOWUrl(type: RequestType): string {
     return `${this.apiUrl}/${type}?id=${this.city}&appid=${this.apiKey}&lang=da&units=metric`
