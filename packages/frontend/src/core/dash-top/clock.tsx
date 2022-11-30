@@ -1,21 +1,29 @@
+import { format } from 'date-fns'
 import * as React from 'react'
-import { Card2Line } from '../card-2-line/card-2-line'
-import moment from 'moment'
+import { Card2Line, SensorValue } from '../card-2-line/card-2-line'
+import { da } from 'date-fns/locale'
+import { Box } from '@mui/material'
 
 export function Clock() {
-  const [date, setDate] = React.useState<moment.Moment>(moment())
+  const [time, setTime] = React.useState<Date>(new Date())
 
   React.useEffect(() => {
-    const timerID = setInterval(() => setDate(moment()), 1000)
-    return () => {
-      clearInterval(timerID)
+    const timerId = setInterval(() => setTime(new Date()), 1000)
+    return function cleanup() {
+      clearInterval(timerId)
     }
-  })
+  }, [])
 
   return (
     <Card2Line
-      value={date.format('HH:mm:ss')}
-      label={date.format('dddd Do MMMM - YYYY')}
-    />
+      label={format(time, 'eee dd. MMMM - yyyy', { locale: da })}
+      onClick={() => {}}
+    >
+      <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1 }}>
+        <Box sx={{ margin: 'auto' }}>
+          <SensorValue value={format(time, 'HH:mm:ss')} />
+        </Box>
+      </Box>
+    </Card2Line>
   )
 }

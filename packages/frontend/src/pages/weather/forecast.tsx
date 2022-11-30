@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { useForecastWeather, ForecastTupple } from '../../core/data'
-import moment from 'moment'
 import { Grid, Box, Typography } from '@mui/material'
 import { GridCard } from '../../core/card-2-line/grid-card'
 import { SvgIconComponent } from '@mui/icons-material'
@@ -9,8 +8,8 @@ import { iconMap, round } from './weather-functions'
 function SingleForecast(props: { data: ForecastTupple }) {
   const { data } = props
   const Icon: SvgIconComponent = iconMap[data.weather[0].icon] || null
-  const timeObj = moment.unix(data.dt)
-  const timeStr = timeObj.format('HH:mm')
+  const timeObj = new Date(data.dt)
+  const timeStr = timeObj.toTimeString()
 
   return (
     <Box
