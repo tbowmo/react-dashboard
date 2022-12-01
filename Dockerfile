@@ -14,7 +14,7 @@ COPY --from=sources /usr/src/app/payload.tar ./
 RUN \
     set -ex; \
     tar xf payload.tar; \
-    yarn install --pure-lockfile; \
+    yarn install --pure-lockfile --ignore-scripts; \
     date
 COPY --from=sources /usr/src/app /usr/src/app
 
@@ -27,7 +27,7 @@ ENV BUILD_COMMIT=${COMMIT} BUILD_VARIANT=${VARIANT} NODE_ENV=production
 RUN set -ex; \
     yarn workspace @dashboard/backend build; \
     yarn workspace @dashboard/frontend build; \
-    yarn install --production; \
+    yarn install --production --ignore-scripts; \
     yarn cache clean;
 
 FROM node as runtime
