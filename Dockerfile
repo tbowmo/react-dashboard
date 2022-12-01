@@ -28,7 +28,9 @@ RUN set -ex; \
     yarn workspace @dashboard/backend build; \
     yarn workspace @dashboard/frontend build; \
     yarn install --production --ignore-scripts; \
-    yarn cache clean;
+    rm -rf packages/frontend/node_modules; \
+    yarn cache clean
+
 
 FROM node as runtime
 EXPOSE 5000
