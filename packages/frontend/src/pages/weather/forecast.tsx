@@ -4,12 +4,15 @@ import { Grid, Box, Typography } from '@mui/material'
 import { GridCard } from '../../core/card-2-line/grid-card'
 import { SvgIconComponent } from '@mui/icons-material'
 import { iconMap, round } from './weather-functions'
+import { format } from 'date-fns'
 
 function SingleForecast(props: { data: ForecastTupple }) {
   const { data } = props
   const Icon: SvgIconComponent = iconMap[data.weather[0].icon] || null
-  const timeObj = new Date(data.dt)
-  const timeStr = timeObj.toTimeString()
+
+  const timeStr = React.useMemo((): string => {
+    return format(data.dt * 1000, 'HH:mm')
+  }, [data.dt])
 
   return (
     <Box
@@ -29,7 +32,7 @@ function SingleForecast(props: { data: ForecastTupple }) {
         fontSize="large"
         sx={{ gridArea: 'weather', whiteSpace: 'nowrap' }}
       >
-        {data?.weather ? data.weather[0]?.description || '' : ''}
+        {data.weather?.[0]?.description || ''}
       </Typography>
       <Typography
         fontSize="large"
@@ -39,7 +42,7 @@ function SingleForecast(props: { data: ForecastTupple }) {
           overflow: 'hidden',
         }}
       >
-        {round(data?.main?.temp_min)} / {round(data?.main?.temp_max)}&deg;C
+        {round(data.main?.temp_min)} / {round(data.main?.temp_max)}&deg;C
       </Typography>
       <Box sx={{ gridArea: 'icon' }}>
         <Icon

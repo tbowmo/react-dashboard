@@ -48,10 +48,8 @@ export type Room = {
   avctrl?: {
     scene: string
   }
-  media: ChromeCast
-  light?: {
-    [keys in string]?: number
-  }
+  media?: ChromeCast
+  light?: Record<string, number>
 }
 
 export type Garden = {
@@ -60,21 +58,11 @@ export type Garden = {
   }
 }
 
-export type Presence = {
-  [person in string]?: {
-    [device in string]?: boolean
-  }
-}
+export type Presence = Record<string, Record<string, boolean>>
 
 export type Global = {
-  utility?: {
-    [key in string]?: number
-  }
-  heating?: {
-    [key in string]?: number
-  }
+  utility?: Record<string, number>
+  heating?: Record<string, number>
 }
 
-export type Home = {
-  [keys in string]?: Room | Presence | Global | Garden
-}
+export type Home = Record<string, Room | Presence | Global | Garden>

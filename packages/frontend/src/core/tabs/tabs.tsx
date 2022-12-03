@@ -1,5 +1,4 @@
 import * as React from 'react'
-import SwipeableViews from 'react-swipeable-views'
 import { Tab, Tabs, Box } from '@mui/material'
 import {
   House,
@@ -71,11 +70,11 @@ interface TabPanelProps {
 
 function TabPanel(props: TabPanelProps) {
   const { children, active } = props
-
+  if (!active) {
+    return null
+  }
   return (
-    <Box sx={{ height: '100%', marginLeft: 1, marginRight: 0 }}>
-      {active && children}
-    </Box>
+    <Box sx={{ height: '100%', marginLeft: 1, marginRight: 0 }}>{children}</Box>
   )
 }
 
@@ -84,10 +83,6 @@ export function IotTabs() {
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue)
-  }
-
-  const handleChangeIndex = (index: number) => {
-    setActiveTab(index)
   }
 
   return (
@@ -115,22 +110,13 @@ export function IotTabs() {
           />
         ))}
       </Tabs>
-      <SwipeableViews
-        axis="y"
-        index={activeTab}
-        onChangeIndex={handleChangeIndex}
-        style={{ width: '100%', height: '100%' }}
-        containerStyle={{ width: '100%', height: '100%' }}
-        slideStyle={{ height: '100%' }}
-        enableMouseEvents
-        resistance
-      >
+      <Box sx={{ width: '100%', height: '100%' }}>
         {menuLinks.map((menuEntry, index) => (
           <TabPanel active={activeTab === index} key={menuEntry.label}>
             {menuEntry.component}
           </TabPanel>
         ))}
-      </SwipeableViews>
+      </Box>
     </Box>
   )
 }

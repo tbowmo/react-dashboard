@@ -6,6 +6,7 @@ import { Provider } from 'react-redux'
 import store from './core/data/store'
 import { CssBaseline, ThemeProvider, StyledEngineProvider } from '@mui/material'
 import { theme } from './theme'
+import { RecoilRoot } from 'recoil'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
@@ -16,7 +17,9 @@ root.render(
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <Provider store={store}>
-            <App />
+            <RecoilRoot>
+              <App />
+            </RecoilRoot>
           </Provider>
         </ThemeProvider>
       </StyledEngineProvider>
