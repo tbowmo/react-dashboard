@@ -1,4 +1,3 @@
-import React from 'react'
 import { DashTop } from './core/dash-top/dash-top'
 import { IotTabs } from './core/tabs/tabs'
 import { SSEProvider } from 'react-hooks-sse'
@@ -8,11 +7,7 @@ import { TabsProvider } from './core/tabs/tabs-context'
 
 export function App() {
   return (
-    <SSEProvider
-      endpoint={
-        import.meta.env.DEV ? 'http://localhost:5000/api/sse' : '/api/sse'
-      }
-    >
+    <SSEProvider endpoint="/api/sse">
       <SSEHandler>
         <TabsProvider>
           <Box
