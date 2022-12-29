@@ -9,9 +9,10 @@ the plan is to use an old tablet, mounted in a frame on the wall as interface fo
 
 This _may_ work for you (most probably it won't). But I have put it out there in order for demonstrational purpose. Some implementations might even be wrong! You have been warned!
 
-![main dashboard](screenshot/main.png)
+![weather station view](screenshot/main.png)
 
 ![radio channels](screenshot/radio.png)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![plauing media](screenshot/playing.png)
 
+![control light](screenshot/remote.png)

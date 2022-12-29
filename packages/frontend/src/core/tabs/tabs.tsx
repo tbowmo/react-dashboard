@@ -17,7 +17,7 @@ import { WifiPassPhrase } from '../../pages/wifi/wifi-pass-phrase'
 import { useTabs } from './tabs-context'
 import { Scene } from '../../pages/scene/scene'
 import { RemoteTv } from 'mdi-material-ui'
-import { Utility } from '../../pages/utility/utility'
+import { Electricity } from '../../pages/electricity/electricity'
 
 type MenuEntry = {
   label: string
@@ -54,7 +54,7 @@ const menuLinks: MenuEntry[] = [
   {
     label: 'Utility',
     icon: ShowChart,
-    component: <Utility />,
+    component: <Electricity />,
   },
   {
     label: 'Wifi',

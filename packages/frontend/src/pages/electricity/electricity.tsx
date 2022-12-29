@@ -1,6 +1,5 @@
 import {
   TableContainer,
-  Paper,
   TableHead,
   TableCell,
   Table,
@@ -14,7 +13,7 @@ import { LineChart, Line, XAxis, YAxis } from 'recharts'
 import { format, parseISO } from 'date-fns'
 import { GridCard } from '../../core/card-2-line/grid-card'
 
-export function Utility() {
+export function Electricity() {
   const data = useUtilityPrices(12)
 
   const formattedPrices = React.useMemo(
@@ -31,15 +30,15 @@ export function Utility() {
   )
   return (
     <Grid container>
-      <GridCard columns={10}>
+      <GridCard>
         <LineChart width={900} height={600} data={formattedPrices}>
           <Line type="stepBefore" dataKey="totalPrice" stroke="#8884d8" />
           <XAxis dataKey="hour" />
           <YAxis />
         </LineChart>
       </GridCard>
-      <GridCard>
-        <TableContainer component={Paper}>
+      <GridCard columns={2}>
+        <TableContainer>
           <Table size="small">
             <TableHead>
               <TableRow>
