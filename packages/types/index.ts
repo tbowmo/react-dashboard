@@ -1,4 +1,4 @@
-type supportedFeatures = {
+type SupportedFeatures = {
   skip_fwd: boolean
   skip_bck: boolean
   pause: boolean
@@ -25,7 +25,7 @@ export type Capabilities = {
   volume: number
   muted: boolean
   app_icon: string
-  supported_features: supportedFeatures
+  supported_features: SupportedFeatures
 }
 
 export type ChromeCast = {

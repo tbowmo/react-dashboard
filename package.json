@@ -48,7 +48,7 @@
     "build": "dotenv-load lerna run build",
     "format": "prettier --write packages/**/*.ts{,x}",
     "coverage": "nyc --clean --cache false mocha --opts test/mocha-global.opts --forbid-only",
-    "lint": "eslint packages/*/src/**/*.ts{,x}",
+    "lint": "eslint packages/*/src/**/*.ts{,x} packages/*/*.ts{,x}",
     "postinstall": "husky install"
   },
   "lint-staged": {
