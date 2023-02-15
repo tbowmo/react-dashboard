@@ -1,11 +1,11 @@
-import * as React from 'react'
-import { useCurrentWeather, useSSENumber } from '../../core/data'
+import React from 'react'
 import { ArrowRightThinCircleOutline } from 'mdi-material-ui'
-import { getCompassHeading, wind, iconMap, round } from './weather-functions'
 import { Grid, Typography, Box } from '@mui/material'
-import { GridCard } from '../../core/card-2-line/grid-card'
 import { SvgIconComponent } from '@mui/icons-material'
+import { getCompassHeading, wind, iconMap, round } from './weather-functions'
 import { Forecast } from './forecast'
+import { GridCard } from '../../core/card-2-line/grid-card'
+import { useCurrentWeather, useSSENumber } from '../../core/data'
 
 export function Weather() {
   const weather = useCurrentWeather()

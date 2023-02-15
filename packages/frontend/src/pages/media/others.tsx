@@ -1,7 +1,7 @@
-import * as React from 'react'
+import React from 'react'
 import { Album, Tv, Games } from '@mui/icons-material'
-import { MediaProp } from './media-prop'
 import { Box } from '@mui/material'
+import { MediaProp } from './media-prop'
 
 type Props = {
   deviceType: string

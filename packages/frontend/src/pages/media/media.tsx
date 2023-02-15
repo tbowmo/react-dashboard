@@ -1,11 +1,11 @@
-import * as React from 'react'
-import { useChromecast, useSSEString } from '../../core/data'
-import { Weather } from '../weather/weather'
+import React from 'react'
+import { Box } from '@mui/material'
 import { Streaming } from './streaming'
 import { RadioTv } from './radio-tv'
 import { Others } from './others'
 import { Remote } from './remote'
-import { Box } from '@mui/material'
+import { Weather } from '../weather/weather'
+import { useChromecast, useSSEString } from '../../core/data'
 
 export function Controller() {
   const cast = useChromecast('stuen')

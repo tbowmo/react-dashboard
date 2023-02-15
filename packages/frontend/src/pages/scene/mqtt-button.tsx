@@ -1,8 +1,8 @@
-import * as React from 'react'
-import { deviceSet, DeviceType } from './device-set'
-import { useTabs } from '../../core/tabs/tabs-context'
+import React from 'react'
 import { SvgIconComponent } from '@mui/icons-material'
+import { deviceSet, DeviceType } from './device-set'
 import { MqttAction } from './mqtt-action'
+import { useTabs } from '../../core/tabs/tabs-context'
 
 export type Props = {
   label?: string

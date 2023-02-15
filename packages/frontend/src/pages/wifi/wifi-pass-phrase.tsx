@@ -1,5 +1,5 @@
 import { Grid, Typography } from '@mui/material'
-import * as React from 'react'
+import React from 'react'
 import QRCode from 'qrcode.react'
 import { useSSEString } from '../../core/data'
 

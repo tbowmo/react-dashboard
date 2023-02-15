@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import { Tab, Tabs, Box } from '@mui/material'
 import {
   House,
@@ -9,14 +9,14 @@ import {
   Wifi,
   SvgIconComponent,
 } from '@mui/icons-material'
+import { RemoteTv } from 'mdi-material-ui'
+import { useTabs } from './tabs-context'
 import { Controller } from '../../pages/media/media'
 import { Streams } from '../../pages/streams/streams'
 import { Weather } from '../../pages/weather/weather'
 import { Surveilance } from '../../pages/surveilance/surveilance'
 import { WifiPassPhrase } from '../../pages/wifi/wifi-pass-phrase'
-import { useTabs } from './tabs-context'
 import { Scene } from '../../pages/scene/scene'
-import { RemoteTv } from 'mdi-material-ui'
 import { Electricity } from '../../pages/electricity/electricity'
 
 type MenuEntry = {

@@ -1,7 +1,7 @@
-import * as React from 'react'
-import { useAppDispatch } from '../store'
+import React from 'react'
 import { useSSE } from 'react-hooks-sse'
 import { incommingData, initialData } from './sse.slice'
+import { useAppDispatch } from '../store'
 
 type Props = {
   children?: React.ReactNode

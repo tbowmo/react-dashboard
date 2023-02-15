@@ -1,5 +1,5 @@
 import { Card, Button, Box, Grid, BoxProps, GridSize } from '@mui/material'
-import * as React from 'react'
+import React from 'react'
 
 export type GridCardProps = BoxProps & { columns?: GridSize }
 

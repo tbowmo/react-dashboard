@@ -1,8 +1,8 @@
 import { parseISO } from 'date-fns'
 import { useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { RootState, useAppDispatch } from '../store'
 import { fetchPrices, fetchTarrifs } from './utility.slice'
+import { RootState, useAppDispatch } from '../store'
 
 function useTarrifs() {
   const tarrifs = useSelector((state: RootState) => state.utility.tarrifs)
@@ -43,7 +43,7 @@ export function useUtilityPrices(hoursAhead: number) {
         hour: item.HourDK,
         price,
         tarrif,
-        totalPrice: (price + tarrif + 0.76) * 1.25,
+        totalPrice: (price + tarrif + 0.008) * 1.25,
       }
     })
   }, [filteredPrices, tarrifs])

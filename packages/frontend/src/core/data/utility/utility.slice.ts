@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { api } from '../use-api'
 import { isAfter, isBefore, parseISO } from 'date-fns'
+import { api } from '../use-api'
 
 type SpotPrice = {
   SpotPriceEUR: number

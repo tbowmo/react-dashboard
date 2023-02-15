@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import {
   Album,
   Games,
@@ -7,11 +7,11 @@ import {
   PowerSettingsNew,
   SvgIconComponent,
 } from '@mui/icons-material'
+import { Box } from '@mui/material'
 import { LightDimmer } from './mqtt-light-dimmer'
 import { MqttButton } from './mqtt-button'
 import { MqttToggle } from './mqtt-toggle'
 import { useSSEString } from '../../core/data'
-import { Box } from '@mui/material'
 
 type Action = {
   label: string

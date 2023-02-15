@@ -1,8 +1,8 @@
+import { SSEProvider } from 'react-hooks-sse'
+import { Box } from '@mui/material'
 import { DashTop } from './core/dash-top/dash-top'
 import { IotTabs } from './core/tabs/tabs'
-import { SSEProvider } from 'react-hooks-sse'
 import { SSEHandler } from './core/data'
-import { Box } from '@mui/material'
 import { TabsProvider } from './core/tabs/tabs-context'
 
 export function App() {

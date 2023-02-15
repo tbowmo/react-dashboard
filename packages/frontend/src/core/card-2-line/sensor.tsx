@@ -1,8 +1,8 @@
-import * as React from 'react'
-import { useSSENumber } from '../data'
+import React from 'react'
 import { Typography, Box } from '@mui/material'
 import { Card2Line, SensorValue } from './card-2-line'
 import { GridCardProps } from './grid-card'
+import { useSSENumber } from '../data'
 
 type Props = Omit<GridCardProps, 'children'> & {
   room: string

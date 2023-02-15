@@ -1,8 +1,8 @@
-import * as React from 'react'
+import React from 'react'
 import { Media, Capabilities } from '@dashboard/types'
+import { Box } from '@mui/material'
 import { Duration } from './duration'
 import { MediaProp } from './media-prop'
-import { Box } from '@mui/material'
 
 type Props = {
   media: Media

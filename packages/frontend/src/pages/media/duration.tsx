@@ -1,8 +1,8 @@
-import * as React from 'react'
+import React from 'react'
 import { Typography } from '@mui/material'
 import { keyframes } from '@mui/system'
-import { MediaCard } from './media-card'
 import { Media, Capabilities } from '@dashboard/types'
+import { MediaCard } from './media-card'
 
 function secondsToHms(seconds: number) {
   const lz = (n: number): string => (n > 9 ? `${n}` : `0${n}`)
@@ -29,6 +29,7 @@ export function Duration(props: {
   state: Capabilities['state']
 }) {
   const {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     media: { current_time, duration },
     state,
   } = props

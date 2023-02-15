@@ -1,8 +1,8 @@
-import * as React from 'react'
-import { Sensor } from '../card-2-line/sensor'
+import React from 'react'
 import { Grid } from '@mui/material'
 
 import { Clock } from './clock'
+import { Sensor } from '../card-2-line/sensor'
 
 type TotalEntry = {
   label: string

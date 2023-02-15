@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 
 const DEFAULTTAB = 0 // for debugging, this can be set to whatever tab you need
 

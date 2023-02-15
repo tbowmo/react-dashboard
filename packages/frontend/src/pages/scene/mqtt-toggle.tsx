@@ -1,8 +1,8 @@
-import * as React from 'react'
-import { useSSEBoolean } from '../../core/data'
+import React from 'react'
 import { ToggleOff, ToggleOn, SvgIconComponent } from '@mui/icons-material'
 import { deviceSet, DeviceType } from './device-set'
 import { MqttAction } from './mqtt-action'
+import { useSSEBoolean } from '../../core/data'
 
 type Props = {
   label: string

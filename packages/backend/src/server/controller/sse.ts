@@ -1,7 +1,7 @@
 import { Express } from 'express'
+import { createSession, createChannel } from 'better-sse'
 import { Mqtt } from '../../mqtt/mqtt'
 import { MemoryStore } from '../../mqtt/memory-store'
-import { createSession, createChannel } from 'better-sse'
 
 const channel = createChannel()
 const store = MemoryStore.get(channel)

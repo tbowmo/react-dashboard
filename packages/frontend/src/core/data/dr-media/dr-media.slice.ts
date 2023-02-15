@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { api } from '../use-api'
 import { DRMedia } from './dr-media-type'
+import { api } from '../use-api'
 
 export type DrMediaState = {
   channels: DRMedia[] | undefined

@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import {
   FastRewind,
   FastForward,
@@ -9,17 +9,17 @@ import {
   PlayArrow,
   SvgIconComponent,
 } from '@mui/icons-material'
-import { useChromecast } from '../../core/data'
 import { IconButton, Box } from '@mui/material'
+import { useChromecast } from '../../core/data'
 
-type controlKey = {
+type ControlKey = {
   icon: SvgIconComponent | undefined
   key: string
   state: 'ALL' | 'PAUSED' | 'PLAYING' | 'none'
   repeat?: boolean
 }
 
-const functions: controlKey[] = [
+const functions: ControlKey[] = [
   {
     icon: VolumeUp,
     key: 'volumeup',
@@ -75,11 +75,11 @@ function stopInterval() {
 
 export function Remote() {
   const [activeKey, setActiveKey] = React.useState<string>('')
-  const [repeat, setRepeat] = React.useState<controlKey | undefined>(undefined)
+  const [repeat, setRepeat] = React.useState<ControlKey | undefined>(undefined)
 
   const capabilities = useChromecast('stuen')
 
-  function buttonDown(target: controlKey) {
+  function buttonDown(target: ControlKey) {
     setRepeat(target)
     setActiveKey(target.key)
     fetch(`/remote/stuen/${target.key}`).then(() => {})

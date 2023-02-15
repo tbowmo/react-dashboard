@@ -1,9 +1,9 @@
-import { CurrentWeatherDto, ForecastDto } from './weather-types'
 import { useSelector } from 'react-redux'
-import type { CurrentWeather, ForecastWeather } from './weather.slice'
-import { RootState, useAppDispatch } from '../store'
-import { fetchCurrent, fetchForecast } from './weather.slice'
 import { useEffect } from 'react'
+import { CurrentWeatherDto, ForecastDto } from './weather-types'
+import { fetchCurrent, fetchForecast } from './weather.slice'
+import { RootState, useAppDispatch } from '../store'
+import type { CurrentWeather, ForecastWeather } from './weather.slice'
 
 type TimerType = {
   timer?: ReturnType<typeof setInterval>

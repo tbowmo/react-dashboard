@@ -7,10 +7,10 @@ import {
   TableRow,
   Grid,
 } from '@mui/material'
-import * as React from 'react'
-import { useUtilityPrices } from '../../core/data'
+import React from 'react'
 import { LineChart, Line, XAxis, YAxis } from 'recharts'
 import { format, parseISO } from 'date-fns'
+import { useUtilityPrices } from '../../core/data'
 import { GridCard } from '../../core/card-2-line/grid-card'
 
 export function Electricity() {

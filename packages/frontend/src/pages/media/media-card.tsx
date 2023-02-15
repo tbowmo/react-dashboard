@@ -1,6 +1,6 @@
-import * as React from 'react'
-import { GridCard } from '../../core/card-2-line/grid-card'
+import React from 'react'
 import { Box, Typography } from '@mui/material'
+import { GridCard } from '../../core/card-2-line/grid-card'
 
 type Props = {
   label: string

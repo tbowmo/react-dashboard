@@ -1,10 +1,10 @@
-import * as React from 'react'
-import { useForecastWeather, ForecastTupple } from '../../core/data'
+import React from 'react'
 import { Grid, Box, Typography } from '@mui/material'
-import { GridCard } from '../../core/card-2-line/grid-card'
 import { SvgIconComponent } from '@mui/icons-material'
-import { iconMap, round } from './weather-functions'
 import { format } from 'date-fns'
+import { iconMap, round } from './weather-functions'
+import { GridCard } from '../../core/card-2-line/grid-card'
+import { useForecastWeather, ForecastTupple } from '../../core/data'
 
 function SingleForecast(props: { data: ForecastTupple }) {
   const { data } = props

@@ -1,8 +1,8 @@
 import { format } from 'date-fns'
-import * as React from 'react'
-import { Card2Line, SensorValue } from '../card-2-line/card-2-line'
+import React from 'react'
 import { da } from 'date-fns/locale'
 import { Box } from '@mui/material'
+import { Card2Line, SensorValue } from '../card-2-line/card-2-line'
 
 export function Clock() {
   const [time, setTime] = React.useState<Date>(new Date())

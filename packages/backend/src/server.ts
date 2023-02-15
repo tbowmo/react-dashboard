@@ -1,13 +1,13 @@
 import 'reflect-metadata'
+import * as path from 'path'
+import * as fs from 'fs'
 import express from 'express'
 import * as bodyParser from 'body-parser'
 import { Request, Response } from 'express'
-import { Routes } from './server/routes'
-import * as path from 'path'
 import * as dotenv from 'dotenv'
-import * as fs from 'fs'
-import { registerSse } from './server/controller/sse'
 import cors = require('cors')
+import { Routes } from './server/routes'
+import { registerSse } from './server/controller/sse'
 import { Mqtt } from './mqtt/mqtt'
 
 let envFile = path.resolve('..', '..', '.env')

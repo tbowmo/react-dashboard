@@ -1,10 +1,10 @@
 import React from 'react'
 import { Slider, Box, Modal, Typography } from '@mui/material'
-import { useSSENumber } from '../../core/data'
-import { deviceSet } from './device-set'
-import { useTabs } from '../../core/tabs/tabs-context'
 import { Lightbulb, LightbulbOutlined } from '@mui/icons-material'
+import { deviceSet } from './device-set'
 import { MqttAction } from './mqtt-action'
+import { useSSENumber } from '../../core/data'
+import { useTabs } from '../../core/tabs/tabs-context'
 
 type Props = {
   room?: string

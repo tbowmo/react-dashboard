@@ -1,5 +1,4 @@
-import * as React from 'react'
-import { useTabs } from '../../core/tabs/tabs-context'
+import React from 'react'
 import {
   CardContent,
   Typography,
@@ -9,6 +8,7 @@ import {
   Card,
 } from '@mui/material'
 import { format } from 'date-fns'
+import { useTabs } from '../../core/tabs/tabs-context'
 import { useDrMedia, Media } from '../../core/data'
 
 export function Streams() {

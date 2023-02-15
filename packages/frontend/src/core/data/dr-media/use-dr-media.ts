@@ -1,8 +1,7 @@
 import { useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { RootState, useAppDispatch } from '../store'
-import { fetchDrMedia } from './dr-media.slice'
 import { isBefore, parseISO } from 'date-fns'
+import { fetchDrMedia } from './dr-media.slice'
 import drp1 from './logo/DRP1_logo_primaer_RGB.svg'
 import drp2 from './logo/DRP2_logo_primaer_RGB.svg'
 import drp3 from './logo/DRP3_logo_primaer_RGB.svg'
@@ -10,6 +9,7 @@ import drp4 from './logo/DRP4_logo_primaer_RGB.svg'
 import drp5 from './logo/DRP5_logo_primaer_RGB.svg'
 import drp6 from './logo/DRP6_logo_primaer_RGB.svg'
 import drp8 from './logo/DRP8_logo_primaer_RGB.svg'
+import { RootState, useAppDispatch } from '../store'
 
 export type Media = {
   id: string
