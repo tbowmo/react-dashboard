@@ -10,7 +10,7 @@ import {
   SvgIconComponent,
 } from '@mui/icons-material'
 import { IconButton, Box } from '@mui/material'
-import { useChromecast } from '../../core/data'
+import { useChromeCast } from '../../core/data'
 
 type ControlKey = {
   icon: SvgIconComponent | undefined
@@ -77,7 +77,7 @@ export function Remote() {
   const [activeKey, setActiveKey] = React.useState<string>('')
   const [repeat, setRepeat] = React.useState<ControlKey | undefined>(undefined)
 
-  const capabilities = useChromecast('stuen')
+  const capabilities = useChromeCast('stuen')
 
   function buttonDown(target: ControlKey) {
     setRepeat(target)

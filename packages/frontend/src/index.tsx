@@ -1,10 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter as Router } from 'react-router-dom'
-import { Provider } from 'react-redux'
 import { CssBaseline, ThemeProvider, StyledEngineProvider } from '@mui/material'
 import { RecoilRoot } from 'recoil'
-import store from './core/data/store'
 import { theme } from './theme'
 import { App } from './app'
 
@@ -16,11 +14,9 @@ root.render(
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <Provider store={store}>
-            <RecoilRoot>
-              <App />
-            </RecoilRoot>
-          </Provider>
+          <RecoilRoot>
+            <App />
+          </RecoilRoot>
         </ThemeProvider>
       </StyledEngineProvider>
     </Router>

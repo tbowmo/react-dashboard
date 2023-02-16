@@ -2,13 +2,13 @@ import { SSEProvider } from 'react-hooks-sse'
 import { Box } from '@mui/material'
 import { DashTop } from './core/dash-top/dash-top'
 import { IotTabs } from './core/tabs/tabs'
-import { SSEHandler } from './core/data'
 import { TabsProvider } from './core/tabs/tabs-context'
+import { SSEAtomHandler } from './core/data/sse/sse-atom-handler'
 
 export function App() {
   return (
     <SSEProvider endpoint="/api/sse">
-      <SSEHandler>
+      <SSEAtomHandler>
         <TabsProvider>
           <Box
             sx={{
@@ -22,7 +22,7 @@ export function App() {
             <IotTabs />
           </Box>
         </TabsProvider>
-      </SSEHandler>
+      </SSEAtomHandler>
     </SSEProvider>
   )
 }

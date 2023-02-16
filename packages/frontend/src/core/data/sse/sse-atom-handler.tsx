@@ -1,15 +1,16 @@
 import React from 'react'
 import { useSSE } from 'react-hooks-sse'
-import { incommingData, initialData } from './sse.slice'
-import { useAppDispatch } from '../store'
+import { useLoadInitialRoom, useLocationUpdater } from './sse-atom'
 
 type Props = {
   children?: React.ReactNode
 }
 
-export function SSEHandler(props: Props) {
+export function SSEAtomHandler(props: Props) {
   const { children } = props
-  const dispatch = useAppDispatch()
+
+  const loadInitialRoom = useLoadInitialRoom()
+  const updateLocation = useLocationUpdater()
 
   const initial = useSSE(
     'initial',
@@ -26,9 +27,11 @@ export function SSEHandler(props: Props) {
 
   React.useEffect(() => {
     if (initial) {
-      dispatch(initialData(initial))
+      for (const location of Object.keys(initial)) {
+        loadInitialRoom(location, initial[location])
+      }
     }
-  }, [initial, dispatch])
+  }, [initial, loadInitialRoom])
 
   const updates = useSSE(
     'updates',
@@ -45,9 +48,9 @@ export function SSEHandler(props: Props) {
 
   React.useEffect(() => {
     if (updates) {
-      dispatch(incommingData(updates))
+      updateLocation(updates.topic, updates.payload)
     }
-  }, [updates, dispatch])
+  }, [updateLocation, updates])
 
   return <React.Fragment>{children}</React.Fragment>
 }

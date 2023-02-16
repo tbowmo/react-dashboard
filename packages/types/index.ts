@@ -65,4 +65,14 @@ export type Global = {
   heating?: Record<string, number>
 }
 
-export type Home = Record<string, Room | Presence | Global | Garden>
+export type HomeEntity = Room | Presence | Global | Garden
+
+export type StrongHomeEntity<T extends HomeEntity> = T extends Room
+  ? Room
+  : T extends Garden
+  ? Garden
+  : T extends Global
+  ? Global
+  : Presence
+
+export type Home = Record<string, HomeEntity>

@@ -10,8 +10,9 @@ import {
 import { format } from 'date-fns'
 import { useTabs } from '../../core/tabs/tabs-context'
 import { useDrMedia, Media } from '../../core/data'
+import { SuspenseFallback } from '../../core/suspense-fallback'
 
-export function Streams() {
+export function InnerStreams() {
   const media = useDrMedia()
 
   const { startTimer } = useTabs()
@@ -85,5 +86,13 @@ export function Streams() {
         </Box>
       ))}
     </Box>
+  )
+}
+
+export function Streams() {
+  return (
+    <React.Suspense fallback={<SuspenseFallback />}>
+      <InnerStreams />
+    </React.Suspense>
   )
 }

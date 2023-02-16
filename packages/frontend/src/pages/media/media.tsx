@@ -5,10 +5,10 @@ import { RadioTv } from './radio-tv'
 import { Others } from './others'
 import { Remote } from './remote'
 import { Weather } from '../weather/weather'
-import { useChromecast, useSSEString } from '../../core/data'
+import { useChromeCast, useSSEString } from '../../core/data'
 
 export function Controller() {
-  const cast = useChromecast('stuen')
+  const cast = useChromeCast('stuen')
 
   const avcenter = useSSEString('stuen', 'avctrl', 'scene') || ''
 

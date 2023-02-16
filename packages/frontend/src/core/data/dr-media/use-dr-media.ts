@@ -1,7 +1,12 @@
-import { useEffect, useMemo } from 'react'
-import { useSelector } from 'react-redux'
+import { useEffect } from 'react'
 import { isBefore, parseISO } from 'date-fns'
-import { fetchDrMedia } from './dr-media.slice'
+import {
+  atom,
+  DefaultValue,
+  selector,
+  useRecoilValue,
+  useResetRecoilState,
+} from 'recoil'
 import drp1 from './logo/DRP1_logo_primaer_RGB.svg'
 import drp2 from './logo/DRP2_logo_primaer_RGB.svg'
 import drp3 from './logo/DRP3_logo_primaer_RGB.svg'
@@ -9,7 +14,8 @@ import drp4 from './logo/DRP4_logo_primaer_RGB.svg'
 import drp5 from './logo/DRP5_logo_primaer_RGB.svg'
 import drp6 from './logo/DRP6_logo_primaer_RGB.svg'
 import drp8 from './logo/DRP8_logo_primaer_RGB.svg'
-import { RootState, useAppDispatch } from '../store'
+import { DRMedia } from './dr-media-type'
+import { api } from '../use-api'
 
 export type Media = {
   id: string
@@ -62,49 +68,74 @@ function logo(channelName: string) {
   }
 }
 
-export function useDrMedia(): Media[] | undefined {
-  const { channels, pending } = useSelector((state: RootState) => state.drMedia)
-  const dispatch = useAppDispatch()
+const drRefresh = atom<number>({
+  key: 'DrMediaRefresh',
+  default: 0,
+})
 
-  const filteredChannels = useMemo(
-    (): Media[] | undefined =>
-      channels
-        ?.filter((channel) => validChannels.includes(channel.now.channel.slug))
-        .map((channel): Media | undefined => {
-          const prg = [channel.now, channel.next]?.filter((programme) =>
-            isBefore(dateConverter(programme.startTime), Date.now()),
-          )?.[0]
-
-          if (!prg) {
-            return undefined
-          }
-
-          const startTime = dateConverter(prg.startTime)
-          const endTime = dateConverter(prg.endTime)
-
-          return {
-            id: channel.now.channel.slug,
-            channelName: channel.now.channel.title,
-            channelIcon: logo(channel.now.channel.slug),
-            startTime,
-            endTime,
-            title: prg.title || channel.now.channel.title,
-            link:
-              channel.now.audioAssets.find((item) => item.bitrate === 192)
-                ?.url || '',
-            avatar: imgUrl(prg.imageAssets[0].id),
-            type: 'audio',
-            duration: (endTime.getTime() - startTime.getTime()) / 1000,
-          }
-        })
-        .filter(isNotUndefined),
-    [channels],
-  )
-
-  useEffect(() => {
-    if (!filteredChannels?.length) {
-      dispatch(fetchDrMedia())
+const drMediaSelector = selector<DRMedia[]>({
+  key: 'DrMediaSelector',
+  get: ({ get }) => {
+    get(drRefresh)
+    return api<DRMedia[]>('https://api.dr.dk/radio/v2/schedules/all/now-next')
+  },
+  set: ({ set }, value) => {
+    if (value instanceof DefaultValue) {
+      set(drRefresh, (v) => v + 1)
     }
-  }, [filteredChannels, pending, dispatch])
+  },
+})
+
+const filteredMedia = selector<Media[] | undefined>({
+  key: 'filteredMedia',
+  get: ({ get }) => {
+    const channels = get(drMediaSelector)
+
+    return channels
+      ?.filter((channel) => validChannels.includes(channel.now.channel.slug))
+      .map((channel): Media | undefined => {
+        const prg = [channel.now, channel.next]?.filter((programme) =>
+          isBefore(dateConverter(programme.startTime), Date.now()),
+        )?.[0]
+
+        if (!prg) {
+          return undefined
+        }
+
+        const startTime = dateConverter(prg.startTime)
+        const endTime = dateConverter(prg.endTime)
+
+        return {
+          id: channel.now.channel.slug,
+          channelName: channel.now.channel.title,
+          channelIcon: logo(channel.now.channel.slug),
+          startTime,
+          endTime,
+          title: prg.title || channel.now.channel.title,
+          link:
+            channel.now.audioAssets.find((item) => item.bitrate === 192)?.url ||
+            '',
+          avatar: imgUrl(prg.imageAssets[0].id),
+          type: 'audio',
+          duration: (endTime.getTime() - startTime.getTime()) / 1000,
+        }
+      })
+      .filter(isNotUndefined)
+  },
+  set: ({ set }, value) => {
+    if (value instanceof DefaultValue) {
+      set(drRefresh, (v) => v + 1)
+    }
+  },
+})
+
+export function useDrMedia(): Media[] | undefined {
+  const filteredChannels = useRecoilValue(filteredMedia)
+  const resetChannels = useResetRecoilState(filteredMedia)
+  useEffect(() => {
+    if (filteredChannels && !filteredChannels.length) {
+      resetChannels()
+    }
+  }, [filteredChannels, resetChannels])
   return filteredChannels
 }

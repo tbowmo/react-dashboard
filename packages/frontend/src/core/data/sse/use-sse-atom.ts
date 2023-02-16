@@ -1,17 +1,17 @@
-import { useSelector } from 'react-redux'
 import { ChromeCast, Room } from '@dashboard/types'
-import { RootState } from '../store'
+import { useLocation, useStrongTypedLocation } from './sse-atom'
 
 export function useSSEString(
   room: string | undefined,
   deviceType: string | undefined,
   device: string | undefined,
 ): string | undefined {
-  const data = useSelector((state: RootState) => state.sse)
+  const data = useLocation(room)
   if (!room || !deviceType || !device) {
     return undefined
   }
-  return data[room]?.[deviceType]?.[device]
+
+  return data?.[deviceType]?.[device]?.toString()
 }
 
 export function useSSENumber(
@@ -40,18 +40,14 @@ export function useSSEBoolean(
   return undefined
 }
 
-export function useChromecast(room = 'stuen'): ChromeCast | undefined {
-  const data = useSelector((state: RootState) => state.sse)
-  if (data[room]) {
-    return (data[room] as Room)?.media
-  }
-  return undefined
+export function useChromeCast(room = 'stuen'): ChromeCast | undefined {
+  return useStrongTypedLocation<Room>(room)?.media
 }
 
 export function useDevices(room: string, type: string): string[] {
-  const data = useSelector((state: RootState) => state.sse)
-  if (data[room] && data[room]?.[type]) {
-    return Object.keys(data[room]?.[type])
+  const data = useLocation(room)
+  if (data?.[type]) {
+    return Object.keys(data[type])
   }
   return []
 }
