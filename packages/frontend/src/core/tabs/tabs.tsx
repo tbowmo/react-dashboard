@@ -18,6 +18,7 @@ import { Surveilance } from '../../pages/surveilance/surveilance'
 import { WifiPassPhrase } from '../../pages/wifi/wifi-pass-phrase'
 import { Scene } from '../../pages/scene/scene'
 import { Electricity } from '../../pages/electricity/electricity'
+import { SuspenseFallback } from '../suspense-fallback'
 
 type MenuEntry = {
   label: string
@@ -111,11 +112,13 @@ export function IotTabs() {
         ))}
       </Tabs>
       <Box sx={{ width: '100%', height: '100%' }}>
-        {menuLinks.map((menuEntry, index) => (
-          <TabPanel active={activeTab === index} key={menuEntry.label}>
-            {menuEntry.component}
-          </TabPanel>
-        ))}
+        <React.Suspense fallback={<SuspenseFallback />}>
+          {menuLinks.map((menuEntry, index) => (
+            <TabPanel active={activeTab === index} key={menuEntry.label}>
+              {menuEntry.component}
+            </TabPanel>
+          ))}
+        </React.Suspense>
       </Box>
     </Box>
   )

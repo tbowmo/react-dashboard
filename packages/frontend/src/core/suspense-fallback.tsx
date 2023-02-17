@@ -1,3 +1,10 @@
+import { Grid } from '@mui/material'
+import { GridCard } from './card-2-line/grid-card'
+
 export function SuspenseFallback() {
-  return <div>Loading data</div>
+  return (
+    <Grid container>
+      <GridCard>Loading data</GridCard>
+    </Grid>
+  )
 }
