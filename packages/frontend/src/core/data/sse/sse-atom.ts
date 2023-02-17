@@ -19,15 +19,15 @@ export function useLocation(location: string | undefined) {
 export function useLocationUpdater() {
   return useRecoilCallback(
     ({ set, snapshot }) =>
-      async (topic: string, payload: string) => {
-        let value = payload
+      async (data: { topic: string; payload: string }) => {
+        let value = data.payload
         try {
-          value = JSON.parse(payload)
+          value = JSON.parse(data.payload)
           // eslint-disable-next-line no-empty
         } catch {}
 
         const [, location, deviceType, device] =
-          topic.match(/home\/([\w-]+)\/([\w-]+)\/([\w-]+)/) || []
+          data.topic.match(/home\/([\w-]+)\/([\w-]+)\/([\w-]+)/) || []
 
         const roomState = (await snapshot.getPromise(homeAtom(location))) || {}
         const typeState = roomState[deviceType] || {}
@@ -49,8 +49,10 @@ export function useLocationUpdater() {
 export function useLoadInitialRoom() {
   return useRecoilCallback(
     ({ set }) =>
-      (location: string, value: HomeEntity) => {
-        set(homeAtom(location), value)
+      (data: Record<string, object>) => {
+        for (const location of Object.keys(data)) {
+          set(homeAtom(location), data[location])
+        }
       },
     [],
   )
