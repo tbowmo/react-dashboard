@@ -1,5 +1,4 @@
 import { Grid } from '@mui/material'
-import React from 'react'
 
 export function Surveilance() {
   return (

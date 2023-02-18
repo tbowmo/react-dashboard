@@ -7,7 +7,6 @@ import {
   TableRow,
   Grid,
 } from '@mui/material'
-import React from 'react'
 import { LineChart, Line, XAxis, YAxis } from 'recharts'
 import { useUtilityPrices } from '../../core/data'
 import { GridCard } from '../../core/card-2-line/grid-card'

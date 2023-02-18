@@ -6,8 +6,10 @@ import { useSSENumber } from '../data'
 
 type Props = Omit<GridCardProps, 'children'> & {
   room: string
-  sensorName1: string
+  sensorName1?: string
+  sensorValue1?: number
   sensorName2?: string
+  sensorValue2?: number
   sensorType?: string
   label: string
   unit1?: string | string[]
@@ -70,6 +72,7 @@ function SingleValue(props: {
   sensorName?: string
   sensorType?: string
   room?: string
+  sensorValue?: number
 }) {
   const {
     unit,
@@ -78,11 +81,12 @@ function SingleValue(props: {
     sensorName,
     sensorType = 'sensors',
     room,
+    sensorValue,
   } = props
 
-  const sensorValue = useSSENumber(room, sensorType, sensorName)
+  const valueSensor = useSSENumber(room, sensorType, sensorName) || sensorValue
   const value = useScaledValue(
-    sensorValue ? sensorValue / divisor : -99,
+    valueSensor ? valueSensor / divisor : -99,
     unit,
     precission,
   )
@@ -105,7 +109,9 @@ function SingleValue(props: {
 export function Sensor(props: Props) {
   const {
     sensorName1,
+    sensorValue1,
     sensorName2,
+    sensorValue2,
     sensorType = 'sensors',
     room,
     label,
@@ -122,6 +128,7 @@ export function Sensor(props: Props) {
       <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1 }}>
         <SingleValue
           sensorName={sensorName1}
+          sensorValue={sensorValue1}
           room={room}
           sensorType={sensorType}
           unit={unit1}
@@ -133,6 +140,7 @@ export function Sensor(props: Props) {
             <SensorValue value="/" />
             <SingleValue
               sensorName={sensorName2}
+              sensorValue={sensorValue2}
               room={room}
               sensorType={sensorType}
               unit={unit2}

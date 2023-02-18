@@ -56,13 +56,33 @@ export type Garden = {
   chickencoop: {
     door: boolean
   }
+  climacell: Record<string, number>
 }
 
 export type Presence = Record<string, Record<string, boolean>>
 
+type Utility = {
+  hour_Wh: number
+  day_Wh: number
+  week_Wh: number
+  month_Wh: number
+  year_Wh: number
+  current_W: number
+  current_Wh: number
+  spot_price_eur: number
+  spot_price_dkk: number
+  transport_tarif_dkk: number
+  spot_price_kwh_eur: number
+  spot_price_kwh_dkk: number
+  kwh_dkk: number
+  gov_charge_dkk: number
+}
+
 export type Global = {
-  utility?: Record<string, number>
+  utility?: Utility
   heating?: Record<string, number>
+  wifi?: Record<string, string>
+  misc?: Record<string, string | number>
 }
 
 export type HomeEntity = Room | Presence | Global | Garden

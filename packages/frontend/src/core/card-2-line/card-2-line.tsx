@@ -1,4 +1,3 @@
-import React from 'react'
 import { Typography } from '@mui/material'
 import { GridCard, GridCardProps } from './grid-card'
 

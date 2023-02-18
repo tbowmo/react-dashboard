@@ -1,4 +1,3 @@
-import React from 'react'
 import { ArrowRightThinCircleOutline } from 'mdi-material-ui'
 import { Grid, Typography, Box } from '@mui/material'
 import { SvgIconComponent } from '@mui/icons-material'

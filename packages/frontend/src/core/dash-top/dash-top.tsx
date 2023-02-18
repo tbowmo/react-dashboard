@@ -1,8 +1,10 @@
 import React from 'react'
 import { Grid } from '@mui/material'
 
+import { Global } from '@dashboard/types'
 import { Clock } from './clock'
 import { Sensor } from '../card-2-line/sensor'
+import { useStrongTypedLocation } from '../data/sse/sse-atom'
 
 type TotalEntry = {
   label: string
@@ -98,6 +100,13 @@ export function DashTop() {
   const humidDp = humidDewPoint[dpIndex]
   const scale = ['Wh', 'kWh', 'MWh']
 
+  const utility = useStrongTypedLocation<Global>('global').utility
+  const electricityPrice =
+    ((utility?.spot_price_kwh_dkk || 0) +
+      (utility?.transport_tarif_dkk || 0) +
+      (utility?.gov_charge_dkk || 0)) *
+    1.25
+
   return (
     <Grid container sx={{ width: '100%' }}>
       <Sensor
@@ -129,7 +138,7 @@ export function DashTop() {
         }}
         room="global"
         sensorType="utility"
-        sensorName1="kwh_dkk"
+        sensorValue1={electricityPrice}
         sensorName2={total.sensor}
         label={total.label}
         precission={2}
