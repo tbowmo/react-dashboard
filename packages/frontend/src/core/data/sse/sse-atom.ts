@@ -1,19 +1,19 @@
 import { HomeEntity, StrongHomeEntity } from '@dashboard/types'
 import { atomFamily, useRecoilCallback, useRecoilValue } from 'recoil'
 
-const homeAtom = atomFamily<HomeEntity | undefined, string>({
-  key: 'AtomSSE',
+export const sseStoreAtom = atomFamily<HomeEntity | undefined, string>({
+  key: 'sseStoreAtom',
   default: {},
 })
 
 export function useStrongTypedLocation<T extends HomeEntity>(
   room: string,
 ): StrongHomeEntity<T> {
-  return useRecoilValue(homeAtom(room)) as StrongHomeEntity<T>
+  return useRecoilValue(sseStoreAtom(room)) as StrongHomeEntity<T>
 }
 
 export function useLocation(location: string | undefined) {
-  return useRecoilValue(homeAtom(location || ''))
+  return useRecoilValue(sseStoreAtom(location || ''))
 }
 
 export function useLocationUpdater() {
@@ -29,7 +29,8 @@ export function useLocationUpdater() {
         const [, location, deviceType, device] =
           data.topic.match(/home\/([\w-]+)\/([\w-]+)\/([\w-]+)/) || []
 
-        const roomState = (await snapshot.getPromise(homeAtom(location))) || {}
+        const roomState =
+          (await snapshot.getPromise(sseStoreAtom(location))) || {}
         const typeState = roomState[deviceType] || {}
 
         const locationState = {
@@ -40,7 +41,7 @@ export function useLocationUpdater() {
           },
         }
 
-        set(homeAtom(location), locationState)
+        set(sseStoreAtom(location), locationState)
       },
     [],
   )
@@ -51,7 +52,7 @@ export function useLoadInitialRoom() {
     ({ set }) =>
       (data: Record<string, object>) => {
         for (const location of Object.keys(data)) {
-          set(homeAtom(location), data[location])
+          set(sseStoreAtom(location), data[location])
         }
       },
     [],

@@ -1,4 +1,4 @@
-import { format, isAfter, isBefore, parseISO } from 'date-fns'
+import { format, isBefore, parseISO } from 'date-fns'
 import { useEffect, useMemo } from 'react'
 import {
   atom,
@@ -7,8 +7,10 @@ import {
   useRecoilValue,
   useResetRecoilState,
 } from 'recoil'
+import { Global } from '@dashboard/types'
 import { DataHub, SpotPrice, TransportTarrif } from './utility-type'
 import { api } from '../use-api'
+import { sseStoreAtom } from '../sse/sse-atom'
 
 const baseUrl = 'https://api.energidataservice.dk/dataset/'
 
@@ -31,11 +33,12 @@ const tarrifSelector = selector<{ [hour in number]: number } | undefined>({
       `${baseUrl}DatahubPricelist?filter=${filter}`,
     )
 
+    const now = Date.now()
     return response.records
       .filter(
         (item) =>
-          isBefore(parseISO(item.ValidFrom), Date.now()) &&
-          isAfter(parseISO(item.ValidTo), Date.now()),
+          isBefore(parseISO(item.ValidFrom), now) &&
+          isBefore(now, parseISO(item.ValidTo || '3000-01-01')),
       )
       .map((item) => {
         const prices: number[] = []
@@ -89,6 +92,9 @@ export const priceSelector = selector({
     const tarrifs = get(tarrifSelector)
     const prices = get(spotPriceSelector)
 
+    const govCharge =
+      (get(sseStoreAtom('global')) as Global).utility?.gov_charge_dkk || 0
+
     if (!tarrifs || !prices) {
       return
     }
@@ -108,7 +114,7 @@ export const priceSelector = selector({
           hour: item.HourDK,
           price,
           tarrif,
-          totalPrice: (price + tarrif + 0.008) * 1.25,
+          totalPrice: (price + tarrif + govCharge) * 1.25,
         }
       })
       .sort((a, b) => new Date(a.hour).getTime() - new Date(b.hour).getTime())
