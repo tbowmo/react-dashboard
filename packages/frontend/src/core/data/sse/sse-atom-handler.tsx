@@ -7,32 +7,32 @@ type Props = {
 }
 
 function useSseTopic<T extends object>(
-  topic: string,
-  empty: T,
-  callback: (data: T) => void,
+    topic: string,
+    empty: T,
+    callback: (data: T) => void,
 ) {
-  const data = useSSE<T>(topic, empty, {
-    stateReducer(_state, changes) {
-      return changes.data
-    },
-    parser(input: string) {
-      return JSON.parse(input)
-    },
-  })
+    const data = useSSE<T>(topic, empty, {
+        stateReducer(_state, changes) {
+            return changes.data
+        },
+        parser(input: string) {
+            return JSON.parse(input)
+        },
+    })
 
-  React.useEffect(() => {
-    callback(data)
-  }, [data, callback])
+    React.useEffect(() => {
+        callback(data)
+    }, [data, callback])
 }
 
 export function SSEAtomHandler(props: Props) {
-  const { children } = props
+    const { children } = props
 
-  const loadInitialRoom = useLoadInitialRoom()
-  const updateLocation = useLocationUpdater()
+    const loadInitialRoom = useLoadInitialRoom()
+    const updateLocation = useLocationUpdater()
 
-  useSseTopic('initial', {}, loadInitialRoom)
-  useSseTopic('updates', { topic: '', payload: '' }, updateLocation)
+    useSseTopic('initial', {}, loadInitialRoom)
+    useSseTopic('updates', { topic: '', payload: '' }, updateLocation)
 
-  return <React.Fragment>{children}</React.Fragment>
+    return <React.Fragment>{children}</React.Fragment>
 }

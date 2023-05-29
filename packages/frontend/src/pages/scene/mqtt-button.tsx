@@ -15,43 +15,43 @@ export type Props = {
 }
 
 export function MqttButton(props: Props) {
-  const {
-    room = 'stuen',
-    type = 'avctrl',
-    device,
-    payload,
-    icon,
-    label,
-    active,
-  } = props
-  const [keyActivated, setKey] = React.useState<boolean>(false)
+    const {
+        room = 'stuen',
+        type = 'avctrl',
+        device,
+        payload,
+        icon,
+        label,
+        active,
+    } = props
+    const [keyActivated, setKey] = React.useState<boolean>(false)
 
-  function click() {
-    setKey(true)
-    deviceSet(room, type, device, payload)
-  }
-
-  const { startTimer } = useTabs()
-
-  React.useEffect(() => {
-    let timer: NodeJS.Timeout
-    if (keyActivated) {
-      timer = setTimeout(() => {
-        setKey(false)
-        startTimer(200)
-      }, 200)
+    function click() {
+        setKey(true)
+        deviceSet(room, type, device, payload)
     }
-    return () => {
-      clearTimeout(timer)
-    }
-  }, [keyActivated, startTimer])
 
-  return (
-    <MqttAction
-      onClick={() => click()}
-      icon={icon}
-      label={label}
-      iconColor={active ? '#ff8c00' : '#151515'}
-    />
-  )
+    const { startTimer } = useTabs()
+
+    React.useEffect(() => {
+        let timer: NodeJS.Timeout
+        if (keyActivated) {
+            timer = setTimeout(() => {
+                setKey(false)
+                startTimer(200)
+            }, 200)
+        }
+        return () => {
+            clearTimeout(timer)
+        }
+    }, [keyActivated, startTimer])
+
+    return (
+        <MqttAction
+            onClick={() => click()}
+            icon={icon}
+            label={label}
+            iconColor={active ? '#ff8c00' : '#151515'}
+        />
+    )
 }

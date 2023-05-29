@@ -3,54 +3,54 @@ import { Mqtt } from '../../mqtt/mqtt'
 import { MemoryStore } from '../../mqtt/memory-store'
 
 export class RemoteController {
-  private readonly mqtt: Mqtt
+    private readonly mqtt: Mqtt
 
-  private readonly scenes = ['dvd', 'audio', 'video', 'wii', 'off', 'ps2']
+    private readonly scenes = ['dvd', 'audio', 'video', 'wii', 'off', 'ps2']
 
-  public constructor(mqtt: Mqtt) {
-    this.mqtt = mqtt
-  }
-
-  private store = MemoryStore.get()
-
-  async remote(request: Request) {
-    const { room, command } = request.params
-    if (this.scenes.includes(command)) {
-      this.mqtt.publish(`home/${room}/avctrl/scene/set`, command)
-    } else {
-      this.mqtt.publish(`home/${room}/avctrl/control/set`, command)
+    public constructor(mqtt: Mqtt) {
+        this.mqtt = mqtt
     }
-    return 204
-  }
 
-  async mediaPlay(request: Request) {
-    const { room } = request.params
-    const payload = request.body
-    if (payload.link) {
-      this.mqtt.publish(`home/${room}/media/control/play`, payload)
-      return 204
+    private store = MemoryStore.get()
+
+    async remote(request: Request) {
+        const { room, command } = request.params
+        if (this.scenes.includes(command)) {
+            this.mqtt.publish(`home/${room}/avctrl/scene/set`, command)
+        } else {
+            this.mqtt.publish(`home/${room}/avctrl/control/set`, command)
+        }
+        return 204
     }
-    return 400
-  }
 
-  async deviceSet(request: Request) {
-    const { room, type, device, value } = request.params
+    async mediaPlay(request: Request) {
+        const { room } = request.params
+        const payload = request.body
+        if (payload.link) {
+            this.mqtt.publish(`home/${room}/media/control/play`, payload)
+            return 204
+        }
+        return 400
+    }
 
-    const state = this.store.getStore()
-    if (
-      Object.keys(state).includes(room) &&
+    async deviceSet(request: Request) {
+        const { room, type, device, value } = request.params
+
+        const state = this.store.getStore()
+        if (
+            Object.keys(state).includes(room) &&
       ['light', 'switch', 'chicken', 'avctrl'].includes(type)
-    ) {
-      this.mqtt.publish(`home/${room}/${type}/${device}/set`, value)
-      return 204
+        ) {
+            this.mqtt.publish(`home/${room}/${type}/${device}/set`, value)
+            return 204
+        }
+        return 400
     }
-    return 400
-  }
 
-  async updateMedia(request: Request) {
-    const { room } = request.params
+    async updateMedia(request: Request) {
+        const { room } = request.params
 
-    this.mqtt.publish(`home/${room}/media/control/update`, '1')
-    return 204
-  }
+        this.mqtt.publish(`home/${room}/media/control/update`, '1')
+        return 204
+    }
 }

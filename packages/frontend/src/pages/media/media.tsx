@@ -1,3 +1,4 @@
+import React from 'react'
 import { Box } from '@mui/material'
 import { Streaming } from './streaming'
 import { RadioTv } from './radio-tv'
@@ -7,28 +8,26 @@ import { Weather } from '../weather/weather'
 import { useChromeCast, useSSEString } from '../../core/data'
 
 export function Controller() {
-  const cast = useChromeCast('stuen')
+    const cast = useChromeCast('stuen')
 
-  const avcenter = useSSEString('stuen', 'avctrl', 'scene') || ''
+    const avcenter = useSSEString('stuen', 'avctrl', 'scene') || ''
 
-  if (`${avcenter}`.toLocaleLowerCase() === 'off' || cast === undefined) {
-    return <Weather />
-  }
+    if (`${avcenter}`.toLocaleLowerCase() === 'off' || cast === undefined) {
+        return <Weather />
+    }
 
-  const isStreaming = avcenter.toLocaleLowerCase().includes('stream')
+    const isStreaming = avcenter.toLocaleLowerCase().includes('stream')
 
-  const streamingMedia =
+    const streamingMedia =
     cast.media?.metadata_type !== null &&
-    cast.media?.metadata_type !== undefined ? (
-      <Streaming media={cast.media} capabilities={cast.capabilities} />
-    ) : (
-      <RadioTv media={cast.media} capabilities={cast.capabilities} />
-    )
+    cast.media?.metadata_type !== undefined 
+        ?   <Streaming media={cast.media} capabilities={cast.capabilities} />
+        :   <RadioTv media={cast.media} capabilities={cast.capabilities} />
 
-  return (
-    <Box sx={{ display: 'grid', gridTemplateColumns: 'auto min-content' }}>
-      {isStreaming ? streamingMedia : <Others deviceType={avcenter} />}
-      <Remote />
-    </Box>
-  )
+    return (
+        <Box sx={{ display: 'grid', gridTemplateColumns: 'auto min-content' }}>
+            {isStreaming ? streamingMedia : <Others deviceType={avcenter} />}
+            <Remote />
+        </Box>
+    )
 }

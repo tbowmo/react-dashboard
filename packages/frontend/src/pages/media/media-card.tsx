@@ -9,18 +9,18 @@ type Props = {
 }
 
 export function MediaCard(props: Props) {
-  const { label, children, onClick } = props
+    const { label, children, onClick } = props
 
-  return (
-    <GridCard onClick={onClick}>
-      <Box
-        sx={{ display: 'grid', gridTemplateRows: 'max-content auto', gap: 1 }}
-      >
-        <Typography fontStyle="italic" sx={{ textDecoration: 'underline' }}>
-          {label}
-        </Typography>
-        {children}
-      </Box>
-    </GridCard>
-  )
+    return (
+        <GridCard onClick={onClick}>
+            <Box
+                sx={{ display: 'grid', gridTemplateRows: 'max-content auto', gap: 1 }}
+            >
+                <Typography fontStyle="italic" sx={{ textDecoration: 'underline' }}>
+                    {label}
+                </Typography>
+                {children}
+            </Box>
+        </GridCard>
+    )
 }

@@ -12,10 +12,13 @@ type TabsContent = {
 }
 
 const TabsContext = React.createContext<TabsContent>({
-  activeTab: 0,
-  setActiveTab: () => {},
-  startTimer: () => {},
-  stopTimer: () => {},
+    activeTab: 0,
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    setActiveTab: () => {},
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    startTimer: () => {},
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    stopTimer: () => {},
 })
 
 type Props = {
@@ -23,50 +26,50 @@ type Props = {
 }
 
 export function TabsProvider(props: Props) {
-  const { children } = props
-  const [activeTab, setActiveTab] = React.useState<number>(DEFAULTTAB)
-  const timer = React.useRef<TimerType>(null)
+    const { children } = props
+    const [activeTab, setActiveTab] = React.useState<number>(DEFAULTTAB)
+    const timer = React.useRef<TimerType>(null)
 
-  const stopTimer = React.useCallback(() => {
-    if (timer.current !== null) {
-      clearTimeout(timer.current)
-      timer.current = null
-    }
-  }, [])
+    const stopTimer = React.useCallback(() => {
+        if (timer.current !== null) {
+            clearTimeout(timer.current)
+            timer.current = null
+        }
+    }, [])
 
-  const startTimer = React.useCallback(
-    (timeout = Number(import.meta.env.VITE_ACTION_TIMEOUT)) => {
-      if (timer.current !== null) {
-        stopTimer()
-      }
-      timer.current = setTimeout(() => {
-        setActiveTab(DEFAULTTAB)
-      }, timeout)
-    },
-    [stopTimer],
-  )
+    const startTimer = React.useCallback(
+        (timeout = Number(import.meta.env.VITE_ACTION_TIMEOUT)) => {
+            if (timer.current !== null) {
+                stopTimer()
+            }
+            timer.current = setTimeout(() => {
+                setActiveTab(DEFAULTTAB)
+            }, timeout)
+        },
+        [stopTimer],
+    )
 
-  const setTab = React.useCallback(
-    (index: number) => {
-      setActiveTab(index)
-      startTimer()
-    },
-    [startTimer],
-  )
+    const setTab = React.useCallback(
+        (index: number) => {
+            setActiveTab(index)
+            startTimer()
+        },
+        [startTimer],
+    )
 
-  const value = React.useMemo(
-    () => ({
-      activeTab,
-      setActiveTab: setTab,
-      startTimer,
-      stopTimer,
-    }),
-    [activeTab, startTimer, stopTimer, setTab],
-  )
+    const value = React.useMemo(
+        () => ({
+            activeTab,
+            setActiveTab: setTab,
+            startTimer,
+            stopTimer,
+        }),
+        [activeTab, startTimer, stopTimer, setTab],
+    )
 
-  return <TabsContext.Provider value={value}>{children}</TabsContext.Provider>
+    return <TabsContext.Provider value={value}>{children}</TabsContext.Provider>
 }
 
 export function useTabs(): TabsContent {
-  return React.useContext(TabsContext)
+    return React.useContext(TabsContext)
 }
