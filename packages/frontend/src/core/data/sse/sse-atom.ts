@@ -1,23 +1,32 @@
-import { HomeEntity, StrongHomeEntity } from '@dashboard/types'
 import {
+    HomeEntity,
+    StrongHomeEntity,
+    Global,
+} from '@dashboard/types'
+import {
+    RecoilState,
     atomFamily,
     useRecoilCallback,
     useRecoilValue,
 } from 'recoil'
 
-export const sseStoreAtom = atomFamily<HomeEntity | undefined, string>({
+const sseStoreAtom = atomFamily<HomeEntity | undefined, string>({
     key: 'sseStoreAtom',
     default: {},
 })
 
+export function strongStore<T extends HomeEntity = Global>(room: string) {
+    return sseStoreAtom(room) as RecoilState<StrongHomeEntity<T> | undefined>
+}
+
 export function useStrongTypedLocation<T extends HomeEntity>(
     room: string,
-): StrongHomeEntity<T> {
-    return useRecoilValue(sseStoreAtom(room)) as StrongHomeEntity<T>
+): StrongHomeEntity<T> | undefined {
+    return useRecoilValue(strongStore<T>(room))
 }
 
 export function useLocation(location: string | undefined) {
-    return useRecoilValue(sseStoreAtom(location || ''))
+    return useRecoilValue(sseStoreAtom(location ?? ''))
 }
 
 export function useLocationUpdater() {

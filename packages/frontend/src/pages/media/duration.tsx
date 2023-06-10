@@ -58,7 +58,7 @@ export function Duration(props: {
     }, [state, setTime, time])
 
     React.useEffect(() => {
-        setTime(current_time || 0)
+        setTime(current_time ?? 0)
     }, [current_time])
 
     const { totalTime, currentTime, fontSize, remainingTime } =
@@ -66,8 +66,8 @@ export function Duration(props: {
         return {
             totalTime: secondsToHms(duration),
             currentTime: secondsToHms(time),
-            remainingTime: secondsToHms((duration || 0) - time),
-            fontSize: duration || 0 > 3600 ? '32pt' : '40pt',
+            remainingTime: secondsToHms((duration ?? 0) - time),
+            fontSize: duration ?? 0 > 3600 ? '32pt' : '40pt',
         }
     }, [duration, time])
 

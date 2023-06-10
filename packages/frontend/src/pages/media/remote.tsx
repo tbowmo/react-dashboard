@@ -109,7 +109,7 @@ export function Remote() {
 
     const remoteButtons = functions.filter((button): boolean => {
         if (button.state === 'ALL') return true
-        const state = capabilities?.state || 'none'
+        const state = capabilities?.state ?? 'none'
         if (['PLAYING', 'PAUSED'].includes(state)) {
             return button.state === state
         }

@@ -11,20 +11,19 @@ import {
     useRecoilValue,
     useResetRecoilState,
 } from 'recoil'
-import { Global } from '@dashboard/types'
 import {
     DataHub,
     SpotPrice,
     TransportTarrif,
 } from './utility-type'
 import { api } from '../use-api'
-import { sseStoreAtom } from '../sse/sse-atom'
+import { strongStore } from '../sse/sse-atom'
 
 const baseUrl = 'https://api.energidataservice.dk/dataset/'
 
 const refreshData = atom<number>({
     key: 'RefreshData',
-    default: 0,
+    default: Date.now(),
 })
 
 const tarrifSelector = selector<{ [hour in number]: number } | undefined>({
@@ -100,8 +99,7 @@ export const priceSelector = selector({
         const tarrifs = get(tarrifSelector)
         const prices = get(spotPriceSelector)
 
-        const govCharge =
-      (get(sseStoreAtom('global')) as Global).utility?.gov_charge_dkk || 0
+        const govCharge = (get(strongStore('global')))?.utility?.gov_charge_dkk ?? 0
 
         if (!tarrifs || !prices) {
             return
@@ -133,7 +131,7 @@ export const priceSelector = selector({
     },
     set: ({ set }, value) => {
         if (value instanceof DefaultValue) {
-            set(refreshData, (v) => v + 1)
+            set(refreshData, Date.now())
         }
     },
 })
@@ -148,4 +146,9 @@ export function useUtilityPrices(hoursAhead = 12) {
         }
     }, [prices, hoursAhead, resetPrices])
     return useMemo(() => prices?.slice(0, hoursAhead), [hoursAhead, prices])
+}
+
+export function useLastUpdated(): Date {
+    const timeStamp = useRecoilValue(refreshData)
+    return useMemo(() => new Date(timeStamp), [timeStamp])
 }

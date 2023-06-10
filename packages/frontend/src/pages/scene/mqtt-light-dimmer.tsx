@@ -54,7 +54,7 @@ export function LightDimmer(props: Props) {
         deviceSet(room, 'light', device, value)
     }
 
-    const currentLightIntensity = useSSENumber(room, 'light', device) || 0
+    const currentLightIntensity = useSSENumber(room, 'light', device) ?? 0
 
     React.useEffect(() => {
         if (currentLightIntensity < 0) {

@@ -10,7 +10,7 @@ import { useChromeCast, useSSEString } from '../../core/data'
 export function Controller() {
     const cast = useChromeCast('stuen')
 
-    const avcenter = useSSEString('stuen', 'avctrl', 'scene') || ''
+    const avcenter = useSSEString('stuen', 'avctrl', 'scene') ?? ''
 
     if (`${avcenter}`.toLocaleLowerCase() === 'off' || cast === undefined) {
         return <Weather />

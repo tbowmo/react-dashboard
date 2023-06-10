@@ -7,9 +7,9 @@ import {
     CardHeader,
     Card,
 } from '@mui/material'
-import { format } from 'date-fns'
 import { useTabs } from '../../core/tabs/tabs-context'
 import { useDrMedia, Media } from '../../core/data'
+import { useFormatDate } from '../../core/date-time'
 
 export function Streams() {
     const media = useDrMedia()
@@ -23,6 +23,8 @@ export function Streams() {
         xhttp.send(JSON.stringify(stream))
         startTimer(200)
     }
+
+    const formatDate = useFormatDate()
 
     return (
         <Box sx={{ display: 'flex', width: '100%', flexWrap: 'wrap' }}>
@@ -64,10 +66,13 @@ export function Streams() {
                                     src={streamEntry.avatar}
                                 />
                                 <Box sx={{ gridArea: 'time' }}>
-                                    {`${format(streamEntry.startTime, 'HH:mm')} - ${format(
-                                        streamEntry.endTime,
-                                        'HH:mm',
-                                    )}`}
+                                    {
+                                        [
+                                            formatDate(streamEntry.startTime, 'time'), 
+                                            '-', 
+                                            formatDate(streamEntry.endTime, 'time'),
+                                        ].join(' ')
+                                    }
                                 </Box>
                                 <Typography
                                     sx={{

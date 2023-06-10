@@ -12,7 +12,7 @@ import { useForecastWeather, ForecastTupple } from '../../core/data'
 
 function SingleForecast(props: { data: ForecastTupple }) {
     const { data } = props
-    const Icon: SvgIconComponent = iconMap[data.weather[0].icon] || null
+    const Icon: SvgIconComponent = iconMap[data.weather[0].icon] ?? null
 
     const timeStr = React.useMemo((): string => {
         return format(data.dt * 1000, 'HH:mm')
@@ -25,8 +25,8 @@ function SingleForecast(props: { data: ForecastTupple }) {
                 gridTemplateColumns: 'auto min-content',
                 gridTemplateRows: 'repeat(3 fr)',
                 gridTemplateAreas: `"time icon"
-            "weather icon"
-            "temperature icon"`,
+                                    "weather icon"
+                                    "temperature icon"`,
             }}
         >
             <Typography fontSize="large" sx={{ gridArea: 'time' }}>
@@ -36,7 +36,7 @@ function SingleForecast(props: { data: ForecastTupple }) {
                 fontSize="large"
                 sx={{ gridArea: 'weather', whiteSpace: 'nowrap' }}
             >
-                {data.weather?.[0]?.description || ''}
+                {data.weather?.[0]?.description ?? ''}
             </Typography>
             <Typography
                 fontSize="large"

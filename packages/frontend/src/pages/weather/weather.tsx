@@ -26,7 +26,7 @@ export function Weather() {
     }
 
     const WeatherIcon: SvgIconComponent =
-    iconMap[weather?.weather[0]?.icon] || null
+    iconMap[weather?.weather[0]?.icon] ?? null
     const iconSize = '180px'
     return (
         <Box sx={{ display: 'grid', gridTemplateRows: 'auto min-content' }}>
@@ -56,7 +56,7 @@ export function Weather() {
                     />
                 </GridCard>
                 <GridCard columns={9}>
-                    <Typography>Vind: {wind(weather?.wind?.speed || 0).label}</Typography>
+                    <Typography>Vind: {wind(weather?.wind?.speed ?? 0).label}</Typography>
                     <Typography fontSize="large">
                         Retning {getCompassHeading(weather?.wind?.deg ?? 0).direction} (
                         {weather?.wind?.speed ?? 0}m/s - {weather?.wind?.deg ?? 0}&deg;)

@@ -84,7 +84,7 @@ function SingleValue(props: {
         sensorValue,
     } = props
 
-    const valueSensor = useSSENumber(room, sensorType, sensorName) || sensorValue
+    const valueSensor = useSSENumber(room, sensorType, sensorName) ?? sensorValue
     const value = useScaledValue(
         valueSensor ? valueSensor / divisor : -99,
         unit,
@@ -93,14 +93,14 @@ function SingleValue(props: {
 
     return (
         <Box>
-            <SensorValue value={value?.value || -99} />
+            <SensorValue value={value?.value ?? -99} />
             <Typography
                 sx={{
                     textAlign: 'center',
                     fontSize: '10pt',
                 }}
             >
-                {value?.unit || unit}
+                {value?.unit ?? unit}
             </Typography>
         </Box>
     )

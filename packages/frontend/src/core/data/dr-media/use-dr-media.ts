@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { isBefore, parseISO } from 'date-fns'
 import {
     atom,
@@ -44,8 +44,18 @@ function imgUrl(url: string | undefined): string {
     const splitAsset = url?.split(':') || []
     const assetNumber =
     splitAsset.length > 1 ? splitAsset[splitAsset?.length - 1] : ''
-    // eslint-disable-next-line max-len
-    return `https://asset.dr.dk/imagescaler/?protocol=https&server=api.dr.dk&file=%2Fradio%2Fv2%2Fimages%2Fraw%2Furn%3Adr%3Aradio%3Aimage%3A${assetNumber}&scaleAfter=crop&quality=70&w=1120&h=1120`
+
+    const imgProps: string[] = Object.entries({
+        protocol: 'https', 
+        server: 'api.dr.dk', 
+        file: `/radio/v2/images/raw/urn:dr:radio:image:${assetNumber}`, 
+        scaleAfter: 'crop', 
+        quality: '70', 
+        w: '600', 
+        h: '600',
+    }).map(([key, value]) => `${key}=${value}`)
+
+    return `https://asset.dr.dk/imagescaler/?${imgProps.join('&')}`
 }
 
 function logo(channelName: string) {
@@ -65,13 +75,13 @@ function logo(channelName: string) {
     case 'p8jazz':
         return drp8
     default:
-        return drp1
+        return ''
     }
 }
 
 const drRefresh = atom<number>({
     key: 'DrMediaRefresh',
-    default: 0,
+    default: Date.now(),
 })
 
 const drMediaSelector = selector<DRMedia[]>({
@@ -82,7 +92,7 @@ const drMediaSelector = selector<DRMedia[]>({
     },
     set: ({ set }, value) => {
         if (value instanceof DefaultValue) {
-            set(drRefresh, (v) => v + 1)
+            set(drRefresh, Date.now())
         }
     },
 })
@@ -93,50 +103,59 @@ const filteredMedia = selector<Media[] | undefined>({
         const channels = get(drMediaSelector)
 
         return channels
-            ?.filter((channel) => validChannels.includes(channel.now.channel.slug))
-            .map((channel): Media | undefined => {
-                const prg = [channel.now, channel.next]?.filter((programme) =>
-                    isBefore(dateConverter(programme.startTime), Date.now()),
-                )?.[0]
+            ?.filter((channel) => (
+                channel.now !== undefined 
+                && validChannels.includes(channel.now.channel.slug)
+            ))
+            .flatMap((channel) => {
+                return [channel?.now, channel?.next]?.map((prg) => {
 
-                if (!prg) {
-                    return undefined
-                }
+                    const startTime = dateConverter(prg.startTime)
+                    const endTime = dateConverter(prg.endTime)
 
-                const startTime = dateConverter(prg.startTime)
-                const endTime = dateConverter(prg.endTime)
-
-                return {
-                    id: channel.now.channel.slug,
-                    channelName: channel.now.channel.title,
-                    channelIcon: logo(channel.now.channel.slug),
-                    startTime,
-                    endTime,
-                    title: prg.title || channel.now.channel.title,
-                    link:
-            channel.now.audioAssets.find((item) => item.bitrate === 192)?.url ||
-            '',
-                    avatar: imgUrl(prg.imageAssets[0].id),
-                    type: 'audio',
-                    duration: (endTime.getTime() - startTime.getTime()) / 1000,
-                }
+                    return {
+                        id: channel.now.channel.slug,
+                        channelName: channel.now.channel.title,
+                        channelIcon: logo(channel.now.channel.slug),
+                        startTime,
+                        endTime,
+                        title: prg.title || channel.now.channel.title,
+                        link: channel.now.audioAssets.find((item) => item.bitrate === 192)?.url ?? '',
+                        avatar: imgUrl(prg.imageAssets[0].id),
+                        type: 'audio',
+                        duration: (endTime.getTime() - startTime.getTime()) / 1000,
+                    }
+                })
             })
             .filter(isNotUndefined)
     },
     set: ({ set }, value) => {
         if (value instanceof DefaultValue) {
-            set(drRefresh, (v) => v + 1)
+            set(drRefresh, Date.now())
         }
     },
 })
 
 export function useDrMedia(): Media[] | undefined {
-    const filteredChannels = useRecoilValue(filteredMedia)
+    const channels = useRecoilValue(filteredMedia)
+    const lastRefresh = useRecoilValue(drRefresh)
     const resetChannels = useResetRecoilState(filteredMedia)
+
+    const filteredChannels = useMemo(
+        // Only get currently playing programmes for dashboard
+        (): Media[] | undefined => {
+            return channels?.filter((item) => isBefore(item.startTime, Date.now()) && isBefore(Date.now(), item.endTime))
+        }, 
+        [channels]
+    )
+
     useEffect(() => {
-        if (filteredChannels && !filteredChannels.length) {
+        const ageInMinutes = (Date.now() - lastRefresh) / 60000
+
+        if ((ageInMinutes > 15) || !filteredChannels?.length) {
             resetChannels()
         }
-    }, [filteredChannels, resetChannels])
+    }, [filteredChannels, lastRefresh, resetChannels])
+
     return filteredChannels
 }

@@ -6,9 +6,9 @@ import { useSSEString } from '../../core/data'
 export function WifiPassPhrase() {
     const type = 'WPA'
     const ssid = 'bowmo-guest'
-    const passphrase = useSSEString('global', 'wifi', 'bowmo_guest') || ''
+    const passphrase = useSSEString('global', 'wifi', 'bowmo_guest') ?? ''
 
-    const hidden = 'true'
+    const hidden = 'false'
     const data = `WIFI:T:${type};S:${ssid};P:${passphrase};H:${hidden};;`
     return (
         <Grid

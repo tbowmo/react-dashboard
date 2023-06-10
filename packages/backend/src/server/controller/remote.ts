@@ -39,7 +39,7 @@ export class RemoteController {
         const state = this.store.getStore()
         if (
             Object.keys(state).includes(room) &&
-      ['light', 'switch', 'chicken', 'avctrl'].includes(type)
+            ['light', 'switch', 'chicken', 'avctrl'].includes(type)
         ) {
             this.mqtt.publish(`home/${room}/${type}/${device}/set`, value)
             return 204

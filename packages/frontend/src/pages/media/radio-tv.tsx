@@ -19,9 +19,8 @@ export function RadioTv(props: Props) {
     )
     const timers = React.useMemo(
         (): { current_time: number; duration: number } => ({
-            current_time:
-        (Date.now() - (selectedChannel?.startTime.getTime() || 0)) / 1000,
-            duration: selectedChannel?.duration || 0,
+            current_time: (Date.now() - (selectedChannel?.startTime.getTime() ?? 0)) / 1000,
+            duration: selectedChannel?.duration ?? 0,
         }),
         [selectedChannel],
     )
@@ -53,7 +52,7 @@ export function RadioTv(props: Props) {
                 : null}
             <img
                 style={{ gridArea: 'image', maxHeight: 600 }}
-                src={selectedChannel?.avatar || capabilities?.app_icon}
+                src={selectedChannel?.avatar ?? capabilities?.app_icon}
                 alt={media?.album}
                 aria-hidden="true"
             />

@@ -70,7 +70,7 @@ const dumbSwitches: { [device in string]: DeviceProps } = {
 
 export function Scene() {
     const activeScene = (
-        useSSEString('stuen', 'avctrl', 'scene') || ''
+        useSSEString('stuen', 'avctrl', 'scene') ?? ''
     ).toLowerCase()
 
     return (

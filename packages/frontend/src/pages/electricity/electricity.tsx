@@ -14,16 +14,21 @@ import {
     XAxis,
     YAxis,
 } from 'recharts'
-import { useUtilityPrices } from '../../core/data'
+import { useUtilityPrices, useLastUpdated } from '../../core/data'
 import { GridCard } from '../../core/card-2-line/grid-card'
+import { useFormatDate } from '../../core/date-time'
 
 export function Electricity() {
     const formattedPrices = useUtilityPrices(12)
-
+    const lastUpdated = useLastUpdated()
+    const dateFormat = useFormatDate()
     return (
         <Grid container>
             <GridCard>
                 <LineChart width={900} height={600} data={formattedPrices}>
+                    <text x={900 / 2} y={20} fill="white" textAnchor="middle" dominantBaseline="central">
+                        <tspan fontSize="14">Data sidst hentet {dateFormat(lastUpdated, 'compactDateTime')}</tspan>
+                    </text>
                     <Line type="stepBefore" dataKey="totalPrice" stroke="#8884d8" />
                     <XAxis dataKey="hour" />
                     <YAxis />

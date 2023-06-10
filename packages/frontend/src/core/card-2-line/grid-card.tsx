@@ -32,7 +32,7 @@ export function GridCard(props: GridCardProps) {
           'linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05))',
                 color: '#fff',
             }}
-            xs={columns || true}
+            xs={columns ?? true}
             onClick={(event) => onClickHandler(event)}
             {...restProps}
         >

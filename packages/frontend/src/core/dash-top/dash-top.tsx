@@ -100,11 +100,11 @@ export function DashTop() {
     const humidDp = humidDewPoint[dpIndex]
     const scale = ['Wh', 'kWh', 'MWh']
 
-    const utility = useStrongTypedLocation<Global>('global').utility
+    const utility = useStrongTypedLocation<Global>('global')?.utility
     const electricityPrice =
-    ((utility?.spot_price_kwh_dkk || 0) +
-      (utility?.transport_tarif_dkk || 0) +
-      (utility?.gov_charge_dkk || 0)) *
+    ((utility?.spot_price_kwh_dkk ?? 0) +
+      (utility?.transport_tarif_dkk ?? 0) +
+      (utility?.gov_charge_dkk ?? 0)) *
     1.25
 
     return (
