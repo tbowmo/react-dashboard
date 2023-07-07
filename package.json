@@ -4,7 +4,6 @@
   "main": "index.js",
   "author": "Thomas Bowman Mørch <thomas+github@bowmo.dk>",
   "license": "MIT",
-  "dependencies": {},
   "devDependencies": {
     "@lerna/conventional-commits": "^6.4.1",
     "@lerna/version": "6.5.1",
@@ -58,5 +57,5 @@
     "*.{ts,tsx}": "eslint --max-warnings 0 packages/*/src/**/*.ts{,x}",
     "*.{yml,yaml,json}": "prettier -c"
   },
-  "packageManager": "yarn@1.22.19"
+  "packageManager": "yarn@3.6.1"
 }
