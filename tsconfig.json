@@ -4,14 +4,8 @@
     "checkJs": false,
     "declaration": true,
     "jsx": "react",
-    "lib": [
-      "dom",
-      "es5",
-      "es2017",
-      "esnext"
-    ],
-    "locale": "en",
-    "module": "commonjs",
+    "lib": ["dom", "es5", "es2017", "esnext"],
+    "module": "ES2022",
     "moduleResolution": "node",
     "newLine": "LF",
     "noEmit": true,

@@ -10,13 +10,13 @@ import { useChromeCast, useSSEString } from '../../core/data'
 export function Controller() {
     const cast = useChromeCast('stuen')
 
-    const avcenter = useSSEString('stuen', 'avctrl', 'scene') ?? ''
+    const avScene = useSSEString('stuen', 'avctrl', 'scene') ?? ''
 
-    if (`${avcenter}`.toLocaleLowerCase() === 'off' || cast === undefined) {
+    if (avScene.toLocaleLowerCase() === 'off' || cast === undefined) {
         return <Weather />
     }
 
-    const isStreaming = avcenter.toLocaleLowerCase().includes('stream')
+    const isStreaming = avScene.toLocaleLowerCase().includes('stream')
 
     const streamingMedia =
     cast.media?.metadata_type !== null &&
@@ -26,7 +26,7 @@ export function Controller() {
 
     return (
         <Box sx={{ display: 'grid', gridTemplateColumns: 'auto min-content' }}>
-            {isStreaming ? streamingMedia : <Others deviceType={avcenter} />}
+            {isStreaming ? streamingMedia : <Others deviceType={avScene} />}
             <Remote />
         </Box>
     )

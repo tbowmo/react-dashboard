@@ -1,4 +1,4 @@
-FROM node:16-alpine as node
+FROM node:20-alpine as node
 RUN apk add tzdata gettext bash tini jq --no-cache && ln -sf /usr/share/zoneinfo/Europe/Copenhagen /etc/localtime
 ENV TZ=Europe/Copenhagen
 
