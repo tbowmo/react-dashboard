@@ -5,7 +5,7 @@ ENV TZ=Europe/Copenhagen
 FROM node as sources
 WORKDIR /usr/src/app
 COPY . .
-RUN tar -cf payload.tar lerna.json package.json yarn.lock packages/*/package.json
+RUN tar -cf payload.tar lerna.json package.json yarn.lock packages/*/package.json .yarn .yarnrc.yml
 RUN md5sum payload.tar
 
 FROM node as development
@@ -14,7 +14,7 @@ COPY --from=sources /usr/src/app/payload.tar ./
 RUN \
     set -ex; \
     tar xf payload.tar; \
-    yarn install --pure-lockfile --ignore-scripts; \
+    yarn install --immutable;  \
     date
 COPY --from=sources /usr/src/app /usr/src/app
 
@@ -26,11 +26,10 @@ ARG VARIANT=local
 ENV BUILD_COMMIT=${COMMIT} BUILD_VARIANT=${VARIANT} NODE_ENV=production
 RUN set -ex; \
     yarn workspace @dashboard/backend build; \
-    yarn workspace @dashboard/frontend build; \
-    yarn install --production --ignore-scripts; \
+    yarn workspace @dashboard/frontend build
+RUN yarn workspaces focus @dashboard/backend --production; \
     rm -rf packages/frontend/node_modules; \
     yarn cache clean
-
 
 FROM node as runtime
 EXPOSE 5000
