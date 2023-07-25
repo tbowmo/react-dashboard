@@ -20,6 +20,7 @@ export class MemoryStore {
         if (!sse && !MemoryStore.myself) {
             throw new Error('SSE is not specified')
         }
+        
         return MemoryStore.myself
     }
 
@@ -28,8 +29,8 @@ export class MemoryStore {
     type: string
     sensor: string
   } {
-        const [, room, type, sensor] =
-      topic.match(/home\/(\w+)\/(\w+)\/(\w+)/) || []
+        const [, room, type, sensor] = topic.match(/home\/(\w+)\/(\w+)\/(\w+)/) || []
+
         return {
             room,
             type,
@@ -42,7 +43,6 @@ export class MemoryStore {
     ): Record<string, unknown> | string {
         try {
             return JSON.parse(value)
-            // eslint-disable-next-line no-empty
         } catch (e) {
             return value
         }
@@ -53,11 +53,9 @@ export class MemoryStore {
 
         const v = MemoryStore.enrichPayload(value)
         const currentValue = this.store?.[room]?.[type]?.[sensor]
-        const equal = isEqual(currentValue, v)
-
-        if (equal) {
-            // eslint-disable-next-line no-console
-            console.log({ room, type, sensor, v })
+        const alreadyStored = isEqual(currentValue, v)
+        
+        if (alreadyStored)   {
             return
         }
 

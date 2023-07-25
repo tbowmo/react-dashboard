@@ -101,11 +101,12 @@ export function DashTop() {
     const scale = ['Wh', 'kWh', 'MWh']
 
     const utility = useStrongTypedLocation<Global>('global')?.utility
-    const electricityPrice =
-    ((utility?.spot_price_kwh_dkk ?? 0) +
-      (utility?.transport_tarif_dkk ?? 0) +
-      (utility?.gov_charge_dkk ?? 0)) *
-    1.25
+
+    const electricityPrice = (
+        (utility?.spot_price_kwh_dkk ?? 0) +
+        (utility?.transport_tarif_dkk ?? 0) +
+        (utility?.gov_charge_dkk ?? 0)
+    ) * 1.25 // VAT / MOMS
 
     return (
         <Grid container sx={{ width: '100%' }}>

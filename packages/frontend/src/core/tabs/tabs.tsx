@@ -3,6 +3,7 @@ import {
     Tab,
     Tabs,
     Box,
+    SxProps,
 } from '@mui/material'
 import {
     House,
@@ -75,11 +76,16 @@ interface TabPanelProps {
 
 function TabPanel(props: TabPanelProps) {
     const { children, active } = props
-    if (!active) {
-        return null
+    
+    const style: SxProps = {
+        height: '100%',
+        marginLeft: 1,
+        marginRight: 0,
+        display: active ? 'block' : 'none',
     }
+
     return (
-        <Box sx={{ height: '100%', marginLeft: 1, marginRight: 0 }}>{children}</Box>
+        <Box sx={style}>{children}</Box>
     )
 }
 

@@ -145,6 +145,7 @@ export function useUtilityPrices(hoursAhead = 12) {
             resetPrices()
         }
     }, [prices, hoursAhead, resetPrices])
+    
     return useMemo(() => prices?.slice(0, hoursAhead), [hoursAhead, prices])
 }
 
