@@ -1,6 +1,6 @@
 {
   "name": "@dashboard/backend",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Backend for tablet sized dashboard",
   "license": "MIT",
   "private": true,
