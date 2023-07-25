@@ -5,7 +5,7 @@ ENV TZ=Europe/Copenhagen
 FROM node as sources
 WORKDIR /usr/src/app
 COPY . .
-RUN tar -cf payload.tar lerna.json package.json yarn.lock packages/*/package.json .yarn .yarnrc.yml
+RUN tar -cf payload.tar package.json yarn.lock packages/*/package.json .yarn .yarnrc.yml
 RUN md5sum payload.tar
 
 FROM node as development
