@@ -1,4 +1,4 @@
-import { Home } from '@dashboard/types'
+import { Home, SSETopic } from '@dashboard/types'
 import { Channel } from 'better-sse'
 import { isEqual } from 'lodash'
 
@@ -24,16 +24,12 @@ export class MemoryStore {
         return MemoryStore.myself
     }
 
-    private static decodeTopic(topic: string): {
-    room: string
-    type: string
-    sensor: string
-  } {
-        const [, room, type, sensor] = topic.match(/home\/(\w+)\/(\w+)\/(\w+)/) || []
+    private static decodeTopic(topic: string): Omit<SSETopic, 'payload'> {
+        const [, room, sensorGroup, sensor] = topic.match(/home\/(\w+)\/(\w+)\/(\w+)/) || []
 
         return {
             room,
-            type,
+            sensorGroup,
             sensor,
         }
     }
@@ -49,10 +45,10 @@ export class MemoryStore {
     }
 
     public async updateStore(topic: string, value: string): Promise<void> {
-        const { room, type, sensor } = MemoryStore.decodeTopic(topic)
+        const { room, sensorGroup, sensor } = MemoryStore.decodeTopic(topic)
 
         const v = MemoryStore.enrichPayload(value)
-        const currentValue = this.store?.[room]?.[type]?.[sensor]
+        const currentValue = this.store?.[room]?.[sensorGroup]?.[sensor]
         const alreadyStored = isEqual(currentValue, v)
         
         if (alreadyStored)   {
@@ -63,8 +59,8 @@ export class MemoryStore {
             ...this.store,
             [room]: {
                 ...this.store[room],
-                [type]: {
-                    ...this.store?.[room]?.[type],
+                [sensorGroup]: {
+                    ...this.store?.[room]?.[sensorGroup],
                     [sensor]: v,
                 },
             },
@@ -73,7 +69,9 @@ export class MemoryStore {
         this.sse.broadcast(
             {
                 payload: v,
-                topic,
+                room,
+                sensor,
+                sensorGroup,
             },
             'updates',
         )

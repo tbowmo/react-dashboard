@@ -2,6 +2,7 @@ import {
     StrongDevice,
     Device,
     Misc,
+    SSETopic,
 } from '@dashboard/types'
 import {
     RecoilState,
@@ -10,15 +11,15 @@ import {
     useRecoilValue,
 } from 'recoil'
 
-type DeviceLocator = { location: string, deviceType: string}
+type DeviceLocator = Pick<SSETopic, 'room' | 'sensorGroup'>
 
 const sseStoreAtom = atomFamily<Device | undefined, DeviceLocator>({
     key: 'sseStoreAtom',
     default: {},
 })
 
-export function strongStore<T extends Device = Misc>(location: string, deviceType: string) {
-    return sseStoreAtom({ location, deviceType }) as RecoilState<StrongDevice<T> | undefined>
+export function strongStore<T extends Device = Misc>(room: string, sensorGroup: string) {
+    return sseStoreAtom({ room, sensorGroup }) as RecoilState<StrongDevice<T> | undefined>
 }
 
 export function useStrongTypedDevices<T extends Device>(
@@ -28,10 +29,10 @@ export function useStrongTypedDevices<T extends Device>(
     return useRecoilValue(strongStore<T>(room, type))
 }
 
-export function useLocation(location: string | undefined, deviceType: string | undefined) {
+export function useLocation(room: string | undefined, sensorGroup: string | undefined) {
     const locator: DeviceLocator = {
-        location: location ?? '',
-        deviceType: deviceType ?? '',
+        room: room ?? '',
+        sensorGroup: sensorGroup ?? '',
     }
     return useRecoilValue(sseStoreAtom(locator))
 }
@@ -39,23 +40,25 @@ export function useLocation(location: string | undefined, deviceType: string | u
 export function useLocationUpdater() {
     return useRecoilCallback(
         ({ set, snapshot }) =>
-            async (data: { topic: string; payload: string }) => {
+            async (data: SSETopic) => {
                 let value = data.payload
                 try {
                     value = JSON.parse(data.payload)
                     // eslint-disable-next-line no-empty
                 } catch { }
 
-                const [, location, deviceType, device] =
-                    data.topic.match(/home\/([\w-]+)\/([\w-]+)\/([\w-]+)/) || []
-                const locator: DeviceLocator = { location, deviceType }
+                const { room, sensorGroup, sensor } = data
+                if (!room || !sensorGroup || !sensor) {
+                    return
+                }
 
-                const deviceTypeState =
-                    (await snapshot.getPromise(sseStoreAtom(locator))) || {}
+                const locator: DeviceLocator = { room, sensorGroup }
+
+                const deviceTypeState = (await snapshot.getPromise(sseStoreAtom(locator))) || {}
 
                 const newDeviceTypeState = {
                     ...deviceTypeState,
-                    [device]: value,
+                    [sensor]: value,
                 }
                 set(sseStoreAtom(locator), newDeviceTypeState)
             },
@@ -67,9 +70,9 @@ export function useLoadInitialRoom() {
     return useRecoilCallback(
         ({ set }) =>
             (data: Record<string, object>) => {
-                for (const location of Object.keys(data)) {
-                    for (const deviceType of Object.keys(data[location])) {
-                        set(sseStoreAtom({ location, deviceType }), data[location][deviceType])
+                for (const room of Object.keys(data)) {
+                    for (const sensorGroup of Object.keys(data[room])) {
+                        set(sseStoreAtom({ room, sensorGroup }), data[room][sensorGroup])
                     }
                 }
             },

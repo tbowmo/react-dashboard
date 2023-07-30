@@ -117,3 +117,11 @@ export type StrongDevice<T extends Device> = T extends ChromeCast
   : T extends Wifi
   ? Wifi
   : Misc
+
+
+export type SSETopic = {
+  room: string,
+  sensorGroup: string,
+  sensor: string,
+  payload: string,
+}

@@ -8,10 +8,9 @@ const store = MemoryStore.get(channel)
 
 function initMqttListener(mqtt: Mqtt) {
     mqtt?.addListener('home/#', async (topic: string, payload: string) => {
-        if (
-            !topic.endsWith('/dt') &&
-      !topic.endsWith('/set') &&
-      !topic.endsWith('/control')
+        if (!topic.endsWith('/dt') 
+            && !topic.endsWith('/set') 
+            && !topic.endsWith('/control')
         ) {
             await store.updateStore(topic, payload)
         }
