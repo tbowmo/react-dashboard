@@ -18,6 +18,7 @@ import {
 } from './utility-type'
 import { api } from '../use-api'
 import { strongStore } from '../sse/sse-atom'
+import { Utility } from '@dashboard/types'
 
 const baseUrl = 'https://api.energidataservice.dk/dataset/'
 
@@ -30,6 +31,7 @@ const tarrifSelector = selector<{ [hour in number]: number } | undefined>({
     key: 'TarrifSelector',
     get: async ({ get }) => {
         get(refreshData)
+        
         const filter = JSON.stringify({
             ChargeTypeCode: 'CD,CD R', // Nettarif C
             ChargeType: 'D03', // Tarif
@@ -83,6 +85,7 @@ const spotPriceSelector = selector({
         const response = await api<DataHub<SpotPrice[]>>(
             `${baseUrl}ElspotPrices?start=Now&filter=${filter}&sort=HourDK`,
         )
+
         return response.records.map((item) => {
             return {
                 ...item,
@@ -93,13 +96,13 @@ const spotPriceSelector = selector({
     },
 })
 
-export const priceSelector = selector({
+const priceSelector = selector({
     key: 'totalPriceSelector',
     get: ({ get }) => {
         const tarrifs = get(tarrifSelector)
         const prices = get(spotPriceSelector)
 
-        const govCharge = (get(strongStore('global')))?.utility?.gov_charge_dkk ?? 0
+        const govCharge = (get(strongStore<Utility>('global', 'utility')))?.gov_charge_dkk ?? 0
 
         if (!tarrifs || !prices) {
             return
@@ -115,11 +118,14 @@ export const priceSelector = selector({
             .map((item) => {
                 const hour = parseISO(item.HourDK).getHours()
                 const tarrif = tarrifValues[hour]
+
                 const price = (item.SpotPriceDKK || item.SpotPriceEUR * 7.5) / 1000
+
                 return {
                     hour: item.HourDK,
                     price,
                     tarrif,
+                    govCharge,
                     totalPrice: (price + tarrif + govCharge) * 1.25,
                 }
             })
@@ -139,13 +145,15 @@ export const priceSelector = selector({
 export function useUtilityPrices(hoursAhead = 12) {
     const prices = useRecoilValue(priceSelector)
     const resetPrices = useResetRecoilState(priceSelector)
+    const currentFetchedTime = useRecoilValue(refreshData)
 
     useEffect(() => {
-        if (prices && prices.length < hoursAhead) {
+        const timeSinceLast = Date.now() - currentFetchedTime
+        if (prices && prices.length < hoursAhead && (timeSinceLast > 15 * 60 * 1000)) {
             resetPrices()
         }
-    }, [prices, hoursAhead, resetPrices])
-    
+    }, [prices, hoursAhead, resetPrices, currentFetchedTime])
+
     return useMemo(() => prices?.slice(0, hoursAhead), [hoursAhead, prices])
 }
 

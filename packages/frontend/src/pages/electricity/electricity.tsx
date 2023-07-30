@@ -19,9 +19,10 @@ import { GridCard } from '../../core/card-2-line/grid-card'
 import { useFormatDate } from '../../core/date-time'
 
 export function Electricity() {
-    const formattedPrices = useUtilityPrices(12)
+    const formattedPrices = useUtilityPrices()
     const lastUpdated = useLastUpdated()
     const dateFormat = useFormatDate()
+
     return (
         <Grid container>
             <GridCard>

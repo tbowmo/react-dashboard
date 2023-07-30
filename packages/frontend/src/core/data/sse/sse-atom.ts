@@ -1,7 +1,7 @@
 import {
-    HomeEntity,
-    StrongHomeEntity,
-    Global,
+    StrongDevice,
+    Device,
+    Misc,
 } from '@dashboard/types'
 import {
     RecoilState,
@@ -10,23 +10,30 @@ import {
     useRecoilValue,
 } from 'recoil'
 
-const sseStoreAtom = atomFamily<HomeEntity | undefined, string>({
+type DeviceLocator = { location: string, deviceType: string}
+
+const sseStoreAtom = atomFamily<Device | undefined, DeviceLocator>({
     key: 'sseStoreAtom',
     default: {},
 })
 
-export function strongStore<T extends HomeEntity = Global>(room: string) {
-    return sseStoreAtom(room) as RecoilState<StrongHomeEntity<T> | undefined>
+export function strongStore<T extends Device = Misc>(location: string, deviceType: string) {
+    return sseStoreAtom({ location, deviceType }) as RecoilState<StrongDevice<T> | undefined>
 }
 
-export function useStrongTypedLocation<T extends HomeEntity>(
+export function useStrongTypedDevices<T extends Device>(
     room: string,
-): StrongHomeEntity<T> | undefined {
-    return useRecoilValue(strongStore<T>(room))
+    type: string,
+): StrongDevice<T> | undefined {
+    return useRecoilValue(strongStore<T>(room, type))
 }
 
-export function useLocation(location: string | undefined) {
-    return useRecoilValue(sseStoreAtom(location ?? ''))
+export function useLocation(location: string | undefined, deviceType: string | undefined) {
+    const locator: DeviceLocator = {
+        location: location ?? '',
+        deviceType: deviceType ?? '',
+    }
+    return useRecoilValue(sseStoreAtom(locator))
 }
 
 export function useLocationUpdater() {
@@ -37,24 +44,20 @@ export function useLocationUpdater() {
                 try {
                     value = JSON.parse(data.payload)
                     // eslint-disable-next-line no-empty
-                } catch {}
+                } catch { }
 
                 const [, location, deviceType, device] =
-          data.topic.match(/home\/([\w-]+)\/([\w-]+)\/([\w-]+)/) || []
+                    data.topic.match(/home\/([\w-]+)\/([\w-]+)\/([\w-]+)/) || []
+                const locator: DeviceLocator = { location, deviceType }
 
-                const roomState =
-          (await snapshot.getPromise(sseStoreAtom(location))) || {}
-                const typeState = roomState[deviceType] || {}
+                const deviceTypeState =
+                    (await snapshot.getPromise(sseStoreAtom(locator))) || {}
 
-                const locationState = {
-                    ...roomState,
-                    [deviceType]: {
-                        ...typeState,
-                        [device]: value,
-                    },
+                const newDeviceTypeState = {
+                    ...deviceTypeState,
+                    [device]: value,
                 }
-
-                set(sseStoreAtom(location), locationState)
+                set(sseStoreAtom(locator), newDeviceTypeState)
             },
         [],
     )
@@ -65,7 +68,9 @@ export function useLoadInitialRoom() {
         ({ set }) =>
             (data: Record<string, object>) => {
                 for (const location of Object.keys(data)) {
-                    set(sseStoreAtom(location), data[location])
+                    for (const deviceType of Object.keys(data[location])) {
+                        set(sseStoreAtom({ location, deviceType }), data[location][deviceType])
+                    }
                 }
             },
         [],

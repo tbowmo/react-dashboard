@@ -1,17 +1,17 @@
-import { ChromeCast, Room } from '@dashboard/types'
-import { useLocation, useStrongTypedLocation } from './sse-atom'
+import { ChromeCast } from '@dashboard/types'
+import { useLocation, useStrongTypedDevices } from './sse-atom'
 
 export function useSSEString(
     room: string | undefined,
     deviceType: string | undefined,
     device: string | undefined,
 ): string | undefined {
-    const data = useLocation(room)
+    const data = useLocation(room, deviceType)
     if (!room || !deviceType || !device) {
         return undefined
     }
 
-    return data?.[deviceType]?.[device]?.toString()
+    return data?.[device]?.toString()
 }
 
 export function useSSENumber(
@@ -41,13 +41,13 @@ export function useSSEBoolean(
 }
 
 export function useChromeCast(room = 'stuen'): ChromeCast | undefined {
-    return useStrongTypedLocation<Room>(room)?.media
+    return useStrongTypedDevices<ChromeCast>(room, 'media')
 }
 
 export function useDevices(room: string, type: string): string[] {
-    const data = useLocation(room)
-    if (data?.[type]) {
-        return Object.keys(data[type])
+    const data = useLocation(room, type)
+    if (data) {
+        return Object.keys(data)
     }
     return []
 }

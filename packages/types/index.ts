@@ -61,7 +61,7 @@ export type Garden = {
 
 export type Presence = Record<string, Record<string, boolean>>
 
-type Utility = {
+export type Utility = {
   hour_Wh: number
   day_Wh: number
   week_Wh: number
@@ -78,11 +78,15 @@ type Utility = {
   gov_charge_dkk: number
 }
 
+export type Heating = Record<string, number>
+export type Wifi = Record<string, string>
+export type Misc = Record<string, string | number>
+
 export type Global = {
   utility?: Utility
-  heating?: Record<string, number>
-  wifi?: Record<string, string>
-  misc?: Record<string, string | number>
+  heating?: Heating
+  wifi?: Wifi
+  misc?: Misc
 }
 
 export type HomeEntity = Room | Presence | Global | Garden
@@ -96,3 +100,20 @@ export type StrongHomeEntity<T extends HomeEntity> = T extends Room
   : Presence
 
 export type Home = Record<string, HomeEntity>
+
+export type Device = ChromeCast | RoomSensor | Utility | Presence | Heating | Wifi | Misc
+
+
+export type StrongDevice<T extends Device> = T extends ChromeCast
+  ? ChromeCast
+  : T extends RoomSensor
+  ? Garden
+  : T extends Utility
+  ? Utility
+  : T extends Presence
+  ? Presence
+  : T extends Heating
+  ? Heating
+  : T extends Wifi
+  ? Wifi
+  : Misc
