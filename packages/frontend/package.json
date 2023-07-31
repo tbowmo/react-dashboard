@@ -1,10 +1,10 @@
 {
   "name": "@dashboard/frontend",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "@dashboard/types": "^1.0.0",
+    "@dashboard/types": "^1.1.0",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@mui/icons-material": "^5.11.9",

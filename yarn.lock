@@ -529,7 +529,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@dashboard/backend@workspace:packages/backend"
   dependencies:
-    "@dashboard/types": ^1.0.0
+    "@dashboard/types": ^1.1.0
     "@types/body-parser": ^1.19.2
     "@types/chai": ^4.3.4
     "@types/date-fns": ^2.6.0
@@ -569,7 +569,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@dashboard/frontend@workspace:packages/frontend"
   dependencies:
-    "@dashboard/types": ^1.0.0
+    "@dashboard/types": ^1.1.0
     "@emotion/react": ^11.10.6
     "@emotion/styled": ^11.10.6
     "@mui/icons-material": ^5.11.9
@@ -598,7 +598,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@dashboard/types@^1.0.0, @dashboard/types@workspace:packages/types":
+"@dashboard/types@^1.1.0, @dashboard/types@workspace:packages/types":
   version: 0.0.0-use.local
   resolution: "@dashboard/types@workspace:packages/types"
   languageName: unknown
