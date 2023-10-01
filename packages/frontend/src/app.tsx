@@ -5,7 +5,6 @@ import { DashTop } from './core/dash-top/dash-top'
 import { IotTabs } from './core/tabs/tabs'
 import { TabsProvider } from './core/tabs/tabs-context'
 import { SSEAtomHandler } from './core/data/sse/sse-atom-handler'
-import { SuspenseFallback } from './core/suspense-fallback'
 
 export function App() {
     return (
@@ -20,10 +19,8 @@ export function App() {
                             width: '100vw',
                         }}
                     >
-                        <React.Suspense fallback={<SuspenseFallback />}>
-                            <DashTop />
-                            <IotTabs />
-                        </React.Suspense>
+                        <DashTop />
+                        <IotTabs />
                     </Box>
                 </TabsProvider>
             </SSEAtomHandler>

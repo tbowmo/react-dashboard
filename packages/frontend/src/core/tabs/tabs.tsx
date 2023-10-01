@@ -23,7 +23,7 @@ import { Surveilance } from '../../pages/surveilance/surveilance'
 import { WifiPassPhrase } from '../../pages/wifi/wifi-pass-phrase'
 import { Scene } from '../../pages/scene/scene'
 import { Electricity } from '../../pages/electricity/electricity'
-import { SuspenseFallback } from '../suspense-fallback'
+import { Spinner } from './spinner'
 
 type MenuEntry = {
   label: string
@@ -70,11 +70,10 @@ const menuLinks: MenuEntry[] = [
 ]
 
 interface TabPanelProps {
-  children?: React.ReactNode
   active: boolean
 }
 
-function TabPanel(props: TabPanelProps) {
+function TabPanel(props: React.PropsWithChildren<TabPanelProps>) {
     const { children, active } = props
     
     const style: SxProps = {
@@ -122,7 +121,7 @@ export function IotTabs() {
                 ))}
             </Tabs>
             <Box sx={{ width: '100%', height: '100%' }}>
-                <React.Suspense fallback={<SuspenseFallback />}>
+                <React.Suspense fallback={<Spinner />}>
                     {menuLinks.map((menuEntry, index) => (
                         <TabPanel active={activeTab === index} key={menuEntry.label}>
                             {menuEntry.component}

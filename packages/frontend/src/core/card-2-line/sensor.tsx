@@ -16,28 +16,23 @@ type Props = Omit<GridCardProps, 'children'> & {
   unit2?: string | string[]
   precission?: number
   scale?: string[]
-  divisor1?: number
-  divisor2?: number
 }
 
-function round(value: number, precission = 1): number {
-    if (precission === 0) {
-        return Math.round(value)
-    }
-
-    return Math.round(value * (10 * precission)) / (10 * precission)
+type ScaledValue = {
+    value: number,
+    unit?: string,
 }
 
 function useScaledValue(
     sensorValue: number | undefined,
     unit: string | string[] | undefined,
-    precission = 1,
-): { value: number; unit?: string } | undefined {
+): ScaledValue | undefined {
     return React.useMemo((): { value: number; unit?: string } | undefined => {
-        if (!sensorValue) {
+        if (sensorValue === undefined) {
             return undefined
         }
-        let returnValue: { value: number; unit?: string }
+
+        let returnValue: ScaledValue
         if (unit !== undefined)
             if (Array.isArray(unit)) {
                 let value = sensorValue
@@ -48,26 +43,25 @@ function useScaledValue(
                 }
                 returnValue = {
                     unit: unit[scaleIndex],
-                    value: round(value, precission),
+                    value: value,
                 }
             } else {
                 returnValue = {
                     unit,
-                    value: round(sensorValue, precission),
+                    value: sensorValue,
                 }
             }
         else {
             returnValue = {
-                value: round(sensorValue, precission),
+                value: sensorValue,
             }
         }
         return returnValue
-    }, [unit, sensorValue, precission])
+    }, [unit, sensorValue])
 }
 
 function SingleValue(props: {
   unit: string | string[] | undefined
-  divisor?: number
   precission?: number
   sensorName?: string
   sensorType?: string
@@ -76,7 +70,6 @@ function SingleValue(props: {
 }) {
     const {
         unit,
-        divisor = 1,
         precission,
         sensorName,
         sensorType = 'sensors',
@@ -86,21 +79,20 @@ function SingleValue(props: {
 
     const valueSensor = useSSENumber(room, sensorType, sensorName) ?? sensorValue
     const value = useScaledValue(
-        valueSensor ? valueSensor / divisor : -99,
+        valueSensor,
         unit,
-        precission,
     )
 
     return (
         <Box>
-            <SensorValue value={value?.value ?? -99} />
+            <SensorValue value={value?.value.toFixed(precission) ?? -99} />
             <Typography
                 sx={{
                     textAlign: 'center',
                     fontSize: '10pt',
                 }}
             >
-                {value?.unit ?? unit}
+                {value?.unit ?? ''}
             </Typography>
         </Box>
     )
@@ -118,8 +110,6 @@ export function Sensor(props: Props) {
         precission,
         unit1,
         unit2,
-        divisor1 = 1,
-        divisor2 = 1,
         ...restProps
     } = props
 
@@ -132,7 +122,6 @@ export function Sensor(props: Props) {
                     room={room}
                     sensorType={sensorType}
                     unit={unit1}
-                    divisor={divisor1}
                     precission={precission}
                 />
                 {sensorName2 ? (
@@ -144,7 +133,6 @@ export function Sensor(props: Props) {
                             room={room}
                             sensorType={sensorType}
                             unit={unit2}
-                            divisor={divisor2}
                             precission={precission}
                         />
                     </React.Fragment>
