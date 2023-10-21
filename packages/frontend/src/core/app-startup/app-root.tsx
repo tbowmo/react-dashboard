@@ -8,6 +8,7 @@ import { DashTop } from '../dash-top/dash-top'
 import { Outlet } from 'react-router'
 import { SvgIconComponent } from '@mui/icons-material'
 import { useTabs , TabsProvider } from '../tabs/tabs-context'
+import ErrorBoundary from './error-boundary'
 
 type MenuEntry = {
     label: string
@@ -81,9 +82,11 @@ export function InnerAppRoot(props: Props) {
                     ))}
                 </Tabs>
                 <Box sx={{ width: '100%', height: '100%' }}>
-                    <React.Suspense fallback={<Fallback />}>
-                        <Outlet />                  
-                    </React.Suspense>
+                    <ErrorBoundary>
+                        <React.Suspense fallback={<Fallback />}>
+                            <Outlet />                  
+                        </React.Suspense>
+                    </ErrorBoundary>
                 </Box>
             </Box>
         </Box>

@@ -37,7 +37,7 @@ export function useLocation(room: string | undefined, sensorGroup: string | unde
     return useRecoilValue(sseStoreAtom(locator))
 }
 
-export function useLocationUpdater() {
+export function useUpdateLocation() {
     return useRecoilCallback(
         ({ set, snapshot }) =>
             async (data: SSETopic) => {
@@ -54,19 +54,19 @@ export function useLocationUpdater() {
 
                 const locator: DeviceLocator = { room, sensorGroup }
 
-                const deviceTypeState = (await snapshot.getPromise(sseStoreAtom(locator))) || {}
+                const previousDeviceState = (await snapshot.getPromise(sseStoreAtom(locator))) || {}
 
-                const newDeviceTypeState = {
-                    ...deviceTypeState,
+                const newDeviceState = {
+                    ...previousDeviceState,
                     [sensor]: value,
                 }
-                set(sseStoreAtom(locator), newDeviceTypeState)
+                set(sseStoreAtom(locator), newDeviceState)
             },
         [],
     )
 }
 
-export function useLoadInitialRoom() {
+export function useLoadInitialData() {
     return useRecoilCallback(
         ({ set }) =>
             (data: Record<string, object>) => {

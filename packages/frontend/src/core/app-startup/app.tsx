@@ -4,13 +4,14 @@ import {
     StyledEngineProvider,
 } from '@mui/material'
 import React from 'react'
-import { SSEAtomHandler } from '../data/sse/sse-atom-handler'
+import { SSEHandler } from '../data/sse/sse-handler'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { RecoilRoot } from 'recoil'
 import { theme } from './theme'
 import { AppRoutes } from './app-routes'
 import { time } from '../time-constants'
+import ErrorBoundary from './error-boundary'
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -27,14 +28,16 @@ export function App() {
         <StyledEngineProvider injectFirst>
             <ThemeProvider theme={theme}>
                 <CssBaseline />
-                <RecoilRoot>
-                    <SSEAtomHandler>
-                        <QueryClientProvider client={queryClient}>
-                            <ReactQueryDevtools />
-                            <AppRoutes />
-                        </QueryClientProvider>
-                    </SSEAtomHandler>
-                </RecoilRoot>
+                <ErrorBoundary>
+                    <RecoilRoot>
+                        <SSEHandler>
+                            <QueryClientProvider client={queryClient}>
+                                <ReactQueryDevtools />
+                                <AppRoutes />
+                            </QueryClientProvider>
+                        </SSEHandler>
+                    </RecoilRoot>
+                </ErrorBoundary>
             </ThemeProvider>
         </StyledEngineProvider>
     )
