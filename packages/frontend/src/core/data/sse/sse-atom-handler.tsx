@@ -1,12 +1,7 @@
 import React from 'react'
-import { useSSE } from 'react-hooks-sse'
+import { SSEProvider, useSSE } from 'react-hooks-sse'
 import { useLoadInitialRoom, useLocationUpdater } from './sse-atom'
 import { SSETopic } from '@dashboard/types'
-
-type Props = {
-    children?: React.ReactNode
-}
-
 
 function useSseTopic<T extends object>(
     topic: string,
@@ -27,7 +22,7 @@ function useSseTopic<T extends object>(
     }, [data, callback])
 }
 
-export function SSEAtomHandler(props: Props) {
+function InnerSSe(props: React.PropsWithChildren) {
     const { children } = props
 
     const loadInitialRoom = useLoadInitialRoom()
@@ -35,6 +30,17 @@ export function SSEAtomHandler(props: Props) {
 
     useSseTopic('initial', {}, loadInitialRoom)
     useSseTopic<SSETopic>('updates', { room: '', sensor: '', sensorGroup: '', payload: '' }, updateLocation)
+    return children
+}
 
-    return <React.Fragment>{children}</React.Fragment>
+export function SSEAtomHandler(props: React.PropsWithChildren) {
+    const { children } = props
+
+    return (
+        <SSEProvider endpoint="/api/sse">
+            <InnerSSe>
+                {children}
+            </InnerSSe>
+        </SSEProvider>
+    )
 }

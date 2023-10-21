@@ -1,18 +1,19 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
-const DEFAULTTAB = 0 // for debugging, this can be set to whatever tab you need
+const DEFAULTTAB = 'main' // for debugging, this can be set to whatever tab you need
 
 type TimerType = ReturnType<typeof setTimeout> | null
 
 type TabsContent = {
-  activeTab: number
-  setActiveTab: (index: number) => void
+  activeTab: string
+  setActiveTab: (index: string) => void
   startTimer: (timeout?: number) => void
   stopTimer: () => void
 }
 
 const TabsContext = React.createContext<TabsContent>({
-    activeTab: 0,
+    activeTab: '',
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     setActiveTab: () => {},
     // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -27,8 +28,13 @@ type Props = {
 
 export function TabsProvider(props: Props) {
     const { children } = props
-    const [activeTab, setActiveTab] = React.useState<number>(DEFAULTTAB)
+    const [activeTab, setActiveTab] = React.useState<string>(DEFAULTTAB)
     const timer = React.useRef<TimerType>(null)
+    const navigate = useNavigate()
+
+    React.useEffect(() => {
+        navigate(`/${activeTab}`)
+    }, [activeTab, navigate])
 
     const stopTimer = React.useCallback(() => {
         if (timer.current !== null) {
@@ -50,8 +56,8 @@ export function TabsProvider(props: Props) {
     )
 
     const setTab = React.useCallback(
-        (index: number) => {
-            setActiveTab(index)
+        (page: string) => {
+            setActiveTab(page)
             startTimer()
         },
         [startTimer],

@@ -26,7 +26,7 @@ export function Weather() {
     }
 
     const WeatherIcon: SvgIconComponent =
-    iconMap[weather?.weather[0]?.icon] ?? null
+    iconMap[weather.weather[0].icon] ?? null
     const iconSize = '180px'
     return (
         <Box sx={{ display: 'grid', gridTemplateRows: 'auto min-content' }}>
