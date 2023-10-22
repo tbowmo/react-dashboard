@@ -3,7 +3,7 @@ import { Grid } from '@mui/material'
 import { Utility } from '@dashboard/types'
 import { Clock } from './clock'
 import { Sensor } from '../card-2-line/sensor'
-import { useStrongTypedDevices } from '../data/sse/sse-atom'
+import { useStrongTypedDevices } from '../data'
 
 type TotalEntry = {
   label: string

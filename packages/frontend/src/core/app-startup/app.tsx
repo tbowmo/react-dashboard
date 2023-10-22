@@ -4,7 +4,7 @@ import {
     StyledEngineProvider,
 } from '@mui/material'
 import React from 'react'
-import { SSEHandler } from '../data/sse/sse-handler'
+import { SSEHandler } from '../data'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { RecoilRoot } from 'recoil'
@@ -16,8 +16,8 @@ import ErrorBoundary from './error-boundary'
 const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
-            staleTime: time.minute * 10,
-            gcTime: time.hour * 5,
+            staleTime: time.minute * 15,
+            gcTime: Infinity,
             suspense: true,
         },
     },
