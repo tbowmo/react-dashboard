@@ -12,13 +12,13 @@ import {
 import { api } from '../use-api'
 import { strongStore } from '../sse/sse-atom'
 import { Utility } from '@dashboard/types'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useSuspenseQuery, useQueryClient } from '@tanstack/react-query'
 import { useRecoilValue } from 'recoil'
 
 const baseUrl = 'https://api.energidataservice.dk/dataset/'
 
 function useTarrif(): { [hour in number]: number } | undefined {
-    const { data } = useQuery({
+    const { data } = useSuspenseQuery({
         queryKey: ['utility', 'tarrif'],
         queryFn: async () => {
             const filter = JSON.stringify({
@@ -69,7 +69,7 @@ function useTarrif(): { [hour in number]: number } | undefined {
 }
 
 function useSpotPrices() {
-    const { data } = useQuery({
+    const { data } = useSuspenseQuery({
         queryKey: ['utility', 'spot'],
         queryFn: async () => {
             const filter = JSON.stringify({ PriceArea: 'DK1' })

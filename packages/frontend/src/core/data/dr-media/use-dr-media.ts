@@ -9,7 +9,7 @@ import drp6 from './logo/DRP6_logo_primaer_RGB.svg'
 import drp8 from './logo/DRP8_logo_primaer_RGB.svg'
 import { DRMedia } from './dr-media-type'
 import { api } from '../use-api'
-import { useQuery } from '@tanstack/react-query'
+import { useSuspenseQuery } from '@tanstack/react-query'
 
 export type Media = {
   id: string
@@ -74,7 +74,7 @@ function logo(channelName: string) {
 }
 
 export function useDrMedia(): Media[] | undefined {
-    const { data } = useQuery({
+    const { data } = useSuspenseQuery({
         queryKey: ['media', 'dr'],
         queryFn: () => api<DRMedia[]>('https://api.dr.dk/radio/v2/schedules/all/now-next'),
         refetchInterval: 15*60*1000,

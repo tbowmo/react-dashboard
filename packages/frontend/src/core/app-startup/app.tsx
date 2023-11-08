@@ -18,7 +18,6 @@ const queryClient = new QueryClient({
         queries: {
             staleTime: time.minute * 15,
             gcTime: Infinity,
-            suspense: true,
         },
     },
 })

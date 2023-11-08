@@ -41,24 +41,24 @@ export function useUpdateLocation() {
     return useRecoilCallback(
         ({ set, snapshot }) =>
             async (data: SSETopic) => {
-                let value = data.payload
-                try {
-                    value = JSON.parse(data.payload)
-                    // eslint-disable-next-line no-empty
-                } catch { }
-
                 const { room, sensorGroup, sensor } = data
                 if (!room || !sensorGroup || !sensor) {
                     return
                 }
 
+                let payload = data.payload
+                try {
+                    payload = JSON.parse(payload)
+                    // eslint-disable-next-line no-empty
+                } catch { }
+
                 const locator: DeviceLocator = { room, sensorGroup }
 
-                const previousDeviceState = (await snapshot.getPromise(sseStoreAtom(locator))) || {}
+                const previousDeviceState = (await snapshot.getPromise(sseStoreAtom(locator))) ?? {}
 
                 const newDeviceState = {
                     ...previousDeviceState,
-                    [sensor]: value,
+                    [sensor]: payload,
                 }
                 set(sseStoreAtom(locator), newDeviceState)
             },
