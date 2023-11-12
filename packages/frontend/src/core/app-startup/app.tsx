@@ -3,7 +3,6 @@ import {
     ThemeProvider,
     StyledEngineProvider,
 } from '@mui/material'
-import React from 'react'
 import { SSEHandler } from '../data'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'

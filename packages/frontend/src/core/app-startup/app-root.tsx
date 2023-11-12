@@ -7,7 +7,7 @@ import {
 import { DashTop } from '../dash-top/dash-top'
 import { Outlet } from 'react-router'
 import { SvgIconComponent } from '@mui/icons-material'
-import { useTabs , TabsProvider } from '../tabs/tabs-context'
+import { useTabs , TabsProvider } from '../tabs'
 import ErrorBoundary from './error-boundary'
 
 type MenuEntry = {

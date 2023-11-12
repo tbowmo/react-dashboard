@@ -1,4 +1,3 @@
-import React from 'react'
 import {
     CardContent,
     Typography,
@@ -7,7 +6,7 @@ import {
     CardHeader,
     Card,
 } from '@mui/material'
-import { useTabs } from '../../core/tabs/tabs-context'
+import { useTabs } from '../../core/tabs'
 import { useDrMedia, Media } from '../../core/data'
 import { useFormatDate } from '../../core/date-time'
 
@@ -21,7 +20,7 @@ export function Streams() {
         xhttp.open('POST', '/media/stuen/play', true)
         xhttp.setRequestHeader('Content-type', 'application/json')
         xhttp.send(JSON.stringify(stream))
-        startTimer(200)
+        startTimer(500)
     }
 
     const formatDate = useFormatDate()

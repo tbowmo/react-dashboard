@@ -1,26 +1,11 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
+import { tabsContext } from './tabs-context'
 
 const DEFAULTTAB = 'main' // for debugging, this can be set to whatever tab you need
+const defaultTimeout = import.meta.env.VITE_ACTION_TIMEOUT ?? 20000
 
 type TimerType = ReturnType<typeof setTimeout> | null
-
-type TabsContent = {
-  activeTab: string
-  setActiveTab: (index: string) => void
-  startTimer: (timeout?: number) => void
-  stopTimer: () => void
-}
-
-const TabsContext = React.createContext<TabsContent>({
-    activeTab: '',
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    setActiveTab: () => {},
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    startTimer: () => {},
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    stopTimer: () => {},
-})
 
 type Props = {
   children: React.ReactNode
@@ -44,7 +29,7 @@ export function TabsProvider(props: Props) {
     }, [])
 
     const startTimer = React.useCallback(
-        (timeout = Number(import.meta.env.VITE_ACTION_TIMEOUT)) => {
+        (timeout = defaultTimeout) => {
             if (timer.current !== null) {
                 stopTimer()
             }
@@ -73,9 +58,6 @@ export function TabsProvider(props: Props) {
         [activeTab, startTimer, stopTimer, setTab],
     )
 
-    return <TabsContext.Provider value={value}>{children}</TabsContext.Provider>
+    return <tabsContext.Provider value={value}>{children}</tabsContext.Provider>
 }
 
-export function useTabs(): TabsContent {
-    return React.useContext(TabsContext)
-}

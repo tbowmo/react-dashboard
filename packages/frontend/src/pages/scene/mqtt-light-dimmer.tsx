@@ -9,7 +9,7 @@ import { Lightbulb, LightbulbOutlined } from '@mui/icons-material'
 import { deviceSet } from './device-set'
 import { MqttAction } from './mqtt-action'
 import { useSSENumber } from '../../core/data'
-import { useTabs } from '../../core/tabs/tabs-context'
+import { useTabs } from '../../core/tabs'
 
 type Props = {
   room?: string

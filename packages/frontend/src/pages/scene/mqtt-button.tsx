@@ -2,7 +2,7 @@ import React from 'react'
 import { SvgIconComponent } from '@mui/icons-material'
 import { deviceSet, DeviceType } from './device-set'
 import { MqttAction } from './mqtt-action'
-import { useTabs } from '../../core/tabs/tabs-context'
+import { useTabs } from '../../core/tabs'
 
 export type Props = {
   label?: string
@@ -38,7 +38,7 @@ export function MqttButton(props: Props) {
         if (keyActivated) {
             timer = setTimeout(() => {
                 setKey(false)
-                startTimer(200)
+                startTimer(500)
             }, 200)
         }
         return () => {

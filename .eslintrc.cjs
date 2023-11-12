@@ -1,6 +1,6 @@
 module.exports = {
+    root: true, // For configuration cascading.
     env: {
-        browser: true, // Browser global variables like `window` etc.
         commonjs: true, // CommonJS global variables and CommonJS scoping.Allows require, exports and module.
         es6: true, // Enable all ECMAScript 6 features except for modules.
         jest: true, // Jest global variables like `it` etc.
@@ -9,14 +9,11 @@ module.exports = {
     extends: [
         'plugin:@typescript-eslint/recommended',
         'eslint:recommended',
-        'plugin:react/recommended',
-        'plugin:jsx-a11y/recommended',
-        'plugin:react-hooks/recommended',
     ],
+    ignorePatterns: ['dist', '.eslintrc.cjs'],
     parser: '@typescript-eslint/parser',
     plugins: [
         '@typescript-eslint',
-        'react',
         'import', // eslint-plugin-import plugin. https://www.npmjs.com/package/eslint-plugin-import
         'import-newlines',
     ],
@@ -24,7 +21,6 @@ module.exports = {
         JSX: true,
         NodeJS: true,
     },
-    root: true, // For configuration cascading.
     rules: {
         'linebreak-style': [
             'error',
@@ -42,7 +38,6 @@ module.exports = {
             'always-multiline',
         ],
         'eol-last': 'error',
-        'react/display-name': 'off',
         'import/order': 'off',
         indent: [
             'error',
@@ -66,23 +61,6 @@ module.exports = {
             'single',
             { 'avoidEscape': true },
         ],
-        'react/jsx-curly-brace-presence': [
-            'warn',
-            { props: 'never', children: 'never' },
-        ],
-        'react/jsx-curly-spacing': 'warn',
-        'react/jsx-filename-extension': [
-            'error',
-            {
-                extensions: [
-                    '.ts',
-                    '.tsx',
-                ],
-            },
-        ],
-        'react/jsx-indent': 'warn',
-        'react/jsx-indent-props': 'warn',
-        'react/prop-types': 'warn',
         semi: ['warn', 'never'],
         'import-newlines/enforce': [
             'error',
@@ -93,11 +71,6 @@ module.exports = {
             },
         ],
 
-    },
-    settings: {
-        react: {
-            version: 'detect', // Detect react version
-        },
     },
 }
 

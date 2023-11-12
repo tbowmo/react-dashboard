@@ -1,4 +1,3 @@
-import React from 'react'
 import { RouterProvider, RouteObject } from 'react-router'
 import {
     House,

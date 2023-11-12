@@ -1,4 +1,3 @@
-import React from 'react'
 import { SvgIconComponent } from '@mui/icons-material'
 import { Typography } from '@mui/material'
 import { GridCard, GridCardProps } from '../../core/card-2-line/grid-card'
