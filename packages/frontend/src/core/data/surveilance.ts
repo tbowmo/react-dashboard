@@ -5,7 +5,7 @@ import { SurveilanceStream } from '@dashboard/types'
 export function useSurveilance() {
     const { data } = useSuspenseQuery({
         queryKey: ['sureveilance', 'streams'],
-        queryFn: () => api<SurveilanceStream[]>('/surveilance/streams'),
+        queryFn: () => api<SurveilanceStream[]>('/api/surveilance/streams'),
     })
 
     return data

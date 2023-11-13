@@ -10,7 +10,7 @@ type Route = {
   controller: WeatherController | RemoteController | SurveilanceController
 }
 
-export function Routes(mqtt: Mqtt): Route[] {
+export function Routes(mqtt: Mqtt, base = '/api'): Route[] {
     const weatherController = new WeatherController()
     const remoteController = new RemoteController(mqtt)
     const surveilanceController = new SurveilanceController()
@@ -18,43 +18,43 @@ export function Routes(mqtt: Mqtt): Route[] {
     return [
         {
             method: 'get',
-            route: '/surveilance/streams',
+            route: `${base}/surveilance/streams`,
             controller: surveilanceController,
             action: 'streams',
         },
         {
             method: 'get',
-            route: '/weather/forecast',
+            route: `${base}/weather/forecast`,
             controller: weatherController,
             action: 'forecast',
         },
         {
             method: 'get',
-            route: '/weather/current',
+            route: `${base}/weather/current`,
             controller: weatherController,
             action: 'currentWeather',
         },
         {
             method: 'get',
-            route: '/remote/:room/:command',
+            route: `${base}/remote/:room/:command`,
             controller: remoteController,
             action: 'remote',
         },
         {
             method: 'get',
-            route: '/deviceSet/:room/:type/:device/:value',
+            route: `${base}/deviceSet/:room/:type/:device/:value`,
             controller: remoteController,
             action: 'deviceSet',
         },
         {
             method: 'post',
-            route: '/media/:room/play',
+            route: `${base}/media/:room/play`,
             controller: remoteController,
             action: 'mediaPlay',
         },
         {
             method: 'get',
-            route: '/media/:room/update',
+            route: `${base}/media/:room/update`,
             controller: remoteController,
             action: 'updateMedia',
         },

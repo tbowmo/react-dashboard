@@ -6,7 +6,7 @@ import { time } from '../../time-constants'
 export function useCurrentWeather(): CurrentWeatherDto | undefined {
     const { data } = useSuspenseQuery({
         queryKey: ['weathcer', 'current'],
-        queryFn: () => api<CurrentWeatherDto>('/weather/current'),
+        queryFn: () => api<CurrentWeatherDto>('/api/weather/current'),
         refetchInterval: 10 * time.minute,
     })
 
@@ -16,7 +16,7 @@ export function useCurrentWeather(): CurrentWeatherDto | undefined {
 export function useForecastWeather(): ForecastDto | undefined {
     const { data } = useSuspenseQuery({
         queryKey: ['weather', 'forecast'],
-        queryFn: () => api<ForecastDto>('/weather/forecast'),
+        queryFn: () => api<ForecastDto>('/api/weather/forecast'),
         refetchInterval: 30 * time.minute,
     })
 

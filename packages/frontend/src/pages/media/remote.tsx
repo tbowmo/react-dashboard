@@ -82,7 +82,7 @@ export function Remote() {
     function buttonDown(target: ControlKey) {
         setRepeat(target)
         setActiveKey(target.key)
-        fetch(`/remote/stuen/${target.key}`)
+        fetch(`/api/remote/stuen/${target.key}`)
     }
 
     function buttonRelease() {
@@ -93,7 +93,7 @@ export function Remote() {
         if (repeat?.repeat && repeatIntervalTimer === undefined) {
             repeatIntervalTimer = setInterval(() => {
                 setActiveKey(repeat.key)
-                fetch(`/remote/stuen/${repeat.key}`)
+                fetch(`/api/remote/stuen/${repeat.key}`)
             }, 400)
         } else {
             stopInterval()

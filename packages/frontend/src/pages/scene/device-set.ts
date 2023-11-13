@@ -6,5 +6,5 @@ export function deviceSet(
     device: string,
     value: string,
 ) {
-    fetch(`/deviceSet/${room}/${deviceType}/${device}/${value}`)
+    fetch(`/api/deviceSet/${room}/${deviceType}/${device}/${value}`)
 }

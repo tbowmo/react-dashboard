@@ -17,7 +17,7 @@ export function Streams() {
 
     function SelectStream(stream: Media) {
         const xhttp = new XMLHttpRequest()
-        xhttp.open('POST', '/media/stuen/play', true)
+        xhttp.open('POST', '/api/media/stuen/play', true)
         xhttp.setRequestHeader('Content-type', 'application/json')
         xhttp.send(JSON.stringify(stream))
         startTimer(500)
