@@ -1,22 +1,40 @@
 import { Grid } from '@mui/material'
+import { useSurveilance } from '../../core'
+import { useState } from 'react'
+import { useTabs } from '../../core/tabs'
 
 export function Surveilance() {
+    const surveilance = useSurveilance()
+
+    const [focusStream, setFocusStream] = useState<string>()
+    const { startTimer } = useTabs()
+    
+    if (!surveilance.length) {
+        return
+    }
+    
+    const width = 1200 / surveilance.length
+    function focus(streamUrl: string) {
+        setFocusStream(streamUrl)
+        startTimer()
+    }
     return (
         <Grid container>
-            <Grid item xs={6}>
-                <img
-                    width={600}
-                    src="https://zm.juletraesfoden.dk/zm/cgi-bin/nph-zms?scale=100&width=640px&height=480px&mode=jpeg&maxfps=30&monitor=6&user=viewonly&pass=ViewOnly123"
-                    alt=""
-                />
-            </Grid>
-            <Grid item xs={6}>
-                <img
-                    width={600}
-                    src="https://zm.juletraesfoden.dk/zm/cgi-bin/nph-zms?scale=100&width=640px&height=480px&mode=jpeg&maxfps=30&monitor=4&user=viewonly&pass=ViewOnly123"
-                    alt=""
-                />
-            </Grid>
+            {focusStream 
+                ? (
+                    <Grid item xs={12}>
+                        <img src={focusStream} alt="" />
+                    </Grid>
+                )
+                : surveilance.map((item) => (
+                    <Grid item xs={6} key={item.url} onClick={() => focus(item.url)}>
+                        <img
+                            width={width}
+                            src={item.url}
+                            alt=""
+                        />
+                    </Grid>
+                ))}
         </Grid>
     )
 }

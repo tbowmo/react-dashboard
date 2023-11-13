@@ -125,3 +125,7 @@ export type SSETopic = {
   sensor: string,
   payload: string,
 }
+
+export type SurveilanceStream = {
+  url: string,
+}
