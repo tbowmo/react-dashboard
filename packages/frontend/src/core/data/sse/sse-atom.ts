@@ -55,12 +55,13 @@ export function useUpdateLocation() {
                 const locator: DeviceLocator = { room, sensorGroup }
 
                 const previousDeviceState = (await snapshot.getPromise(sseStoreAtom(locator))) ?? {}
-
-                const newDeviceState = {
-                    ...previousDeviceState,
-                    [sensor]: payload,
+                if (previousDeviceState[sensor] !== payload) {
+                    const newDeviceState = {
+                        ...previousDeviceState,
+                        [sensor]: payload,
+                    }
+                    set(sseStoreAtom(locator), newDeviceState)
                 }
-                set(sseStoreAtom(locator), newDeviceState)
             },
         [],
     )

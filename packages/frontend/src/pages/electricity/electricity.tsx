@@ -41,6 +41,8 @@ export function Electricity() {
                             <TableRow>
                                 <TableCell>tid</TableCell>
                                 <TableCell>Pris</TableCell>
+                                <TableCell>Tarrif</TableCell>
+                                <TableCell>Afgift</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -48,6 +50,8 @@ export function Electricity() {
                                 <TableRow key={item.hour}>
                                     <TableCell>{item.hour}</TableCell>
                                     <TableCell>{item.totalPrice.toFixed(2)}</TableCell>
+                                    <TableCell>{item.tarrif.toFixed(2)}</TableCell>
+                                    <TableCell>{item.govCharge.toFixed(2)}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>

@@ -1,7 +1,10 @@
 import {
     format,
+    isAfter,
     isBefore,
     parseISO,
+    startOfHour,
+    subHours,
 } from 'date-fns'
 import { useMemo } from 'react'
 import {
@@ -73,9 +76,12 @@ function useSpotPrices() {
         queryKey: ['utility', 'spot'],
         queryFn: async () => {
             const filter = JSON.stringify({ PriceArea: 'DK1' })
+            
+            const date = subHours(startOfHour(Date.now()), 1)
+            const dateStr = format(date, "yyyy-MM-dd'T'HH:mm")
 
             const response = await api<DataHub<SpotPrice[]>>(
-                `${baseUrl}ElspotPrices?start=Now&filter=${filter}&sort=HourDK`,
+                `${baseUrl}ElspotPrices?start=${dateStr}&filter=${filter}&sort=HourDK`,
             )
     
             return response.records.map((item) => {
@@ -103,9 +109,9 @@ export function useUtilityPrices(hoursAhead = 12) {
         }
 
         const tarrifValues = Object.values(tarrifs)
-        const currentDate = new Date()
+        const currentDate = subHours(startOfHour(new Date()), 1)
         const futurePrices = prices.filter(
-            (item) => new Date(item.HourDK) > currentDate,
+            (item) => isAfter(new Date(item.HourDK), currentDate),
         )
 
         const calculatedPrices = futurePrices
