@@ -1,25 +1,25 @@
 import { WeatherController } from './controller/WeatherController'
 import { RemoteController } from './controller/remote'
 import { Mqtt } from '../mqtt/mqtt'
-import { SurveilanceController } from './controller/surveilance'
+import { SurveillanceController } from './controller/surveillance'
 
 type Route = {
   method: 'get' | 'post' | 'delete'
   route: string
   action: string
-  controller: WeatherController | RemoteController | SurveilanceController
+  controller: WeatherController | RemoteController | SurveillanceController
 }
 
 export function Routes(mqtt: Mqtt, base = '/api'): Route[] {
     const weatherController = new WeatherController()
     const remoteController = new RemoteController(mqtt)
-    const surveilanceController = new SurveilanceController()
+    const surveillanceController = new SurveillanceController()
 
     return [
         {
             method: 'get',
-            route: `${base}/surveilance/streams`,
-            controller: surveilanceController,
+            route: `${base}/surveillance/streams`,
+            controller: surveillanceController,
             action: 'streams',
         },
         {

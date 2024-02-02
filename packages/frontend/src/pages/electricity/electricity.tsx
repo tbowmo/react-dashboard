@@ -29,7 +29,7 @@ export function Electricity() {
                     <text x={900 / 2} y={20} fill="white" textAnchor="middle" dominantBaseline="central">
                         <tspan fontSize="14">Data sidst hentet {dateFormat(lastUpdated, 'compactDateTime')}</tspan>
                     </text>
-                    <Line type="stepBefore" dataKey="totalPrice" stroke="#8884d8" />
+                    <Line type="stepAfter" dataKey="totalPrice" stroke="#8884d8" />
                     <XAxis dataKey="hour" />
                     <YAxis />
                 </LineChart>

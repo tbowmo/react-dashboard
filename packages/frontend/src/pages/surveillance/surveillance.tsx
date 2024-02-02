@@ -1,10 +1,10 @@
 import { Grid } from '@mui/material'
-import { useSurveilance } from '../../core'
+import { useSurveillance } from '../../core'
 import { useState } from 'react'
 import { useTabs } from '../../core/tabs'
 
-export function Surveilance() {
-    const surveilance = useSurveilance()
+export function Surveillance() {
+    const surveilance = useSurveillance()
 
     const [focusStream, setFocusStream] = useState<string>()
     const { startTimer } = useTabs()

@@ -13,10 +13,9 @@ import {
     TransportTarrif,
 } from './utility-type'
 import { api } from '../use-api'
-import { strongStore } from '../sse/sse-atom'
+import { useStrongTypedDevices } from '../sse/sse-atom'
 import { Utility } from '@dashboard/types'
 import { useSuspenseQuery, useQueryClient } from '@tanstack/react-query'
-import { useRecoilValue } from 'recoil'
 
 const baseUrl = 'https://api.energidataservice.dk/dataset/'
 
@@ -101,7 +100,7 @@ function useSpotPrices() {
 export function useUtilityPrices(hoursAhead = 12) {
     const tarrifs = useTarrif()
     const prices = useSpotPrices()
-    const govCharge = useRecoilValue(strongStore<Utility>('global', 'utility'))?.gov_charge_dkk ?? 0
+    const govCharge = useStrongTypedDevices<Utility>('global', 'utility')?.gov_charge_dkk ?? 0
 
     return useMemo(() => {
         if (!tarrifs || !prices) {
@@ -122,17 +121,17 @@ export function useUtilityPrices(hoursAhead = 12) {
                 const price = (item.SpotPriceDKK || item.SpotPriceEUR * 7.5) / 1000
 
                 return {
-                    hour: item.HourDK,
+                    date: parseISO(item.HourDK),
                     price,
                     tarrif,
                     govCharge,
                     totalPrice: (price + tarrif + govCharge) * 1.25,
                 }
             })
-            .sort((a, b) => new Date(a.hour).getTime() - new Date(b.hour).getTime())
+            .sort((a, b) => a.date.getTime() - b.date.getTime())
             .map((item) => ({
                 ...item,
-                hour: format(parseISO(item.hour), 'HH:mm'),
+                hour: format(item.date, 'HH:mm'),
             }))
         return calculatedPrices?.slice(0, hoursAhead)
     }, [govCharge, hoursAhead, prices, tarrifs])

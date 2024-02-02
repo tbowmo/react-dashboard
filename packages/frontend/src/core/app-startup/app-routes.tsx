@@ -15,7 +15,7 @@ import { Controller } from '../../pages/media/media'
 import { Streams } from '../../pages/streams/streams'
 import { Scene } from '../../pages/scene/scene'
 import { Weather } from '../../pages/weather/weather'
-import { Surveilance } from '../../pages/surveilance/surveilance'
+import { Surveillance } from '../../pages/surveillance/surveillance'
 import { Electricity } from '../../pages/electricity/electricity'
 import { WifiPassPhrase } from '../../pages/wifi/wifi-pass-phrase'
 
@@ -49,7 +49,7 @@ const menuLinks: MenuEntry[] = [
     {
         label: 'Video',
         icon: Videocam,
-        component: <Surveilance />,
+        component: <Surveillance />,
     },
     {
         label: 'Utility',

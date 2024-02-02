@@ -35,11 +35,17 @@
     "lint": "eslint packages/*/src/**/*.ts{,x} packages/*/*.ts{,x}",
     "postinstall": "husky install",
     "coverage": "nyc --clean --cache false mocha --forbid-only -r ts-node/register -r source-map-support/register 'packages/*/src/**/*.test.ts{,x}'",
-    "postcoverage": "nyc check-coverage --functions 50 --branches 50 --statements 90"
+    "postcoverage": "nyc check-coverage --functions 50 --branches 50 --statements 90",
+    "start:server": "cd packages/backend && yarn start",
+    "start:frontend": "cd packages/frontend && yarn start",
+    "start": "run-p --race start:server start:frontend"
   },
   "lint-staged": {
     "*.{ts,tsx}": "eslint --max-warnings 0 packages/*/src/**/*.ts{,x}",
     "*.{yml,yaml,json}": "prettier -c"
   },
-  "packageManager": "yarn@3.6.1"
+  "packageManager": "yarn@3.6.1",
+  "dependencies": {
+    "npm-run-all2": "^6.1.1"
+  }
 }

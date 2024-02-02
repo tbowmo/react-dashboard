@@ -126,6 +126,6 @@ export type SSETopic = {
   payload: string,
 }
 
-export type SurveilanceStream = {
+export type SurveillanceStream = {
   url: string,
 }

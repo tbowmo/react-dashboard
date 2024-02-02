@@ -18,7 +18,7 @@ const sseStoreAtom = atomFamily<Device | undefined, DeviceLocator>({
     default: {},
 })
 
-export function strongStore<T extends Device = Misc>(room: string, sensorGroup: string) {
+function strongStore<T extends Device = Misc>(room: string, sensorGroup: string) {
     return sseStoreAtom({ room, sensorGroup }) as RecoilState<StrongDevice<T> | undefined>
 }
 
@@ -29,7 +29,7 @@ export function useStrongTypedDevices<T extends Device>(
     return useRecoilValue(strongStore<T>(room, type))
 }
 
-export function useLocation(room: string | undefined, sensorGroup: string | undefined) {
+export function useWeakTypedDevices(room: string | undefined, sensorGroup: string | undefined): Device | undefined {
     const locator: DeviceLocator = {
         room: room ?? '',
         sensorGroup: sensorGroup ?? '',

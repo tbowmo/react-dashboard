@@ -24,8 +24,8 @@ export class WeatherController {
     }
 
     /**
-   * Caching (in memory) data from weather open weather map.
-   */
+     * Caching (in memory) data from weather open weather map.
+     */
     async getWeatherCaching(
         requestType: RequestType,
         timeout: number,
